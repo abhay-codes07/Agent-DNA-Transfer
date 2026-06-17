@@ -1,0 +1,54 @@
+# --- Secrets / keys (NEVER commit) ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.keypair
+secrets/
+helix-identity/
+
+# --- Helix runtime artifacts ---
+*.dna                  # exported memory strands (user data — never commit)
+*.dna.bak
+.helix/                # local strand store / cache
+strands/
+models/                # downloaded embedding models cache
+.helix-cache/
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+.uv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+coverage.xml
+
+# --- Node / TypeScript ---
+node_modules/
+.pnpm-store/
+apps/**/dist/
+apps/**/.vite/
+sdks/**/dist/
+*.tsbuildinfo
+
+# --- Editors / OS ---
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# --- Logs / temp ---
+*.log
+tmp/
+.tmp/
