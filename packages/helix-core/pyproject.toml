@@ -1,0 +1,32 @@
+[project]
+name = "helix-core"
+version = "0.0.1"
+description = "Helix engine: extraction, stores, retrieval, consolidation, and the .dna codec."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "Apache-2.0" }
+
+# NOTE: pinned at integration time. Listed here to document intent (see CLAUDE.md / TSD).
+dependencies = [
+  # storage
+  "sqlite-vec",            # embedded vector store; the strand *is* a SQLite file
+  "networkx",             # in-memory graph projections
+  # embeddings (local default — no API, no cost)
+  "fastembed",            # BAAI/bge-small-en-v1.5 on CPU
+  # llm router (optional path)
+  "litellm",              # provider-agnostic; Gemini free tier -> gpt-4o-mini
+  # crypto for the .dna strand
+  "pynacl",               # XChaCha20-Poly1305 + Ed25519
+  "argon2-cffi",          # passphrase KDF
+  "blake3",               # content addressing / Merkle integrity
+  # misc
+  "pydantic>=2",
+  "platformdirs",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/helix_core"]

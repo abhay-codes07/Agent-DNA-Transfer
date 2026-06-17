@@ -1,0 +1,60 @@
+# Helix — uv workspace root.
+# Polyglot monorepo: Python engine/CLI/MCP/SDK here; TS dashboard & SDK under apps/ & sdks/.
+# See docs/SYSTEM_ARCHITECTURE.md §8 for the full layout.
+
+[project]
+name = "helix-memory"
+version = "0.0.1"
+description = "Take your AI's memory anywhere — a local-first, portable, git-like memory layer for AI coding agents."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "Apache-2.0" }
+authors = [{ name = "The Helix Authors" }]
+keywords = ["ai", "memory", "mcp", "agents", "llm", "local-first", "portable", "knowledge-graph"]
+
+# Meta-package: installing `helix-memory` pulls the user-facing pieces.
+dependencies = [
+  "helix-core",
+  "helix-cli",
+  "helix-mcp",
+]
+
+[project.urls]
+Homepage = "https://github.com/abhay-codes07/Agent-DNA-Transfer"
+Repository = "https://github.com/abhay-codes07/Agent-DNA-Transfer"
+Documentation = "https://github.com/abhay-codes07/Agent-DNA-Transfer/tree/main/docs"
+
+[tool.uv.workspace]
+members = ["packages/*"]
+
+[tool.uv.sources]
+helix-core = { workspace = true }
+helix-cli = { workspace = true }
+helix-mcp = { workspace = true }
+helix-sdk-python = { workspace = true }
+
+[dependency-groups]
+dev = [
+  "pytest>=8",
+  "pytest-cov",
+  "ruff",
+  "black",
+  "mypy",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests", "packages"]
+addopts = "-q"
