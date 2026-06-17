@@ -223,6 +223,286 @@ single source of truth. Pre-alpha packages may be stubs; the structure is author
 
 ---
 
+---
+
+# Wave 2 — research-driven decisions (2026-06-18)
+
+The following ADRs were added after a seven-stream deep-research pass (competitive
+landscape, memory science, retrieval SOTA, storage/infra, crypto/sync/CRDT, MCP/
+integrations, privacy/eval/business). They deepen — and in a few places refine — the
+foundational ADRs above. Each cites the dossier that grounds it; see [`docs/RESEARCH.md`](docs/RESEARCH.md)
+for the consolidated survey and sources.
+
+## ADR-012 — Memory taxonomy: episodic / semantic / procedural + an entity graph; CLS two-stage
+**Status:** Accepted · **Date:** 2026-06-18
+
+**Context.** Generic memory layers store undifferentiated "facts." Cognitive science
+distinguishes memory types with different retrieval triggers, decay rates, and consolidation
+paths; the Complementary Learning Systems (CLS) framework explains a fast episodic store that
+trains a slow semantic store by replay.
+
+**Decision.** Helix's long-term memory has four first-class shapes: **episodic** (event log),
+**semantic** (durable facts), **procedural** (skills/playbooks), and a cross-cutting
+**entity-relationship graph**. Our coding-native types (project, decision, convention,
+snippet, …) map onto these. The live agent context window is **working memory** and is never
+the system of record. Writes follow a **two-stage CLS** path: cheap fast episodic capture
+online; slow generalizing **consolidation** offline. Full spec: [`docs/MEMORY_MODEL.md`](docs/MEMORY_MODEL.md), [`docs/CONSOLIDATION.md`](docs/CONSOLIDATION.md).
+
+**Consequences.** Richer schema and a background consolidation process to build/maintain;
+in return, recall is sharper and storage is compressed (ten episodes → one semantic rule).
+
+**Supersedes/refines** ADR-001's memory shape (which listed flat types). Alternatives: a
+single flat fact table (rejected — loses type-specific decay/retrieval).
+
+## ADR-013 — Bi-temporal fact model (valid-time + transaction-time)
+**Status:** Accepted · **Date:** 2026-06-18
+
+**Context.** Facts change ("we moved billing to Postgres", "Priya left the team"). Deleting or
+overwriting loses the audit trail and breaks rollback/merge.
+
+**Decision.** Every fact carries **valid-time** (when it is true in the world) and
+**transaction-time** (when Helix learned it), the XTDB/Graphiti model. Invalidation is
+**append-only**: a superseded fact is closed, never deleted. This powers contradiction
+handling, point-in-time queries, rollback, and conflict-aware merge. See [`docs/SYNC.md`](docs/SYNC.md), [`docs/MEMORY_MODEL.md`](docs/MEMORY_MODEL.md).
+
+**Consequences.** More storage and slightly more complex queries; gains audit, time-travel,
+and a clean basis for merge. Source: Graphiti/Zep (arxiv 2501.13956), XTDB bitemporality.
+
+## ADR-014 — Decay & reinforcement: per-type exponential decay + SM-2-style reinforcement
+**Status:** Accepted · **Date:** 2026-06-18
+
+**Context.** Memory must stay sharp as it grows; the Ebbinghaus forgetting curve and spaced
+repetition give proven models.
+
+**Decision.** Compute salience at retrieval time as `importance · e^(−λ·Δt_last_access)` with
+per-type half-lives (episodic ~7d, procedural ~90d, semantic ~non-decaying until
+contradicted; `λ = ln2/half_life`). On successful recall, **reinforce** SM-2-style (grow the
+effective half-life via an easiness factor, clamp ≥ 1.3; reset Δt). Below a salience floor a
+memory is archived/consolidated, **never auto-deleted**. Details: [`docs/CONSOLIDATION.md`](docs/CONSOLIDATION.md).
+
+**Consequences.** No cron needed (decay is computed on read); frequently-useful memories
+become near-permanent. Sources: Ebbinghaus, SuperMemo SM-2, Stanford Generative Agents.
+
+## ADR-015 — Reflection trees + sleep-time consolidation
+**Status:** Accepted · **Date:** 2026-06-18
+
+**Context.** Raw episodes alone don't yield higher-level understanding ("this codebase prefers
+composition over inheritance"); doing that work on the hot path would add latency and cost.
+
+**Decision.** Adopt Generative-Agents **reflection** (when accumulated importance exceeds a
+threshold, synthesize higher-level insights stored as first-class memories linked to their
+source episodes) and **sleep-time consolidation** (a background worker runs during idle time,
+using a stronger/slower model since it isn't latency-bound). Both are off the query hot path.
+
+**Consequences.** Better semantic/procedural memory over time; requires an idle-time scheduler
+and careful anti-hallucination guards (ADR-029). Sources: Generative Agents (2304.03442),
+MemGPT (2310.08560), Letta sleep-time compute.
+
+## ADR-016 — Retrieval pipeline: hybrid + RRF + graph PPR + MMR, with NO LLM on the hot path
+**Status:** Accepted · **Date:** 2026-06-18
+
+**Context.** Recall must be p95 < 150 ms on CPU at $0 over 10⁵–10⁶ items. Query-time LLM
+expansion (HyDE/Query2doc) costs 2000 ms+; CPU cross-encoder reranking of top-100 is
+impossible (65–195× slower than GPU).
+
+**Decision.** Default pipeline: query-embed → embedding **router/scope** (skip-retrieval when
+appropriate) → **hybrid retrieve** (dense + BM25) → **RRF fuse (k=60)** → **graph expansion**
+via Personalized PageRank / bounded traversal (HippoRAG-style) → multi-signal **ranking** →
+**MMR** dedup/diversity → **token-budgeted packing** (most-salient at head and tail to beat
+"lost in the middle"). All LLM work is pushed to **ingest time**. An optional high-quality
+tier adds late-interaction reranking (answerai-colbert-small) or an int8 cross-encoder on
+top-20–30, and HyDE/multi-query async. Full spec: [`docs/RETRIEVAL.md`](docs/RETRIEVAL.md).
+
+**Consequences.** Fast, cheap, offline recall. Keep BM25 always (personal memory is full of
+identifiers/paths BM25 must catch). Sources: Cormack RRF (SIGIR'09), HippoRAG (2405.14831),
+"Lost in the Middle" (2307.03172), MMR (Carbonell & Goldstein 1998).
+
+## ADR-017 — Embeddings: bge-small-en-v1.5 (int8) default; Matryoshka upgrade tier; quantization
+**Status:** Accepted · **Date:** 2026-06-18 · **Refines ADR-006**
+
+**Decision.** Default local embedding = **BAAI/bge-small-en-v1.5** (384-dim, 33M, MTEB 62.17,
+best-in-small-class) via fastembed ONNX, stored **int8-quantized** (4× smaller, ~99% recall
+with rescoring). Upgrade tier = **mxbai-embed-large-v1** or **arctic-embed-l-v2.0**
+(Matryoshka-truncatable dims, multilingual), with **binary quantization + float rescore** at
+scale (32× smaller). Embedding space (provider/model/dim/quantization) stays pinned per strand
+(ADR-006); switching triggers a tracked re-embed. Details: [`docs/RETRIEVAL.md`](docs/RETRIEVAL.md).
+
+**Consequences.** $0 high-quality recall on CPU; a clean quality ladder. Source: MTEB,
+HuggingFace embedding-quantization, Nomic/Arctic Matryoshka.
+
+## ADR-018 — Storage confirmed: sqlite-vec brute-force in one file; Kùzu rejected; store interface
+**Status:** Accepted · **Date:** 2026-06-18 · **Refines ADR-005**
+
+**Context.** Benchmarks confirm sqlite-vec brute-force is fast enough at our scale with
+quantization (17–41 ms @1M); **Kùzu (the embedded graph DB we might have used) was
+abandoned/archived Oct 2025**; DuckDB-VSS HNSW persistence is experimental (no WAL recovery →
+corruption risk).
+
+**Decision.** Default store stays **one SQLite file**: `sqlite-vec` vectors (brute-force +
+int8/binary quantization) + **relational node/edge tables with recursive CTEs**, NetworkX
+projections for richer graph work. **Do not adopt upstream Kùzu**; if a graph engine is ever
+needed, use a maintained fork behind the interface. Everything sits behind a `MemoryStore`
+interface with a team-scale upgrade path (LanceDB → pgvector → Qdrant). Before exporting a
+`.dna`, **checkpoint WAL + atomic-rename** so the artifact is a single self-contained file.
+Sources/benchmarks: [`docs/RESEARCH.md`](docs/RESEARCH.md).
+
+**Consequences.** Maximum portability + transactional safety with no dependency-abandonment
+risk; ANN/graph engines remain optional, isolated behind the interface.
+
+## ADR-019 — Crypto suite for `.dna`: XChaCha20-Poly1305 secretstream, Argon2id, BLAKE3 Merkle, Ed25519, wrap-don't-encrypt
+**Status:** Accepted · **Date:** 2026-06-18 · **Refines ADR-008**
+
+**Decision.** Encrypt the strand with **XChaCha20-Poly1305** via libsodium **secretstream**
+over **64 KiB chunks** (truncation-resistant, portable, random-nonce-safe). Derive keys with
+**Argon2id** (desktop params, start m=64 MiB, t=3, p=1). Use **wrap-don't-encrypt**: a random
+data key encrypts the payload and is itself wrapped by the passphrase/keychain/recovery/
+hardware key (enables re-keying + multi-factor unlock). Integrity via a **BLAKE3 Merkle tree**
+over content-addressed chunks; **Ed25519** detached signature over the Merkle root, verified
+on import. This makes `.dna` **independently verifiable offline, with no blockchain** (we keep
+Walrus's verifiability, drop the chain). Spec: [`docs/DNA_FORMAT.md`](docs/DNA_FORMAT.md), [`docs/SECURITY_MODEL.md`](docs/SECURITY_MODEL.md).
+
+**Consequences.** Strong, portable, offline-verifiable artifact; chunked AEAD enables seekable
+incremental exports. Sources: libsodium, C2SP `age` STREAM, OWASP Argon2id, BLAKE3.
+
+## ADR-020 — Key management & recovery: keychain + passphrase + recovery code + optional Shamir/hardware
+**Status:** Accepted · **Date:** 2026-06-18
+
+**Decision.** Daily unlock via the **OS keychain** (macOS Keychain / Windows DPAPI / Linux
+libsecret); portable fallback via **passphrase → Argon2id**. A high-entropy **recovery code**
+independently wraps the data key (forgotten passphrase ≠ data loss). Optional **2-of-3 Shamir
+secret sharing** and **hardware keys** (age-plugin-yubikey, passkeys/WebAuthn) for high-value
+users/teams. Any one factor can unwrap the data key; losing one never loses data; losing all
+does (true E2E). See [`docs/SECURITY_MODEL.md`](docs/SECURITY_MODEL.md).
+
+**Consequences.** Usable-but-strong default with a real recovery story. Sources: 1Password,
+Standard Notes, Obsidian Sync, age-plugin-yubikey.
+
+## ADR-021 — Merge strategy: CRDT convergence + git-style 3-way semantic merge + bi-temporal
+**Status:** Accepted · **Date:** 2026-06-18
+
+**Context.** Merging two strands (over time, or across teammates) must not silently lose facts;
+last-write-wins does exactly that.
+
+**Decision.** Use an **Automerge-style CRDT** (op-based, full history) for mechanical
+convergence of concurrent edits, **plus git-style 3-way semantic merge** at the fact/field
+level (using the commit-DAG merge-base) for contradictory facts that need logic, resolved with
+the **bi-temporal** model (ADR-013). Store is content-addressed (Prolly/Merkle, Dolt-style) so
+diffs/merges are cheap and incremental. "Two facts meet" has one code path whether over time
+or across people. Spec: [`docs/SYNC.md`](docs/SYNC.md).
+
+**Consequences.** Conflict-aware, reversible, audit-preserving merge — the hardest and most
+differentiating feature. Sources: Automerge, MRDTs, Dolt, XTDB.
+
+## ADR-022 — Optional E2E sync: bring-your-own-storage first, two-secret derivation
+**Status:** Proposed · **Date:** 2026-06-18 · **Refines ADR-010**
+
+**Decision.** Team/multi-device sync is **optional and end-to-end encrypted**; any server/relay
+sees only ciphertext. Default transport is **bring-your-own-bucket** (S3/R2/Drive) moving
+content-addressed encrypted chunks; a thin relay is optional for NAT/presence. Adopt
+**1Password-style two-secret derivation** (account passphrase + high-entropy Secret Key) so
+stored blobs resist offline cracking. Not in v1; designed now so local-first stays the default.
+Spec: [`docs/SYNC.md`](docs/SYNC.md).
+
+## ADR-023 — MCP architecture: one local daemon + stdio shim; ~5 tools; token-budgeted results
+**Status:** Accepted · **Date:** 2026-06-18 · **Refines ADR-003**
+
+**Decision.** Run a long-lived **Streamable HTTP daemon on `127.0.0.1`** (shared store/cache
+across concurrent agents) **plus a thin stdio shim** for clients that prefer stdio. Lead with
+**Tools** (keep to ~5: `memory.search`, `memory.context`, `memory.write/add`, `memory.get`,
+`memory.forget`; `memory.relate` optional), add **Resources** for read/browse; treat Prompts/
+Sampling/Elicitation as optional enhancements (avoid hard deps on Sampling/Roots given draft
+deprecation). **Token-budget every result** (`response_format` concise|detailed, `limit`/
+`max_tokens`; default well under Claude Code's ~25k tool-output cap), **human-readable IDs**,
+idempotent dedup/supersede writes, `isError`-in-result error handling, stable names +
+`tools/list_changed`. Spec: [`docs/API_REFERENCE.md`](docs/API_REFERENCE.md), [`docs/MCP_INTEGRATION.md`](docs/MCP_INTEGRATION.md).
+
+**Consequences.** One shared memory across all agents; a tiny, stable, context-friendly surface
+no competitor token-budgets today. Sources: MCP spec 2025-06-18/11-25, Anthropic "writing
+tools for agents."
+
+## ADR-024 — Agent/MCP security posture: memory is the private-data leg of the lethal trifecta
+**Status:** Accepted · **Date:** 2026-06-18
+
+**Decision.** Treat Helix as the **private-data leg of the "lethal trifecta"** (private data +
+untrusted content + exfiltration). Default **read-mostly**; require explicit consent for
+cross-namespace reads or writes that could exfiltrate; bind to loopback + validate `Origin`;
+non-deterministic session IDs; **treat returned memory text as untrusted** (sanitize so stored
+content can't act as injected instructions); keep tool descriptions static and audited
+(anti tool-poisoning/rug-pull); remote endpoints use OAuth 2.1 (PKCE, RFC 8707, no token
+passthrough). See [`docs/SECURITY_MODEL.md`](docs/SECURITY_MODEL.md).
+
+**Consequences.** Hardened against the signature attacks on memory MCP servers. Sources:
+Invariant Labs (tool poisoning), Simon Willison (lethal trifecta), MCP security best practices.
+
+## ADR-025 — Redaction pipeline: tiered, at ingest AND outbound
+**Status:** Accepted · **Date:** 2026-06-18 · **Refines ADR (redaction in TSD/Security)**
+
+**Decision.** Redact with a tiered pipeline — regex/checksum → **entropy secret-scan
+(detect-secrets + gitleaks)** → **Presidio NER** → mask — **before writing** to a strand
+**and before any outbound LLM payload**, so "secrets never leave your machine" is literally
+true. Redaction is defense-in-depth (no detector is complete), and is covered by tests
+asserting no secret reaches a strand. Spec: [`docs/PRIVACY_COMPLIANCE.md`](docs/PRIVACY_COMPLIANCE.md).
+
+**Consequences.** Strong privacy guarantee; some false positives (tunable). Sources: Microsoft
+Presidio, Yelp detect-secrets, gitleaks.
+
+## ADR-026 — GDPR posture: provenance-cascade erasure; never fine-tune on user memory
+**Status:** Accepted · **Date:** 2026-06-18
+
+**Decision.** Helix is **retrieval-only** — it never fine-tunes on user memory — avoiding the
+unsolved machine-unlearning problem. Every derived artifact (embedding, summary, graph node)
+carries a **provenance link** to its source record, so an erasure (GDPR Art. 17) is a
+deterministic **cascade delete** of the record and everything derived from it. Local-first
+keeps the user as sole controller (no processor relationship, no cross-border transfer). Spec:
+[`docs/PRIVACY_COMPLIANCE.md`](docs/PRIVACY_COMPLIANCE.md).
+
+**Consequences.** Clean, defensible "right to be forgotten." Source: EDPB Opinion 28/2024.
+
+## ADR-027 — Evaluation: LongMemEval over LoCoMo; define the coding-agent memory benchmark
+**Status:** Accepted · **Date:** 2026-06-18
+
+**Decision.** Do **not** optimize for or trust vendor **LoCoMo** numbers (documented flaws;
+full-context baseline beats specialized systems). Build the internal harness on
+**LongMemEval** dimensions (extraction, multi-session, **temporal**, **knowledge-update**,
+**abstention**) plus Helix-specific metrics (precision/recall@k, MRR, contradiction handling,
+forget-cascade correctness, p50/p95 latency, tokens-per-retrieval, an adversarial poisoning
+suite). **Define and publish a coding-agent memory benchmark** (the category gap) to own the
+narrative. Spec: [`docs/EVALUATION.md`](docs/EVALUATION.md).
+
+## ADR-028 — Business model: Apache-2.0 forever; never charge to read your own memory
+**Status:** Accepted · **Date:** 2026-06-18 · **Refines ADR-009**
+
+**Decision.** Keep the core **Apache-2.0 with a public no-relicense commitment** (permissive +
+patent grant is what lets agent vendors/IDEs embed Helix; AGPL/SSPL/BSL would kill that GTM).
+**Never charge to read your own local memory.** Monetize only true server-side infrastructure:
+team sync, hosted encrypted backup/cross-device, org policy/audit/RBAC/SSO, managed cloud —
+priced per-seat/per-org, not per-memory. The "review team memory like code" flow is the
+primary paid trigger and growth loop. Spec: [`docs/BUSINESS.md`](docs/BUSINESS.md).
+
+## ADR-029 — Anti-poisoning & memory-integrity guardrails
+**Status:** Accepted · **Date:** 2026-06-18
+
+**Context.** Persistent memory poisoning (MINJA, MemoryGraft, Unit 42 on Bedrock) is the
+signature attack on memory systems — temporally decoupled and self-reinforcing.
+
+**Decision.** Every memory carries **provenance + confidence**; provenance distinguishes
+**user-asserted vs agent-ingested** content. Ingested external content is untrusted and is
+**injection-scanned before any durable write**. Consolidated facts must **cite ≥1 grounding
+episode** (a validation gate against hallucinated memories). Contradictions are **flagged, not
+silently overwritten** (bi-temporal, ADR-013). Memory is **human-reviewable and reversible**
+(rollback), which doubles as the team-review feature. Spec: [`docs/CONSOLIDATION.md`](docs/CONSOLIDATION.md), [`docs/SECURITY_MODEL.md`](docs/SECURITY_MODEL.md).
+
+## ADR-030 — Plugin/extension architecture
+**Status:** Accepted · **Date:** 2026-06-18
+
+**Decision.** Everything swappable sits behind a registered interface: `Embedder`,
+`VectorStore`, `GraphStore`, `Extractor`, `LLMProvider`/router, `Redactor`, `AgentConnector`,
+`SyncBackend`. Plugins are discovered via entry points. This is what makes the local→team
+upgrade path (ADR-018), the embeddings ladder (ADR-017), and broad agent support possible
+without touching the engine. Spec: [`docs/PLUGINS.md`](docs/PLUGINS.md).
+
+---
+
 ## How to add a decision
 
 1. Copy the ADR skeleton below, bump the number, set Status/Date.
