@@ -121,8 +121,19 @@ helix/
 
 - Product spec → [`docs/PRD.md`](docs/PRD.md)
 - Technical contract → [`docs/TSD.md`](docs/TSD.md)
-- Memory schema → [`docs/MEMORY_MODEL.md`](docs/MEMORY_MODEL.md)
+- Memory schema (bi-temporal, typed) → [`docs/MEMORY_MODEL.md`](docs/MEMORY_MODEL.md)
+- Memory lifecycle (decay/reflection) → [`docs/CONSOLIDATION.md`](docs/CONSOLIDATION.md)
+- Retrieval pipeline → [`docs/RETRIEVAL.md`](docs/RETRIEVAL.md)
 - Portable format → [`docs/DNA_FORMAT.md`](docs/DNA_FORMAT.md)
+- Sync & merge → [`docs/SYNC.md`](docs/SYNC.md)
+- Agent surface → [`docs/API_REFERENCE.md`](docs/API_REFERENCE.md) · [`docs/MCP_INTEGRATION.md`](docs/MCP_INTEGRATION.md)
+- Extension points → [`docs/PLUGINS.md`](docs/PLUGINS.md)
 - Cost rules → [`docs/COST_OPTIMIZATION.md`](docs/COST_OPTIMIZATION.md)
-- Security/threat model → [`docs/SECURITY_MODEL.md`](docs/SECURITY_MODEL.md)
-- Decisions & changes → [`DECISIONS.md`](DECISIONS.md)
+- Security/threat model → [`docs/SECURITY_MODEL.md`](docs/SECURITY_MODEL.md) · privacy → [`docs/PRIVACY_COMPLIANCE.md`](docs/PRIVACY_COMPLIANCE.md)
+- Evaluation → [`docs/EVALUATION.md`](docs/EVALUATION.md)
+- Why-it's-this-way (the research) → [`docs/RESEARCH.md`](docs/RESEARCH.md)
+- Decisions & changes (30 ADRs) → [`DECISIONS.md`](DECISIONS.md)
+
+> **Before implementing a subsystem, read its dedicated doc above** — they carry the
+> research-backed algorithms (e.g. RRF k=60, Personalized PageRank, per-type decay half-lives,
+> XChaCha20 secretstream, BLAKE3 Merkle). The Wave-2 ADRs (012–030) are the binding decisions.

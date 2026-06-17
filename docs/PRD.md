@@ -1,7 +1,7 @@
 # Helix — Product Requirements Document (PRD)
 
 **Status:** Draft v1 · **Owner:** Founding team · **Last updated:** 2026-06-18
-**Related:** [TSD](TSD.md) · [System Architecture](SYSTEM_ARCHITECTURE.md) · [Decisions](../DECISIONS.md) · [Roadmap](../ROADMAP.md)
+**Related:** [TSD](TSD.md) · [System Architecture](SYSTEM_ARCHITECTURE.md) · [Competitive Analysis](COMPETITIVE_ANALYSIS.md) · [Business](BUSINESS.md) · [Evaluation](EVALUATION.md) · [Research Survey](RESEARCH.md) · [Decisions](../DECISIONS.md) · [Roadmap](../ROADMAP.md)
 
 ---
 

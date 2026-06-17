@@ -123,10 +123,25 @@ Generalize the wedge.
 ---
 
 ## Cross-phase, always-on
-- Security: redaction tests, crypto review, **external audit before any public launch**
+- Security: tiered redaction tests, crypto review, anti-poisoning guardrails, **external audit
+  before any public launch** ([Security](docs/SECURITY_MODEL.md), [Privacy](docs/PRIVACY_COMPLIANCE.md))
+- **Evaluation harness** from Phase 1: LongMemEval-style metrics + a coding-agent memory
+  benchmark; the $0/offline path tested as a first-class CI config ([Evaluation](docs/EVALUATION.md))
 - Trademark/availability check for "Helix" before public launch ([ADR-002](DECISIONS.md))
 - Performance budgets (recall p95, footprint) enforced in CI
 - Docs and ADRs kept in lockstep with code (spec-first invariant)
+
+## Research-driven workstreams (woven across phases)
+These deepen the phases above; each maps to a Wave-2 ADR and a spec:
+- **Cognitive memory model** — episodic/semantic/procedural + entity graph, bi-temporal facts
+  ([Memory Model](docs/MEMORY_MODEL.md), ADR-012/013).
+- **Consolidation engine** — CLS two-stage, decay/reinforcement, reflection, sleep-time
+  ([Consolidation](docs/CONSOLIDATION.md), ADR-014/015) — Phase 3+.
+- **Retrieval pipeline** — hybrid + RRF + graph PPR + MMR, quantized embeddings
+  ([Retrieval](docs/RETRIEVAL.md), ADR-016/017) — Phase 1.
+- **Merge & sync** — CRDT + 3-way semantic merge, optional E2E sync
+  ([Sync](docs/SYNC.md), ADR-021/022) — Phase 4/7.
+- **Plugin interfaces** — embeddings/stores/LLM/connectors ([Plugins](docs/PLUGINS.md), ADR-030).
 
 ---
 

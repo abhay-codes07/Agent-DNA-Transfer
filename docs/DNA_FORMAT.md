@@ -61,12 +61,19 @@ counts, author key) and verify integrity **before** decrypting anything.
 The signature (`manifest.sig`) covers the **entire** manifest, including the integrity root,
 so any tampering with content or metadata is detectable.
 
-## 3. Encryption
+## 3. Encryption ([ADR-019](../DECISIONS.md))
 
-- **Cipher:** XChaCha20-Poly1305 (AEAD) over `strand.db`.
-- **Key derivation:** Argon2id from the user's passphrase (`HELIX_PASSPHRASE`), or the strand
-  key is wrapped by a device-keychain key when no passphrase is used.
-- **Nonces:** random 192-bit (XChaCha) per encryption; stored in the manifest.
+- **Cipher:** XChaCha20-Poly1305 (AEAD) via libsodium **`secretstream`** over **64 KiB
+  chunks** — authenticated, seekable, and truncation-resistant (the `age` STREAM model), not a
+  single monolithic blob.
+- **Wrap-don't-encrypt:** a random **data key** encrypts the payload; that data key is itself
+  *wrapped* by the user's unlock factor(s). So re-keying never re-encrypts the whole strand and
+  multiple factors can unlock the same file (see §4 / key management).
+- **Key derivation:** **Argon2id** from the passphrase (`HELIX_PASSPHRASE`) — desktop params
+  (start m=64 MiB, t=3, p=1) — or the data key is wrapped by a device-keychain key when no
+  passphrase is set; optional recovery code / Shamir / hardware key wrap the same data key
+  ([ADR-020](../DECISIONS.md)).
+- **Nonces:** 192-bit (XChaCha) — random nonces are safe at this width.
 - **Threat posture:** the disk/USB/cloud-drive holding the `.dna` is treated as untrusted; the
   plaintext strand exists only in memory on a trusted device. See [Security Model](SECURITY_MODEL.md).
 
@@ -110,11 +117,14 @@ Atomic (temp file + rename); never overwrites the source strand.
 5. Open as a new local strand (or stage for merge).
 
 ### merge (`A ⊕ B`)
-The hard, valuable operation — and it reuses the same engine as everyday learning:
-1. Align nodes/edges by content hash + semantic match.
-2. Run **consolidation** over the union (ADD/UPDATE/NOOP) and **conflict resolution** on
-   contradictions (recency > confidence > provenance, optional LLM tie-break) — see
-   [TSD §6.3/§6.6](TSD.md).
+The hard, valuable operation — and it reuses the same engine as everyday learning. Full spec in
+[Sync & Merge](SYNC.md) ([ADR-021](../DECISIONS.md)):
+1. Align nodes/edges by content hash + semantic match (content-addressed Prolly/Merkle store
+   makes this cheap).
+2. **CRDT convergence** (Automerge-style, op-based with history) for concurrent edits, then
+   **git-style 3-way semantic merge** at the fact/field level (against the commit-DAG
+   merge-base) for contradictions — resolved with the **bi-temporal** model (close `valid_to`,
+   never delete). Not last-write-wins.
 3. Preserve **both** provenances; never silently drop a contributor's fact.
 4. Enforce the **redaction invariant**: secrets are never present to merge in the first place.
 5. Produce a new `version` with both `parents` (reversible via rollback).

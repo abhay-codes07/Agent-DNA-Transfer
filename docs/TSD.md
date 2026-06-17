@@ -1,7 +1,13 @@
 # Helix — Technical Specification Document (TSD)
 
 **Status:** Draft v1 · **Last updated:** 2026-06-18
-**Related:** [PRD](PRD.md) · [System Architecture](SYSTEM_ARCHITECTURE.md) · [Memory Model](MEMORY_MODEL.md) · [DNA Format](DNA_FORMAT.md) · [Cost](COST_OPTIMIZATION.md) · [Security](SECURITY_MODEL.md) · [Decisions](../DECISIONS.md)
+**Related:** [PRD](PRD.md) · [System Architecture](SYSTEM_ARCHITECTURE.md) · [Memory Model](MEMORY_MODEL.md) · [Retrieval](RETRIEVAL.md) · [Consolidation](CONSOLIDATION.md) · [DNA Format](DNA_FORMAT.md) · [Sync](SYNC.md) · [API Reference](API_REFERENCE.md) · [Cost](COST_OPTIMIZATION.md) · [Security](SECURITY_MODEL.md) · [Decisions](../DECISIONS.md)
+
+> **v2 note (2026-06-18):** the algorithms in §6 are now specified in depth in dedicated,
+> research-cited docs — retrieval → [Retrieval](RETRIEVAL.md) (hybrid+RRF+PPR+MMR); memory
+> lifecycle/decay/reflection → [Consolidation](CONSOLIDATION.md); the bi-temporal data model →
+> [Memory Model](MEMORY_MODEL.md); the agent surface → [API Reference](API_REFERENCE.md). This
+> file remains the engineering overview; those are the source of truth for their subsystems.
 
 This document is the engineering contract: components, data model, algorithms, interfaces,
 and the technology behind each. Where a choice is made, it links to the relevant ADR.

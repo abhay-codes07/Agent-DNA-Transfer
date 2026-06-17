@@ -50,9 +50,11 @@ Details in [DNA Format](DNA_FORMAT.md) §3–§5.
 
 - Provider keys and passphrases are read from the **environment only**; never logged, never
   written into a strand, never sent anywhere except the chosen LLM provider.
-- **Redaction at ingest:** API keys, tokens, private keys, and `.env`-style values are detected
-  (regex + entropy heuristics) and removed *before* storage and *before* any LLM call. This
-  invariant holds across `write`, `import`, and `merge`.
+- **Tiered redaction at ingest *and* outbound** ([ADR-025](../DECISIONS.md), [Privacy & Compliance](PRIVACY_COMPLIANCE.md)):
+  a pipeline of regex/checksum → **entropy secret-scan (detect-secrets + gitleaks)** →
+  **Presidio NER** removes secrets/PII *before* storage **and** before any LLM payload leaves
+  the device — so "secrets never leave your machine" is literally true. The invariant holds
+  across `write`, `import`, and `merge`. Redaction is defense-in-depth (no detector is complete).
 - Crash dumps and logs are redacted; content never appears in logs.
 
 ## 6. Threats & mitigations
@@ -78,12 +80,20 @@ Details in [DNA Format](DNA_FORMAT.md) §3–§5.
 - **Right to forget / erase.** Any fact can be soft-deleted (recoverable) and then purged;
   the whole strand can be destroyed by deleting one file and the key.
 
-## 8. The agent-exfiltration problem (called out)
+## 8. The agent-exfiltration problem & the lethal trifecta ([ADR-024](../DECISIONS.md))
 
-Because any connected agent can call `memory.search`, a *malicious* agent could try to vacuum
-memory. Mitigations now: the surface is tiny, results are scope-bounded and token-budgeted,
-secrets are never present to leak. On the roadmap: per-agent scopes/allow-lists, rate limits,
-and a local audit log of what each agent read — so the user can see and constrain access.
+Helix is, by design, the **private-data leg of the "lethal trifecta"** (private data + untrusted
+content + exfiltration ability). Because any connected agent can call `memory.search`, a
+*malicious or hijacked* agent could try to vacuum memory, and **returned memory text is itself
+untrusted** — a poisoned memory could carry injected instructions.
+
+Mitigations now: the MCP surface is tiny; results are scope-bounded and token-budgeted; secrets
+are never present to leak; stored content is sanitized so it can't act as instructions; tool
+descriptions are static and audited (anti tool-poisoning/rug-pull); the daemon binds to loopback
+and validates `Origin`; remote endpoints use OAuth 2.1 (PKCE, RFC 8707, no token passthrough).
+On the roadmap: per-agent scopes/allow-lists, rate limits, and a local audit log of what each
+agent read. See [MCP Integration](MCP_INTEGRATION.md) and [Consolidation](CONSOLIDATION.md)
+(anti-poisoning guardrails).
 
 ## 9. What Helix does NOT claim
 

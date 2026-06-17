@@ -33,3 +33,22 @@ fix it (spec-first invariant, [CLAUDE.md](../CLAUDE.md)).
 | **Deterministic extractor** | The no-LLM, rules+embeddings extractor; the $0 floor. |
 | **Daemon** | The local Helix process hosting the engine for CLI, MCP server, and dashboard. |
 | **ADR** | Architecture Decision Record — an entry in [`DECISIONS.md`](../DECISIONS.md). |
+| **Episodic / semantic / procedural** | The three long-term memory shapes Helix models (events / durable facts / skills), plus a cross-cutting entity graph. |
+| **Working memory** | The live agent context window — used, but never Helix's system of record. |
+| **CLS (Complementary Learning Systems)** | The fast-episodic-trains-slow-semantic model behind the two-stage write path. |
+| **Bi-temporal** | Every fact carries *valid-time* (true in the world) and *transaction-time* (when Helix learned it); invalidation is append-only. |
+| **Importance** | A write-time rating (1–10 / 0–1) of how significant a memory is; an input to salience. |
+| **Reflection** | Periodic synthesis of higher-level insights from clusters of episodes, stored as new linked memories. |
+| **Sleep-time consolidation** | A background, idle-time worker that consolidates/rewrites memory using a stronger model off the hot path. |
+| **Hybrid retrieval** | Combining dense (embedding) and sparse (BM25) search. |
+| **RRF** | Reciprocal Rank Fusion (k=60) — rank-only fusion of multiple result lists. |
+| **PPR** | Personalized PageRank — lightweight graph-expansion retrieval (HippoRAG-style). |
+| **MMR** | Maximal Marginal Relevance — diversity/dedup during result selection. |
+| **Matryoshka (MRL)** | Embeddings whose dimensions can be truncated without re-embedding. |
+| **Quantization (int8/binary)** | Compressing embedding vectors for smaller/faster storage (with optional float rescore). |
+| **Redaction** | Tiered removal of secrets/PII (regex → detect-secrets/gitleaks → Presidio) before storage and before any LLM call. |
+| **Memory poisoning** | An attack that plants false/persistent instructions into long-term memory; guarded by provenance + validation + review. |
+| **CRDT** | Conflict-free Replicated Data Type — used for mechanical convergence during merge. |
+| **3-way semantic merge** | Fact/field-level merge against a common ancestor for contradictory facts. |
+| **Daemon** | The local Helix process (Streamable HTTP on 127.0.0.1) that serves the CLI, MCP shim, and dashboard. |
+| **Lethal trifecta** | Private data + untrusted content + exfiltration ability — the agent-security risk a memory server must mitigate. |

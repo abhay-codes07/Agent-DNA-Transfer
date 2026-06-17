@@ -130,18 +130,40 @@ prefers a free tier when it does. See [Cost Optimization](docs/COST_OPTIMIZATION
 
 ## Documentation
 
+**Product & strategy**
 | Doc | What's inside |
 |---|---|
 | [PRD](docs/PRD.md) | Vision, personas, problem, scope, requirements, metrics, GTM |
+| [Competitive Analysis](docs/COMPETITIVE_ANALYSIS.md) | 11-product teardown + the 6-axis positioning table |
+| [Business Model & GTM](docs/BUSINESS.md) | Open-core, pricing principles, growth loops |
+| [Roadmap](ROADMAP.md) | Phased plan from MVP to platform |
+| [Research Survey](docs/RESEARCH.md) | The cited literature/landscape behind every decision |
+
+**Engineering**
+| Doc | What's inside |
+|---|---|
 | [Technical Spec (TSD)](docs/TSD.md) | Components, data model, APIs, algorithms, tech choices |
 | [System Architecture](docs/SYSTEM_ARCHITECTURE.md) | Diagrams, data flow, deployment, scaling, trust boundaries |
-| [Memory Model](docs/MEMORY_MODEL.md) | The knowledge-graph schema and lifecycle |
+| [Memory Model](docs/MEMORY_MODEL.md) | Typed graph schema: episodic/semantic/procedural + bi-temporal |
+| [Consolidation, Decay & Reflection](docs/CONSOLIDATION.md) | CLS two-stage, decay/reinforcement, reflection, sleep-time |
+| [Retrieval Pipeline](docs/RETRIEVAL.md) | Hybrid + RRF + graph PPR + MMR; no LLM on the hot path |
 | [`.dna` Format](docs/DNA_FORMAT.md) | The portable, signed, encrypted bundle spec |
+| [Sync & Merge](docs/SYNC.md) | Optional E2E sync; CRDT + 3-way semantic merge |
 | [Cost Optimization](docs/COST_OPTIMIZATION.md) | How Helix stays at ~$0 |
+| [API Reference](docs/API_REFERENCE.md) | MCP tools, local daemon REST, SDKs |
 | [MCP Integration](docs/MCP_INTEGRATION.md) | Tools/resources exposed to agents |
-| [Security Model](docs/SECURITY_MODEL.md) | Encryption, signing, threat model |
-| [Decisions (ADR)](DECISIONS.md) | Every meaningful choice + why, and what changed |
-| [Roadmap](ROADMAP.md) | Phased plan from MVP to platform |
+| [Plugins & Extensions](docs/PLUGINS.md) | Pluggable embeddings/stores/LLM/connectors |
+| [Observability](docs/OBSERVABILITY.md) | Local metrics + the "$0" cost dashboard |
+
+**Trust, quality & process**
+| Doc | What's inside |
+|---|---|
+| [Security Model](docs/SECURITY_MODEL.md) | Encryption, signing, threat model, anti-poisoning |
+| [Privacy & Compliance](docs/PRIVACY_COMPLIANCE.md) | Redaction, GDPR erasure cascade, never-fine-tune |
+| [Evaluation & Benchmarks](docs/EVALUATION.md) | LongMemEval, the coding-memory benchmark gap, harness |
+| [Governance & RFCs](docs/GOVERNANCE.md) | Roles, RFC process, versioning, commercial layer |
+| [Decisions (ADR)](DECISIONS.md) | Every meaningful choice + why, and what changed (30 ADRs) |
+| [Glossary](docs/GLOSSARY.md) | Shared vocabulary |
 | [CLAUDE.md](CLAUDE.md) | Guidance for AI agents working *in this repo* |
 
 ## Project status

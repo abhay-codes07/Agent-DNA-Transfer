@@ -1,6 +1,6 @@
 # Helix — MCP Integration
 
-**Status:** Draft v1 · **Last updated:** 2026-06-18 · **Related:** [TSD §4](TSD.md) · [ADR-003](../DECISIONS.md)
+**Status:** Draft v1 · **Last updated:** 2026-06-18 · **Related:** [TSD §4](TSD.md) · [API Reference](API_REFERENCE.md) · [Security](SECURITY_MODEL.md) · [ADR-003](../DECISIONS.md) · [ADR-023](../DECISIONS.md) · [ADR-024](../DECISIONS.md)
 
 The Model Context Protocol (MCP) is Helix's primary interface — the one integration that lets
 *every* compatible agent (Claude Code, Cursor, Copilot, Windsurf, ChatGPT desktop, …) read and
@@ -8,11 +8,14 @@ write the same memory. The surface is intentionally small, stable, and versioned
 
 ---
 
-## 1. Server
+## 1. Server architecture — one daemon, two front doors ([ADR-023](../DECISIONS.md))
 
-`helix-mcp` runs locally and speaks MCP over stdio (and optionally a local socket). It is a
-thin front-end over `helix-core`; it holds no business logic of its own. One server per
-machine serves all connected agents against the user's active strand.
+Helix runs a long-lived **local daemon** (Streamable HTTP bound to `127.0.0.1`) so a single
+shared store/cache serves *all* concurrently-running agents, plus a thin **stdio shim** that
+proxies to it for clients that prefer stdio. Both are thin front-ends over `helix-core` (no
+business logic). The deprecated HTTP+SSE transport is not used. The daemon binds to loopback and
+validates `Origin` (DNS-rebinding defense); see [Security Model](SECURITY_MODEL.md) and the full
+[API Reference](API_REFERENCE.md) for the exact tool/resource schemas and the daemon REST surface.
 
 ## 2. Tools
 
