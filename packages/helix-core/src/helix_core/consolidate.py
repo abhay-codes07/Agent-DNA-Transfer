@@ -1,0 +1,108 @@
+"""Consolidation — ADD / UPDATE / NOOP / SUPERSEDE (TSD §6.3, docs/CONSOLIDATION.md).
+
+For each candidate fact (already embedded), find the nearest existing memory and decide how to
+fold it in. Bi-temporal supersession never hard-deletes: the old fact's `valid_to` is closed
+and it is marked superseded, linked by a `supersedes` edge (ADR-013/021). Idempotent: a
+re-stated fact is a NOOP that simply reinforces.
+"""
+
+from __future__ import annotations
+
+import re
+from dataclasses import dataclass
+
+from .decay import reinforce
+from .ids import edge_id, new_id
+from .models import CandidateFact, Edge, Memory, Provenance, Status, utcnow
+
+# Cosine thresholds (vectors are normalized; cosine in [-1, 1]).
+DUP_THRESHOLD = 0.97  # essentially the same statement -> NOOP
+UPDATE_THRESHOLD = 0.82  # same subject, refine/supersede
+
+_NEGATION = re.compile(r"\b(no longer|not|instead|now use|switched to|deprecated|don'?t)\b", re.I)
+# Types that hold at most one current value per scope -> a near-match is a supersession.
+_SINGLETON = {"identity"}
+
+
+@dataclass(slots=True)
+class ConsolidationResult:
+    op: str  # "ADD" | "UPDATE" | "NOOP" | "SUPERSEDE"
+    memory_id: str
+
+
+def consolidate(
+    store,  # SqliteStore
+    candidate: CandidateFact,
+    embedding: list[float],
+    provenance: Provenance,
+) -> ConsolidationResult:
+    now = utcnow()
+    hits = store.vector_search(embedding, k=5, scope=candidate.scope)
+    best_id, best_sim = hits[0] if hits else (None, 0.0)
+    best = store.get_memory(best_id) if best_id else None
+
+    # NOOP — we already know this; reinforce it.
+    if best and best_sim >= DUP_THRESHOLD and best.type == candidate.type:
+        reinforce(best, now)
+        best.confidence = min(best.confidence + 0.05, 1.0)
+        best.provenance.append(provenance)
+        best.updated_at = now
+        store.upsert_memory(best)
+        store.add_history("noop", best.id, {"sim": round(best_sim, 3)})
+        return ConsolidationResult("NOOP", best.id)
+
+    # UPDATE / SUPERSEDE — same subject area.
+    if best and best_sim >= UPDATE_THRESHOLD and best.type == candidate.type:
+        contradicts = bool(_NEGATION.search(candidate.content)) or candidate.type.value in _SINGLETON
+        if contradicts:
+            return _supersede(store, best, candidate, embedding, provenance, now, best_sim)
+        # Refine in place: prefer the richer statement, merge metadata, reinforce.
+        if len(candidate.content) > len(best.content):
+            best.content = candidate.content
+        best.importance = max(best.importance, candidate.importance)
+        best.confidence = min(best.confidence + 0.05, 1.0)
+        best.attributes.update(candidate.attributes)
+        best.provenance.append(provenance)
+        reinforce(best, now)
+        best.updated_at = now
+        store.upsert_memory(best, embedding)
+        store.add_history("update", best.id, {"sim": round(best_sim, 3)})
+        return ConsolidationResult("UPDATE", best.id)
+
+    # ADD — novel.
+    mem = _new_memory(candidate, provenance, now)
+    store.upsert_memory(mem, embedding)
+    store.add_history("add", mem.id, {"type": mem.type.value})
+    return ConsolidationResult("ADD", mem.id)
+
+
+def _supersede(store, old: Memory, candidate, embedding, provenance, now, sim) -> ConsolidationResult:
+    old.valid_to = now
+    old.status = Status.SUPERSEDED
+    old.updated_at = now
+    store.upsert_memory(old)  # drops it from FTS/active retrieval
+    new = _new_memory(candidate, provenance, now)
+    store.upsert_memory(new, embedding)
+    store.add_edge(Edge(id=edge_id(new.id, "supersedes", old.id),
+                        from_id=new.id, to_id=old.id, relation="supersedes"))
+    store.add_history("supersede", new.id, {"superseded": old.id, "sim": round(sim, 3)})
+    return ConsolidationResult("SUPERSEDE", new.id)
+
+
+def _new_memory(candidate: CandidateFact, provenance: Provenance, now) -> Memory:
+    return Memory(
+        id=new_id(candidate.type.value, candidate.content),
+        type=candidate.type,
+        content=candidate.content,
+        scope=candidate.scope,
+        cognitive=candidate.cognitive,
+        attributes=dict(candidate.attributes),
+        importance=candidate.importance,
+        confidence=candidate.confidence,
+        provenance=[provenance],
+        valid_from=now,
+        recorded_at=now,
+        created_at=now,
+        updated_at=now,
+        last_seen_at=now,
+    )

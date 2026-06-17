@@ -1,12 +1,15 @@
-"""Embedder interface (ADR-006).
+"""Embedder interface + vector helpers (ADR-006/ADR-017).
 
-Default is LOCAL (fastembed bge-small) — the highest-volume call must be free. Cloud
-embeddings are opt-in. The embedding space (provider/model/dim) is pinned per strand; a
-mismatch on import triggers a tracked re-embed, never a silent mix.
+The default embedder is LOCAL and dependency-free (see hashing.py) so the $0/offline core runs
+on a bare Python with no model download. fastembed (bge-small) is an optional accelerator
+(local.py). The embedding space (provider/model/dim) is pinned per strand; a mismatch on
+import triggers a tracked re-embed, never a silent mix.
 """
 
 from __future__ import annotations
 
+import array
+import math
 from typing import Protocol, runtime_checkable
 
 
@@ -19,23 +22,31 @@ class Embedder(Protocol):
     def dim(self) -> int: ...
 
     def embed(self, texts: list[str]) -> list[list[float]]:
-        """Embed a batch of texts into normalized vectors."""
+        """Embed a batch of texts into L2-normalized vectors."""
         ...
 
 
-class LocalEmbedder:
-    """fastembed BAAI/bge-small-en-v1.5 (384-dim, CPU, $0). Implemented in Phase 1."""
+# --- vector helpers (pure stdlib; vectors are stored as float32 bytes) ---
 
-    _model = "BAAI/bge-small-en-v1.5"
-    _dim = 384
 
-    @property
-    def model(self) -> str:
-        return self._model
+def normalize(vec: list[float]) -> list[float]:
+    norm = math.sqrt(sum(v * v for v in vec))
+    if norm == 0.0:
+        return vec
+    inv = 1.0 / norm
+    return [v * inv for v in vec]
 
-    @property
-    def dim(self) -> int:
-        return self._dim
 
-    def embed(self, texts: list[str]) -> list[list[float]]:
-        raise NotImplementedError("Phase 1: load fastembed model lazily; cache on disk")
+def cosine(a: list[float], b: list[float]) -> float:
+    """Cosine similarity. Inputs are expected normalized, so this is a dot product."""
+    return sum(x * y for x, y in zip(a, b))
+
+
+def to_bytes(vec: list[float]) -> bytes:
+    return array.array("f", vec).tobytes()
+
+
+def from_bytes(data: bytes) -> list[float]:
+    a = array.array("f")
+    a.frombytes(data)
+    return list(a)

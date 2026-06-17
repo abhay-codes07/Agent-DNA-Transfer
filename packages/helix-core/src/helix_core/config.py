@@ -2,6 +2,8 @@
 
 Precedence: CLI flags > env/.env > ~/.helix/config.toml > defaults (TSD §9).
 Secrets come from the environment ONLY; never logged, never written into a strand.
+
+Stdlib-only: no third-party imports, so the $0/offline core runs on a bare Python.
 """
 
 from __future__ import annotations
@@ -10,19 +12,27 @@ import os
 from dataclasses import dataclass
 from pathlib import Path
 
-import platformdirs
 
-
-def _home() -> Path:
-    return Path(os.environ.get("HELIX_HOME") or platformdirs.user_data_dir("helix"))
+def default_home() -> Path:
+    """Where strands live by default. Honors HELIX_HOME, else an OS-appropriate data dir."""
+    env = os.environ.get("HELIX_HOME")
+    if env:
+        return Path(env)
+    base = (
+        os.environ.get("APPDATA")  # Windows
+        or os.environ.get("XDG_DATA_HOME")  # Linux
+        or os.path.join(os.path.expanduser("~"), ".local", "share")
+    )
+    return Path(base) / "helix"
 
 
 @dataclass(slots=True)
 class Config:
     # --- storage ---
-    home: Path = _home()
+    home: Path = default_home()
+    strand: str = "default"  # active strand name -> <home>/<strand>.helix.db
 
-    # --- embeddings (default = local, $0) ---
+    # --- embeddings (default = local; falls back to the dependency-free hashing embedder) ---
     embeddings_provider: str = os.environ.get("HELIX_EMBEDDINGS_PROVIDER", "local")
     local_embed_model: str = os.environ.get("HELIX_LOCAL_EMBED_MODEL", "BAAI/bge-small-en-v1.5")
 
@@ -39,6 +49,10 @@ class Config:
 
     # --- privacy ---
     telemetry: str = os.environ.get("HELIX_TELEMETRY", "off")
+
+    @property
+    def strand_path(self) -> Path:
+        return self.home / f"{self.strand}.helix.db"
 
     @property
     def gemini_api_key(self) -> str | None:
@@ -62,5 +76,5 @@ class Config:
 
 
 def load() -> Config:
-    """Load config from env/defaults. (.env loading + config.toml merge added in Phase 1.)"""
+    """Load config from env/defaults. (.env loading + config.toml merge come later.)"""
     return Config()

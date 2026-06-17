@@ -11,6 +11,9 @@ helix-identity/
 # --- Helix runtime artifacts ---
 *.dna                  # exported memory strands (user data — never commit)
 *.dna.bak
+*.helix.db             # local strand databases (user data)
+*.helix.db-wal
+*.helix.db-shm
 .helix/                # local strand store / cache
 strands/
 models/                # downloaded embedding models cache
