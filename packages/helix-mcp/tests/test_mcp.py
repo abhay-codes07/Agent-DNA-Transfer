@@ -81,6 +81,14 @@ def test_server_call_tool_round_trip(tmp_path):
     assert payload["ok"] and payload["count"] >= 1
 
 
+def test_server_exposes_resources(tmp_path):
+    server = build_server(_toolset(tmp_path))
+    resources = asyncio.run(server.list_resources())
+    uris = {str(r.uri) for r in resources}
+    assert "helix://strand/manifest" in uris
+    assert "helix://graph" in uris
+
+
 def _extract_text(result) -> str:
     # FastMCP.call_tool returns either a list[Content] or (content, structured) across versions.
     content = result[0] if isinstance(result, tuple) else result

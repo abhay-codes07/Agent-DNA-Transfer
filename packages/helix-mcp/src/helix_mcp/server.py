@@ -75,12 +75,25 @@ def build_server(toolset: HelixToolset | None = None):
     def memory_list(scope: str = "", limit: int = 50) -> str:
         return json.dumps(ts.list(scope=scope or None, limit=limit))
 
+    # --- resources (application-controlled context; ADR-023) ---
+    @mcp.resource("helix://strand/manifest", description="Strand metadata: embedding space, counts.")
+    def strand_manifest() -> str:
+        return json.dumps(ts.engine.stats())
+
+    @mcp.resource("helix://graph", description="A read-only view of the memory graph.")
+    def memory_graph() -> str:
+        return json.dumps(ts.list(limit=500))
+
     return mcp
 
 
 def main() -> None:
-    """Entry point: `helix-mcp serve --stdio` (stdio is the default transport)."""
-    build_server().run()
+    """Entry point: `helix-mcp serve [--stdio|--http]` (stdio is the default transport)."""
+    import sys
+
+    args = set(sys.argv[1:])
+    transport = "streamable-http" if "--http" in args else "stdio"
+    build_server().run(transport=transport)
 
 
 if __name__ == "__main__":
