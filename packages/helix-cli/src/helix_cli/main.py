@@ -6,6 +6,7 @@ commands (export/import/merge) land in Phase 4.
 
 from __future__ import annotations
 
+import json
 import sys
 
 import typer
@@ -14,6 +15,7 @@ from rich.table import Table
 
 from helix_core.engine import Engine
 from helix_core.models import GLOBAL
+from helix_core.serialize import hit_to_dict, memory_to_dict
 
 # Ensure UTF-8 output so box-drawing/emoji render on Windows legacy consoles (cp1252).
 for _stream in (sys.stdout, sys.stderr):
@@ -69,11 +71,14 @@ def search(
     query: str,
     scope: str = typer.Option(None, help="restrict to a scope"),
     k: int = typer.Option(8, help="max results"),
+    as_json: bool = typer.Option(False, "--json", help="machine-readable output"),
 ) -> None:
     """Recall memories matching a query (hybrid search + ranking)."""
     eng = _engine()
     hits = eng.recall(query, scope=scope, k=k)
-    if not hits:
+    if as_json:
+        print(json.dumps([hit_to_dict(h) for h in hits], indent=2))
+    elif not hits:
         console.print("[dim]no matching memories[/]")
     else:
         table = Table(show_lines=False)
@@ -90,10 +95,15 @@ def search(
 def list_cmd(
     scope: str = typer.Option(None, help="restrict to a scope"),
     limit: int = typer.Option(50),
+    as_json: bool = typer.Option(False, "--json", help="machine-readable output"),
 ) -> None:
     """List stored memories."""
     eng = _engine()
     mems = eng.list_memories(scope=scope, limit=limit)
+    if as_json:
+        print(json.dumps([memory_to_dict(m) for m in mems], indent=2))
+        eng.close()
+        return
     table = Table(show_lines=False)
     table.add_column("id", style="cyan", no_wrap=True)
     table.add_column("type")
@@ -127,9 +137,46 @@ def forget(target: str) -> None:
 
 
 @app.command()
-def connect(agent: str) -> None:
-    """Wire Helix into an agent over MCP (Phase 2)."""
-    console.print(f"[yellow]Phase 2[/]: will write MCP config for '{agent}' (see docs/MCP_INTEGRATION.md)")
+def relate(from_id: str, to_id: str, relation: str = typer.Argument("related_to")) -> None:
+    """Link two memories with a typed relation (feeds graph-expansion recall)."""
+    eng = _engine()
+    eid = eng.relate(from_id, to_id, relation)
+    console.print(f"[green]linked[/] {from_id} --{relation}--> {to_id}  [dim]({eid})[/]")
+    eng.close()
+
+
+@app.command()
+def maintain(
+    min_age_days: float = typer.Option(30.0, help="only archive memories older than this"),
+) -> None:
+    """Housekeeping: archive stale, low-salience memories (decay-driven, never deletes)."""
+    eng = _engine()
+    res = eng.maintain(min_age_days=min_age_days)
+    console.print(f"scanned {res['scanned']}, [magenta]archived {res['archived']}[/]")
+    eng.close()
+
+
+@app.command()
+def connect(
+    agent: str = typer.Argument(..., help="claude-code | cursor | windsurf | vscode | gemini | zed | codex"),
+    print_only: bool = typer.Option(False, "--print", help="preview the config without writing"),
+) -> None:
+    """Wire Helix into an AI agent over MCP by writing its config (idempotent)."""
+    try:
+        from helix_mcp.connect import connect as do_connect
+    except ImportError:
+        console.print("[red]helix-mcp is not installed[/] (pip install helix-mcp)")
+        raise typer.Exit(1)
+    try:
+        res = do_connect(agent, dry_run=print_only)
+    except ValueError as exc:
+        console.print(f"[red]{exc}[/]")
+        raise typer.Exit(1)
+    verb = "would write" if print_only else "wrote"
+    console.print(f"[green]{verb}[/] helix MCP config -> [cyan]{res['path']}[/]  (key: {res['key']})")
+    console.print(res["preview"], markup=False)  # don't let rich parse [section] as markup
+    if not print_only:
+        console.print("[dim]restart the agent to load the new server[/]")
 
 
 @app.command()

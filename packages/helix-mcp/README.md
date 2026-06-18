@@ -3,7 +3,9 @@
 The Helix MCP server — the universal interface that lets *any* MCP-compatible agent (Claude
 Code, Cursor, Copilot, Windsurf, ChatGPT desktop) read and write the same local memory.
 
-Run it: `helix-mcp serve --stdio`. Tools/resources are documented in
+Run it (installed): `helix-mcp serve --stdio`. From source: `python -m helix_mcp.server`.
+Wire it into an agent with `helix connect <agent>` (Claude Code / Cursor / Windsurf / VS Code /
+Gemini / Zed / Codex). Tools/resources are documented in
 [`docs/MCP_INTEGRATION.md`](../../docs/MCP_INTEGRATION.md). The surface is intentionally small
 and versioned; growing it requires an ADR ([ADR-003](../../DECISIONS.md)). Thin front-end over
 [`helix-core`](../helix-core).
