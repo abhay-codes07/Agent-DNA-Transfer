@@ -1,0 +1,65 @@
+name: Bug report
+description: Something isn't working as expected.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve Helix. Please don't paste secrets, API keys, or the
+        contents of a `.dna` strand (it's your private memory).
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: A clear description of the bug, and what you expected instead.
+      placeholder: "`helix search ...` returned ... but I expected ..."
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: The exact commands / SDK calls. Minimal is best.
+      render: shell
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - core (extract / consolidate / retrieve / store)
+        - .dna strand (export / import / merge)
+        - sync (push / pull / relay)
+        - MCP server / connect
+        - LLM router
+        - dashboard / daemon
+        - CLI
+        - SDK (Python / TypeScript)
+        - other / not sure
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Helix version / commit
+      placeholder: "v0.1.0 or a commit SHA"
+    validations:
+      required: true
+  - type: textarea
+    id: env
+    attributes:
+      label: Environment
+      description: Output of `helix doctor` is ideal (it lists OS-agnostic config — no secrets).
+      placeholder: "OS, Python version, embedder (hashing/fastembed), llm_provider"
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I redacted any secrets / private memory from this report.
+          required: true
+        - label: I searched existing issues and this isn't a duplicate.
+          required: true

@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/abhay-codes07/Agent-DNA-Transfer/blob/main/SECURITY.md
+    about: Please report vulnerabilities privately — do NOT open a public issue.
+  - name: Documentation
+    url: https://abhay-codes07.github.io/Agent-DNA-Transfer/
+    about: Read the specs, architecture, and ADRs before filing.
+  - name: Roadmap
+    url: https://github.com/abhay-codes07/Agent-DNA-Transfer/blob/main/ROADMAP.md
+    about: Check what's planned / already shipped.

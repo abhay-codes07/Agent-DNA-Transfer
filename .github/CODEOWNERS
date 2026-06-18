@@ -1,0 +1,18 @@
+# Code owners — auto-requested for review on matching paths.
+# Docs: https://docs.github.com/articles/about-code-owners
+
+# Default owner for everything
+*                       @abhay-codes07
+
+# Specs & decisions: review carefully (spec-first invariant)
+/docs/                  @abhay-codes07
+/DECISIONS.md           @abhay-codes07
+/CLAUDE.md              @abhay-codes07
+
+# Security-sensitive: crypto, redaction, the .dna format
+/packages/helix-core/src/helix_core/strand/      @abhay-codes07
+/packages/helix-core/src/helix_core/redaction.py @abhay-codes07
+/SECURITY.md            @abhay-codes07
+
+# Release & CI
+/.github/workflows/     @abhay-codes07

@@ -1,0 +1,33 @@
+name: Feature request
+description: Suggest an idea or improvement.
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What are you trying to do that Helix makes hard or impossible today?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: What you'd like to see. Sketch the CLI/SDK/MCP surface if relevant.
+    validations:
+      required: true
+  - type: checkboxes
+    id: invariants
+    attributes:
+      label: Fits the invariants?
+      description: Helix is local-first and $0/offline by default (see CLAUDE.md). Tick what holds.
+      options:
+        - label: Works (or degrades) with no network and no account.
+        - label: Doesn't raise the default cost above $0 (any LLM/cloud use is opt-in).
+        - label: Keeps the user in control of their memory (readable / editable / deletable).
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+    validations:
+      required: false
