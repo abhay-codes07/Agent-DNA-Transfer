@@ -74,6 +74,74 @@ class DecryptionError(RuntimeError):
     pass
 
 
+# --- chunked AEAD (XChaCha20-Poly1305 secretstream) — truncation-resistant ---
+
+CHUNK_SIZE = 64 * 1024  # 64 KiB plaintext chunks (the age STREAM size, ADR-019)
+
+
+def encrypt_stream(key: bytes, message: bytes, aad: bytes = b"") -> bytes:
+    """Encrypt `message` as a libsodium secretstream: header || (len||frame)*.
+
+    Each 64 KiB chunk is individually authenticated; the last carries TAG_FINAL, so truncation
+    (dropping trailing bytes) is detected on decrypt.
+    """
+    bindings, _, _, _ = _nacl()
+    state = bindings.crypto_secretstream_xchacha20poly1305_state()
+    header = bindings.crypto_secretstream_xchacha20poly1305_init_push(state, key)
+    final_tag = bindings.crypto_secretstream_xchacha20poly1305_TAG_FINAL
+    msg_tag = bindings.crypto_secretstream_xchacha20poly1305_TAG_MESSAGE
+
+    out = bytearray(header)
+    n = len(message)
+    i = 0
+    while True:
+        chunk = message[i : i + CHUNK_SIZE]
+        i += CHUNK_SIZE
+        tag = final_tag if i >= n else msg_tag
+        ct = bindings.crypto_secretstream_xchacha20poly1305_push(state, bytes(chunk), aad, tag)
+        out += len(ct).to_bytes(4, "big") + ct
+        if i >= n:
+            break
+    return bytes(out)
+
+
+def decrypt_stream(key: bytes, blob: bytes, aad: bytes = b"") -> bytes:
+    bindings, _, _, exceptions = _nacl()
+    head_len = bindings.crypto_secretstream_xchacha20poly1305_HEADERBYTES
+    final_tag = bindings.crypto_secretstream_xchacha20poly1305_TAG_FINAL
+    if len(blob) < head_len:
+        raise DecryptionError("strand is truncated (no stream header)")
+    state = bindings.crypto_secretstream_xchacha20poly1305_state()
+    try:
+        bindings.crypto_secretstream_xchacha20poly1305_init_pull(state, blob[:head_len], key)
+    except exceptions.CryptoError as exc:
+        raise DecryptionError("decryption failed (wrong passphrase or tampered strand)") from exc
+
+    out = bytearray()
+    off = head_len
+    saw_final = False
+    while off < len(blob):
+        if off + 4 > len(blob):
+            raise DecryptionError("strand is truncated (incomplete frame length)")
+        clen = int.from_bytes(blob[off : off + 4], "big")
+        off += 4
+        if off + clen > len(blob):
+            raise DecryptionError("strand is truncated (incomplete frame)")
+        frame = blob[off : off + clen]
+        off += clen
+        try:
+            msg, tag = bindings.crypto_secretstream_xchacha20poly1305_pull(state, frame, aad)
+        except exceptions.CryptoError as exc:
+            raise DecryptionError("decryption failed (wrong passphrase or tampered strand)") from exc
+        out += msg
+        if tag == final_tag:
+            saw_final = True
+            break
+    if not saw_final:
+        raise DecryptionError("strand is truncated (missing final chunk)")
+    return bytes(out)
+
+
 # --- Ed25519 identity / signing ---
 
 def load_or_create_identity(path: Path) -> bytes:

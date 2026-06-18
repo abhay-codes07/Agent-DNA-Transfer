@@ -172,6 +172,34 @@ class Engine:
         return [m for m in self.store.all_memories(scope=scope, limit=limit)
                 if not m.attributes.get("_hub")]
 
+    def edit_memory(self, memory_id: str, *, content: str | None = None, scope: str | None = None,
+                    type: str | None = None, importance: float | None = None) -> Memory | None:
+        """Edit a memory in place (re-embeds if the content changed). Returns the updated memory."""
+        mem = self.store.get_memory(memory_id)
+        if mem is None:
+            return None
+        content_changed = content is not None and content != mem.content
+        if content is not None:
+            mem.content = content
+        if scope is not None:
+            mem.scope = scope
+        if type is not None:
+            from .models import COGNITIVE_OF
+
+            mem.type = MemoryType(type)
+            mem.cognitive = COGNITIVE_OF[mem.type]
+        if importance is not None:
+            mem.importance = min(max(float(importance), 0.0), 1.0)
+        mem.updated_at = utcnow()
+        emb = self.embedder.embed([mem.content])[0] if content_changed else None
+        with self.store.tx():
+            self.store.upsert_memory(mem, emb)
+            self.store.add_history("edit", mem.id, {"content_changed": content_changed})
+        return mem
+
+    def get_memory(self, memory_id: str) -> Memory | None:
+        return self.store.get_memory(memory_id)
+
     def relate(self, from_id: str, to_id: str, relation: str, weight: float = 1.0) -> str:
         """Create a typed edge between two memories (memory.relate)."""
         eid = edge_id(from_id, relation, to_id)

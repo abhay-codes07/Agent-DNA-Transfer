@@ -93,7 +93,8 @@ Make memory visible, accountable, and editable.
   ([ADR-033](DECISIONS.md)); `helix dashboard`
 - ☑ Browse/search memories; add/forget; per-memory type/scope/origin; Stats panel
 - ☑ Graph tab (nodes + typed relations)
-- ☐ Inline edit, provenance "why it believes this" drill-down, history timeline UI (next)
+- ☑ Inline edit (re-embeds on content change), provenance "why it believes this" drill-down,
+  History timeline tab
 - ☐ React/Vite/Tailwind frontend + decay/reinforcement tuning (next)
 
 **Exit:** ✅ a user can browse, search, add, and forget memories in a browser without the CLI;

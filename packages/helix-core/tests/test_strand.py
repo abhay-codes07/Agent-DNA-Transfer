@@ -154,3 +154,32 @@ def test_history_records_ops(tmp_path):
     eng.remember("a durable fact", scope="g")
     assert any(r["op"] == "add" for r in eng.history())
     eng.close()
+
+
+def test_stream_crypto_roundtrip_tamper_and_truncation():
+    from helix_core.strand import crypto
+
+    key = crypto.random_bytes(crypto.KEY_BYTES)
+    msg = b"helix" * (40 * 1024)  # ~200 KiB -> several 64 KiB chunks
+    blob = crypto.encrypt_stream(key, msg)
+    assert crypto.decrypt_stream(key, blob) == msg
+
+    with pytest.raises(crypto.DecryptionError):  # truncation is detected (no final tag)
+        crypto.decrypt_stream(key, blob[:-40])
+
+    tampered = bytearray(blob)
+    tampered[-10] ^= 0xFF
+    with pytest.raises(crypto.DecryptionError):  # tamper is detected
+        crypto.decrypt_stream(key, bytes(tampered))
+
+
+def test_dna_uses_chunked_stream_mode(tmp_path):
+    from helix_core.strand.codec import read_manifest
+
+    eng = _engine(tmp_path)
+    eng.remember("a durable fact about the deploy process", scope="project:ops")
+    out = tmp_path / "s.dna"
+    eng.export_strand(str(out), passphrase=PW)
+    manifest, _, _ = read_manifest(out)
+    assert manifest.enc_mode == "stream"  # chunked secretstream, not legacy single-blob
+    eng.close()

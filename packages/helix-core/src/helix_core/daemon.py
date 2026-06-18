@@ -15,7 +15,7 @@ from urllib.parse import parse_qs, urlparse
 
 from . import __version__
 from .engine import Engine
-from .serialize import hit_to_dict, memory_to_dict
+from .serialize import hit_to_dict, memory_detail_dict, memory_to_dict
 
 
 def _make_handler(engine: Engine):
@@ -68,6 +68,12 @@ def _make_handler(engine: Engine):
                                                        query=q.get("q") or None)})
             elif u.path == "/api/graph":
                 self._json(_graph(engine))
+            elif u.path == "/api/memory":
+                mem = engine.get_memory(q.get("id", ""))
+                self._json(memory_detail_dict(mem) if mem else {"error": "not found"},
+                           200 if mem else 404)
+            elif u.path == "/api/history":
+                self._json({"history": engine.history(int(q.get("limit", 50)))})
             else:
                 self._json({"error": "not found"}, 404)
 
@@ -84,6 +90,14 @@ def _make_handler(engine: Engine):
                 eid = engine.relate(str(body["from"]), str(body["to"]),
                                     str(body.get("relation", "related_to")))
                 self._json({"edge": eid})
+            elif u.path == "/api/edit":
+                mem = engine.edit_memory(
+                    str(body.get("id", "")),
+                    content=body.get("content"), scope=body.get("scope"),
+                    type=body.get("type"), importance=body.get("importance"),
+                )
+                self._json(memory_detail_dict(mem) if mem else {"error": "not found"},
+                           200 if mem else 404)
             else:
                 self._json({"error": "not found"}, 404)
 
@@ -147,12 +161,15 @@ button.go{background:var(--accent);color:#fff;border:none;border-radius:8px;padd
 .x:hover{color:#ff6b6b;border-color:#ff6b6b}
 .stat{display:flex;justify-content:space-between;border-bottom:1px solid var(--line);padding:7px 0}
 .muted{color:var(--dim)}.hidden{display:none}.edge{color:var(--dim);font-size:12px}
+.extra{margin-top:8px}.prov{color:var(--dim);font-size:12px;border-top:1px dashed var(--line);padding-top:6px}
+.editform textarea{width:100%;min-height:62px;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:8px;font:inherit}
 </style></head><body>
 <header><h1>🧬 Helix</h1><span class="tag">your portable memory — local & private</span></header>
 <div class="wrap">
   <div class="tabs">
     <button data-t="memories" class="active">Memories</button>
     <button data-t="graph">Graph</button>
+    <button data-t="history">History</button>
     <button data-t="stats">Stats</button>
   </div>
 
@@ -163,17 +180,20 @@ button.go{background:var(--accent);color:#fff;border:none;border-radius:8px;padd
   </section>
 
   <section id="graph" class="hidden"><div id="graphbox"></div></section>
+  <section id="history" class="hidden"><div id="histbox"></div></section>
   <section id="stats" class="hidden"><div id="statbox"></div></section>
 </div>
 <script>
 const api=(p,o)=>fetch(p,o).then(r=>r.json());
 const esc=s=>(s||'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
-function tab(name){for(const s of ['memories','graph','stats'])document.getElementById(s).classList.toggle('hidden',s!==name);
+function tab(name){for(const s of ['memories','graph','history','stats'])document.getElementById(s).classList.toggle('hidden',s!==name);
   document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('active',b.dataset.t===name));
-  if(name==='graph')loadGraph(); if(name==='stats')loadStats(); if(name==='memories')loadAll();}
+  if(name==='graph')loadGraph(); if(name==='stats')loadStats(); if(name==='memories')loadAll(); if(name==='history')loadHistory();}
 document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>tab(b.dataset.t));
 function card(m,score){const sc=score!==undefined?`<span class="score">${score.toFixed(2)}</span>`:'';
-  return `<div class="card"><div>${esc(m.content)}</div><div class="meta">${sc}<span class="pill">${m.type}</span><span class="pill">${esc(m.scope)}</span><span class="muted">${(m.origin||'')}</span><span class="x" onclick="forget('${m.id}')">forget</span></div></div>`;}
+  return `<div class="card"><div>${esc(m.content)}</div><div class="meta">${sc}<span class="pill">${m.type}</span><span class="pill">${esc(m.scope)}</span><span class="muted">${(m.origin||'')}</span>`
+    +`<span class="x" onclick="edit('${m.id}')">edit</span><span class="x" onclick="why('${m.id}')">why?</span><span class="x" onclick="forget('${m.id}')">forget</span></div>`
+    +`<div class="extra" id="x_${m.id}"></div></div>`;}
 async function loadAll(){const d=await api('/api/memories');document.getElementById('list').innerHTML=d.memories.map(m=>card(m)).join('')||'<p class="muted">No memories yet — add one above.</p>';}
 async function search(){const q=document.getElementById('q').value;if(!q)return loadAll();const d=await api('/api/search?q='+encodeURIComponent(q));
   document.getElementById('list').innerHTML=d.results.map(r=>card(r,r.score)).join('')||'<p class="muted">No matches.</p>';}
@@ -189,5 +209,14 @@ async function loadStats(){const s=await api('/api/stats');
   document.getElementById('statbox').innerHTML=Object.entries(s).map(([k,v])=>`<div class="stat"><span class="muted">${k}</span><span>${esc(String(v))}</span></div>`).join('');}
 async function refreshScopes(){const d=await api('/api/memories');const set=new Set(['global']);d.memories.forEach(m=>set.add(m.scope));
   const sel=document.getElementById('news');const cur=sel.value;sel.innerHTML=[...set].map(s=>`<option ${s===cur?'selected':''}>${esc(s)}</option>`).join('');}
+async function loadHistory(){const d=await api('/api/history?limit=80');
+  document.getElementById('histbox').innerHTML='<h3>Timeline</h3>'+(d.history.map(h=>`<div class="stat"><span class="muted">${(h.ts||'').replace('T',' ').slice(0,19)}</span><span class="pill">${h.op}</span><span>${esc(h.memory_id||'')}</span></div>`).join('')||'<p class="muted">No history yet.</p>');}
+async function why(id){const box=document.getElementById('x_'+id);if(box.dataset.open){box.innerHTML='';box.dataset.open='';return;}box.dataset.open='1';
+  const m=await api('/api/memory?id='+encodeURIComponent(id));const p=(m.provenance||[]).map(x=>`source <b>${esc(x.agent||'?')}</b> · extractor ${esc(x.extractor||'?')} · ${esc(x.origin||'')}`).join('<br>');
+  box.innerHTML=`<div class="prov">${p||'no provenance'}<br>created ${(m.created_at||'').replace('T',' ').slice(0,19)} · confidence ${m.confidence} · importance ${m.importance}</div>`;}
+async function edit(id){const m=await api('/api/memory?id='+encodeURIComponent(id));const box=document.getElementById('x_'+id);
+  box.innerHTML=`<div class="editform"><textarea id="e_${id}">${esc(m.content)}</textarea><div class="row" style="margin-top:6px"><input id="es_${id}" value="${esc(m.scope)}"><button class="go" onclick="saveEdit('${id}')">Save</button></div></div>`;}
+async function saveEdit(id){const c=document.getElementById('e_'+id).value;const s=document.getElementById('es_'+id).value;
+  await api('/api/edit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,content:c,scope:s})});loadAll();}
 loadAll();refreshScopes();
 </script></body></html>"""

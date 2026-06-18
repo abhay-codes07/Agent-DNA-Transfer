@@ -536,8 +536,9 @@ counts: **XChaCha20-Poly1305** (AEAD), **Ed25519** (detached signature over the 
 **Argon2id** (KDF, interactive limits). Deviations from ADR-019, recorded here:
 - **Merkle hash = BLAKE2b (stdlib)**, not BLAKE3 (not stdlib; optional future upgrade).
 - **Container = zip (DEFLATE)**, not tar+zstd — simpler, stdlib, fine for individual strands.
-- **Single-blob AEAD** over the snapshot, not 64 KiB **secretstream chunks** — the strand is
-  small for individuals; chunked/streaming is a future enhancement for very large strands.
+- **Encryption = 64 KiB secretstream chunks** (XChaCha20-Poly1305), truncation-resistant — the
+  spec's intent. *(Initially single-blob; upgraded to chunked streaming, with a back-compatible
+  `enc_mode` field so legacy single-blob strands still import.)*
 Crypto is **lazily imported** so the always-on $0 memory loop stays dependency-free; only
 `export`/`import`/`merge` need PyNaCl. Wrap-don't-encrypt, signed Merkle root, fail-closed
 verification, and offline verifiability are all preserved.

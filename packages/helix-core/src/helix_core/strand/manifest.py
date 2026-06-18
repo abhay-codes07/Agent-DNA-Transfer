@@ -39,6 +39,7 @@ class Manifest:
     format_version: int = 1
     cipher: str = "xchacha20poly1305-ietf"
     kdf: str = "argon2id"
+    enc_mode: str = "blob"  # "stream" (chunked secretstream) | "blob" (legacy single AEAD)
 
     def to_dict(self) -> dict:
         return asdict(self)

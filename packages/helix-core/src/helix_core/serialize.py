@@ -26,6 +26,27 @@ def memory_to_dict(mem: Memory) -> dict:
     }
 
 
+def provenance_to_dict(p) -> dict:
+    return {
+        "agent": p.agent,
+        "ref": p.ref,
+        "extractor": p.extractor,
+        "origin": p.origin.value,
+        "ingested_at": p.ingested_at.isoformat() if p.ingested_at else None,
+    }
+
+
+def memory_detail_dict(mem: Memory) -> dict:
+    """Full detail incl. provenance ('why it believes this') — for the dashboard drill-down."""
+    d = memory_to_dict(mem)
+    d["created_at"] = mem.created_at.isoformat() if mem.created_at else None
+    d["updated_at"] = mem.updated_at.isoformat() if mem.updated_at else None
+    d["last_seen_at"] = mem.last_seen_at.isoformat() if mem.last_seen_at else None
+    d["provenance"] = [provenance_to_dict(p) for p in mem.provenance]
+    d["attributes"] = {k: v for k, v in mem.attributes.items() if not k.startswith("_")}
+    return d
+
+
 def hit_to_dict(hit: Hit) -> dict:
     d = memory_to_dict(hit.memory)
     d["score"] = round(hit.score, 4)

@@ -69,6 +69,31 @@ def test_daemon_full_crud_cycle(tmp_path):
         engine.close()
 
 
+def test_daemon_edit_provenance_and_history(tmp_path):
+    httpd, base, engine = _start(tmp_path)
+    try:
+        mid = _post(base + "/api/remember",
+                    {"content": "We use Mongo for billing.", "scope": "project:billing"})["results"][0]["id"]
+
+        detail = _get(base + "/api/memory?id=" + mid)
+        assert detail["id"] == mid
+        assert detail["provenance"] and detail["provenance"][0]["origin"]  # "why it believes this"
+
+        edited = _post(base + "/api/edit", {"id": mid, "content": "We use Postgres for billing."})
+        assert "Postgres" in edited["content"]
+
+        q = urllib.parse.quote("postgres database")
+        s = _get(base + f"/api/search?q={q}&scope=project:billing")
+        assert any("postgres" in x["content"].lower() for x in s["results"])  # re-embedded on edit
+
+        ops = {h["op"] for h in _get(base + "/api/history")["history"]}
+        assert "add" in ops and "edit" in ops
+    finally:
+        httpd.shutdown()
+        httpd.server_close()
+        engine.close()
+
+
 def test_dashboard_html_is_served(tmp_path):
     httpd, base, engine = _start(tmp_path)
     try:
