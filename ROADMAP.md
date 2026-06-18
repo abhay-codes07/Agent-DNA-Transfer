@@ -106,7 +106,7 @@ deeper curation (inline edit, history) is iterative. API tested over HTTP.
 Let others build on Helix.
 
 - ☑ Python SDK (`helix_sdk.Helix`) — full parity (memory, transfer, sync, edit, history, stats)
-- ☑ TypeScript SDK (`@helix-memory/sdk`) — fetch client against the local daemon API
+- ☑ TypeScript SDK (`@helix-dna/sdk`) — fetch client against the local daemon API
 - ☑ Connectors: 8 named clients (incl. **claude-desktop**, per-OS) + a generic
   `helix connect <name> --path <file> --key <key>` for any MCP client
 - ☐ Public docs site; MCP-directory listings; more example recipes (next)

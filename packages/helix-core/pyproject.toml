@@ -1,5 +1,5 @@
 [project]
-name = "helix-core"
+name = "helix-dna-core"
 version = "0.1.0"
 description = "Helix engine: extraction, stores, retrieval, consolidation, and the .dna codec."
 readme = "README.md"

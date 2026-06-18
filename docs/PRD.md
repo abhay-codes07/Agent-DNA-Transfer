@@ -265,7 +265,7 @@ explicitly share. See [Security Model](SECURITY_MODEL.md).)
 
 **Wedge:** open-source, developer-first, MCP-native. Land where developers already are.
 
-- **Distribution:** PyPI (`pipx install helix-memory`), GitHub, MCP server directories,
+- **Distribution:** PyPI (`pipx install helix-dna`), GitHub, MCP server directories,
   "Add to Cursor/Claude Code" one-liners, Homebrew later.
 - **Narrative:** "Your AI forgets you every time you switch tools. Helix fixes that — locally
   and free." Demos showing the *same* memory lighting up Claude Code *and* Cursor.

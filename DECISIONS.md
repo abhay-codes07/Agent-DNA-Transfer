@@ -50,7 +50,9 @@ that fits the "DNA / transfer" metaphor and reads well to founders.
 
 **Decision.** Product brand = **Helix** (the double helix = two strands of memory). The
 portable memory bundle = a **`.dna` strand**. CLI verb set is git-like (`init`, `clone`,
-`push`, `pull`, `merge`, `log`). The MCP server = `helix-mcp`. PyPI package = `helix-memory`.
+`push`, `pull`, `merge`, `log`). The MCP server command = `helix-mcp`. PyPI distribution names use the `helix-dna-*` family
+(meta = `helix-dna`); the import packages stay `helix_core`/`helix_cli`/`helix_mcp`/`helix_sdk`
+and the CLI command stays `helix`. (`helix-memory`/`helix-cli`/`helix-mcp` were taken on PyPI.)
 
 **Consequences.** "Helix" is a common word; **trademark/availability check is a TODO before
 any public launch** (tracked in ROADMAP). The repo name `Agent-DNA-Transfer` stays as the

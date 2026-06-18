@@ -1,12 +1,12 @@
 [project]
-name = "helix-cli"
+name = "helix-dna-cli"
 version = "0.1.0"
 description = "The `helix` command — init, connect, export/import/merge, log, search, doctor."
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "Apache-2.0" }
 # The CLI is the main install target, so it pulls the full core (crypto + embeddings).
-dependencies = ["helix-core[all]", "helix-mcp", "typer>=0.12", "rich"]
+dependencies = ["helix-dna-core[all]", "helix-dna-mcp", "typer>=0.12", "rich"]
 
 [project.scripts]
 helix = "helix_cli.main:app"

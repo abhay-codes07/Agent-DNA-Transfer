@@ -3,7 +3,7 @@
 # See docs/SYSTEM_ARCHITECTURE.md §8 for the full layout.
 
 [project]
-name = "helix-memory"
+name = "helix-dna"
 version = "0.1.0"
 description = "Take your AI's memory anywhere — a local-first, portable, git-like memory layer for AI coding agents."
 readme = "README.md"
@@ -12,11 +12,13 @@ license = { text = "Apache-2.0" }
 authors = [{ name = "The Helix Authors" }]
 keywords = ["ai", "memory", "mcp", "agents", "llm", "local-first", "portable", "knowledge-graph"]
 
-# Meta-package: installing `helix-memory` pulls the user-facing pieces.
+# Meta-package: installing `helix-dna` pulls the user-facing pieces.
+# (PyPI distribution names use the `helix-dna-*` family; the product is "Helix" and the CLI
+# command is `helix`. Import packages stay `helix_core`/`helix_cli`/`helix_mcp`/`helix_sdk`.)
 dependencies = [
-  "helix-core",
-  "helix-cli",
-  "helix-mcp",
+  "helix-dna-core",
+  "helix-dna-cli",
+  "helix-dna-mcp",
 ]
 
 [project.urls]
@@ -28,10 +30,10 @@ Documentation = "https://github.com/abhay-codes07/Agent-DNA-Transfer/tree/main/d
 members = ["packages/*"]
 
 [tool.uv.sources]
-helix-core = { workspace = true }
-helix-cli = { workspace = true }
-helix-mcp = { workspace = true }
-helix-sdk-python = { workspace = true }
+helix-dna-core = { workspace = true }
+helix-dna-cli = { workspace = true }
+helix-dna-mcp = { workspace = true }
+helix-dna-sdk = { workspace = true }
 
 [dependency-groups]
 dev = [

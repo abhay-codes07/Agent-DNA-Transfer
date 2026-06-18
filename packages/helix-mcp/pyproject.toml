@@ -1,11 +1,11 @@
 [project]
-name = "helix-mcp"
+name = "helix-dna-mcp"
 version = "0.1.0"
 description = "Helix MCP server — exposes the memory tool/resource surface to any MCP agent."
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "Apache-2.0" }
-dependencies = ["helix-core", "mcp>=1.0"]
+dependencies = ["helix-dna-core", "mcp>=1.0"]
 
 [project.scripts]
 helix-mcp = "helix_mcp.server:main"

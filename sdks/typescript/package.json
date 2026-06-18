@@ -1,5 +1,5 @@
 {
-  "name": "@helix-memory/sdk",
+  "name": "@helix-dna/sdk",
   "version": "0.1.0",
   "description": "TypeScript SDK + MCP client helpers for Helix — portable AI memory.",
   "license": "Apache-2.0",

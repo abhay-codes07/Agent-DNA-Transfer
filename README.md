@@ -106,7 +106,8 @@ Every node is timestamped, sourced, confidence-scored, and editable.
 
 ## Quick start
 
-These commands work today (run from source during alpha; PyPI packaging is next):
+These commands work today (run from source during alpha; once published on PyPI it'll be
+`pipx install helix-dna`):
 
 ```bash
 # from a clone: put the packages on the path, then use the `helix` CLI

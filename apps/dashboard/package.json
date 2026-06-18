@@ -1,5 +1,5 @@
 {
-  "name": "@helix-memory/dashboard",
+  "name": "@helix-dna/dashboard",
   "version": "0.1.0",
   "private": true,
   "description": "Helix dashboard (React + Vite) — browse, search, edit, and audit your memory graph.",

@@ -4,7 +4,7 @@
  * Talks to the local Helix daemon (the same HTTP API the dashboard uses) so JS/TS agents share
  * the user's portable memory. Start the daemon with `helix dashboard` (or `helix-mcp` for MCP).
  *
- *   import { Helix } from "@helix-memory/sdk";
+ *   import { Helix } from "@helix-dna/sdk";
  *   const mem = new Helix();
  *   await mem.remember("We use RFC-7807 for API errors", { scope: "project:billing" });
  *   const hits = await mem.recall("how do we format API errors?", { scope: "project:billing" });
