@@ -135,9 +135,10 @@ one SQLite file, and an LLM router that only calls a model when it needs one —
 free tier. See [Cost Optimization](docs/COST_OPTIMIZATION.md).
 
 Full CLI: `init · add · ingest · search · context · list · forget · relate · maintain ·
-dashboard · connect · export · verify · import · merge · diff · rollback · push · pull ·
-export-md · log · eval · doctor`. (`ingest` seeds memory from a markdown/notes file or folder;
-`export-md` dumps it as human-readable Markdown.)
+reflect · dashboard · relay · connect · export · verify · import · merge · diff · rollback ·
+push · pull · export-md · log · eval · doctor`. (`ingest` seeds memory from a markdown/notes
+file or folder; `reflect` distills clusters of facts into higher-level insights; `export-md`
+dumps memory as human-readable Markdown; `relay` runs a thin sync server.)
 
 ## Documentation
 

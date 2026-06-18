@@ -161,3 +161,40 @@ def test_deterministic_extract_batch_maps_over_inputs():
         ["We use Postgres for billing.", "We deploy on Fridays."], scope="g", force=True
     )
     assert len(out) == 2 and out[0] and out[1]
+
+
+# --- reflection (insight synthesis, ADR-015) ---
+
+
+def test_reflect_synthesizes_a_cited_insight_with_llm(tmp_path):
+    eng = Engine(Config(home=tmp_path))
+    eng.remember("We use Postgres for the billing service.", scope="project:b")
+    eng.remember("We use FastAPI for the billing service.", scope="project:b")
+    eng.remember("We deploy the billing service on Fly.io.", scope="project:b")
+    eng.router = LLMRouter(
+        Config(),
+        providers=[
+            FakeProvider(
+                '{"insights": ["The billing service is a FastAPI app on Postgres, deployed to Fly.io."]}'
+            )
+        ],
+    )
+    res = eng.reflect(scope="project:b", min_cluster=3)
+    assert res["insights"] >= 1
+
+    reflections = [
+        m for m in eng.list_memories(scope="project:b") if m.attributes.get("_reflection")
+    ]
+    assert reflections
+    assert "fastapi" in reflections[0].content.lower()
+    assert reflections[0].attributes.get("sources")  # cites its grounding memories
+    eng.close()
+
+
+def test_reflect_makes_no_insights_without_an_llm(tmp_path):
+    eng = Engine(Config(home=tmp_path))
+    for fact in ("alpha fact about caching", "beta fact about caching", "gamma fact about caching"):
+        eng.remember(fact, scope="project:b")
+    res = eng.reflect(scope="project:b", min_cluster=3)
+    assert res["insights"] == 0  # deterministic mode: NL synthesis needs a model
+    eng.close()

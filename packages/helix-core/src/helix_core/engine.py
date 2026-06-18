@@ -7,6 +7,7 @@ rank). Transfer (export/import/merge) lands in Phase 4.
 
 from __future__ import annotations
 
+import json
 import re
 import tempfile
 from datetime import datetime
@@ -309,8 +310,8 @@ class Engine:
     ) -> dict:
         """Decay-driven housekeeping: archive stale, low-salience memories (never delete).
 
-        Reflection/insight synthesis (LLM-assisted) is Phase 3; this is the deterministic,
-        $0 part of consolidation (docs/CONSOLIDATION.md).
+        Reflection (insight synthesis) is separate — see `reflect()`; this is the deterministic,
+        $0 archival part of consolidation (docs/CONSOLIDATION.md).
         """
         now = now or utcnow()
         scanned = archived = 0
@@ -327,6 +328,76 @@ class Engine:
                     self.store.add_history("archive", mem.id, {"age_days": round(age_days, 1)})
                     archived += 1
         return {"scanned": scanned, "archived": archived}
+
+    def reflect(self, *, scope: Scope | None = None, min_cluster: int = 3) -> dict:
+        """Synthesize higher-level insights from clusters of related memories (ADR-015).
+
+        Groups active memories by scope and asks the LLM to distill each sizeable cluster into a
+        couple of concise insights, stored as new memories that **cite their sources** (linked
+        with `derived_from` edges, ADR-029). Needs an LLM; the deterministic path makes none.
+        """
+        mems = [
+            m
+            for m in self.store.all_memories(scope=scope, limit=100000)
+            if not m.attributes.get("_hub") and not m.attributes.get("_reflection")
+        ]
+        clusters: dict[str, list[Memory]] = {}
+        for m in mems:
+            clusters.setdefault(m.scope, []).append(m)
+
+        created = examined = 0
+        with self.store.tx():
+            for cscope, group in clusters.items():
+                if len(group) < min_cluster:
+                    continue
+                examined += 1
+                for text in self._synthesize(group):
+                    cand = CandidateFact(
+                        type=MemoryType.FACT,
+                        content=text,
+                        scope=cscope,
+                        cognitive=Cognitive.SEMANTIC,
+                        importance=0.7,
+                        confidence=0.7,
+                        attributes={"_reflection": True, "sources": [m.id for m in group[:10]]},
+                    )
+                    emb = self.embedder.embed([text])[0]
+                    prov = Provenance(
+                        agent="reflect", extractor="reflect", origin=Origin.AGENT_INGESTED
+                    )
+                    res = consolidate(self.store, cand, emb, prov, router=self.router)
+                    if res.op in ("ADD", "UPDATE", "SUPERSEDE"):
+                        for src in group[:10]:
+                            self.store.add_edge(
+                                Edge(
+                                    id=edge_id(res.memory_id, "derived_from", src.id),
+                                    from_id=res.memory_id,
+                                    to_id=src.id,
+                                    relation="derived_from",
+                                )
+                            )
+                        created += 1
+        return {"clusters_examined": examined, "insights": created}
+
+    def _synthesize(self, group: list[Memory]) -> list[str]:
+        if not (self.router and self.router.available()):
+            return []  # natural-language insight synthesis needs an LLM
+        facts = "\n".join(f"- {m.content}" for m in group[:30])
+        prompt = (
+            "From these facts about a project or topic, write 1-2 concise higher-level insights "
+            '(each a single sentence). Return JSON {"insights": ["..."]}.\nFACTS:\n' + facts
+        )
+        try:
+            result = self.router.complete(
+                prompt,
+                system="You synthesize higher-level insights from a developer's memory.",
+                json_mode=True,
+            )
+            data = json.loads(result.text)
+            items = data.get("insights", []) if isinstance(data, dict) else []
+            return [str(x).strip() for x in items if str(x).strip()][:3]
+        except Exception:
+            return []
 
     # --- diagnostics ----------------------------------------------------------
     def stats(self) -> dict:

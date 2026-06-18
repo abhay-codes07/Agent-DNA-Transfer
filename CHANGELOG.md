@@ -15,7 +15,8 @@ graceful opt-ins). 74 tests; ruff + black + mypy clean; CI configured.
 - Consolidation: ADD / UPDATE / NOOP / **SUPERSEDE**, with **LLM-assisted gray-band
   adjudication** when a model is configured (deterministic otherwise).
 - Hybrid retrieval: dense + keyword → RRF → graph (PPR-lite) expansion → multi-signal ranking
-  → MMR; read-time decay + SM-2 reinforcement; `maintain` archival.
+  → MMR; read-time decay + SM-2 reinforcement; `maintain` archival; **`reflect`** (LLM insight
+  synthesis from clusters of facts, cited via `derived_from`).
 - Embeddings: dependency-free hashing embedder default; **fastembed (bge-small)** when installed.
 - `ingest` (seed memory from markdown/notes files or folders, batched) and Markdown export.
 

@@ -158,8 +158,9 @@ Generalize the wedge.
 These deepen the phases above; each maps to a Wave-2 ADR and a spec:
 - **Cognitive memory model** — episodic/semantic/procedural + entity graph, bi-temporal facts
   ([Memory Model](docs/MEMORY_MODEL.md), ADR-012/013).
-- **Consolidation engine** — CLS two-stage, decay/reinforcement, reflection, sleep-time
-  ([Consolidation](docs/CONSOLIDATION.md), ADR-014/015) — Phase 3+.
+- **Consolidation engine** — ☑ decay/reinforcement, ☑ archival (`maintain`), ☑ **reflection**
+  (`reflect` — LLM insight synthesis, cited via `derived_from`); background sleep-time
+  scheduling deferred ([Consolidation](docs/CONSOLIDATION.md), ADR-014/015).
 - **Retrieval pipeline** — hybrid + RRF + graph PPR + MMR, quantized embeddings
   ([Retrieval](docs/RETRIEVAL.md), ADR-016/017) — Phase 1.
 - **Merge & sync** — CRDT + 3-way semantic merge, optional E2E sync

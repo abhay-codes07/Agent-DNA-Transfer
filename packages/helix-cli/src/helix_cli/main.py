@@ -186,6 +186,27 @@ def maintain(
 
 
 @app.command()
+def reflect(
+    scope: str = typer.Option(None, help="restrict to a scope"),
+    min_cluster: int = typer.Option(3, help="minimum related memories to reflect on"),
+) -> None:
+    """Synthesize higher-level insights from clusters of memories (needs an LLM provider)."""
+    eng = _engine()
+    res = eng.reflect(scope=scope, min_cluster=min_cluster)
+    if res["insights"]:
+        console.print(
+            f"[green]reflected[/]: {res['insights']} insight(s) "
+            f"from {res['clusters_examined']} cluster(s)"
+        )
+    else:
+        console.print(
+            f"[dim]no insights (examined {res['clusters_examined']} cluster(s); "
+            f"reflection needs an LLM provider)[/]"
+        )
+    eng.close()
+
+
+@app.command()
 def connect(
     agent: str = typer.Argument(
         ..., help="claude-code | claude-desktop | cursor | windsurf | vscode | gemini | zed | codex"
