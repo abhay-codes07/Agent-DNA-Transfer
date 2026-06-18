@@ -126,6 +126,29 @@ def test_diff_reports_changes(tmp_path):
     b.close()
 
 
+def test_reembed_on_import_when_embedding_space_differs(tmp_path):
+    from helix_core.embed.hashing import HashingEmbedder
+    from helix_core.stores import SqliteStore
+
+    a = _engine(tmp_path / "a")
+    a.remember("We use Postgres for the billing service.", scope="project:billing")
+    out = tmp_path / "a.dna"
+    a.export_strand(str(out), passphrase=PW)  # exported with the default 256-dim embedder
+    a.close()
+
+    b = _engine(tmp_path / "b")
+    b.embedder = HashingEmbedder(dim=128)  # a DIFFERENT embedding space
+    res = b.import_strand(str(out), passphrase=PW, as_strand="imp")
+    assert res["reembedded"] >= 1
+    b.close()
+
+    imp = SqliteStore(tmp_path / "b" / "imp.helix.db")
+    assert imp.get_meta("embedding_dim") == "128"  # re-pinned to the local space
+    hits = imp.vector_search(HashingEmbedder(128).embed(["postgres billing"])[0], 5)
+    assert hits  # search works at 128 dims — no silent vector-space mix
+    imp.close()
+
+
 def test_history_records_ops(tmp_path):
     eng = _engine(tmp_path)
     eng.remember("a durable fact", scope="g")

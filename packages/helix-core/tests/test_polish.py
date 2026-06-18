@@ -118,3 +118,19 @@ def test_fastembed_adapter_when_present():
     v = e.embed(["hello world"])[0]
     assert len(v) == e.dim > 0
     assert abs(sum(x * x for x in v) - 1.0) < 1e-3  # normalized
+
+
+@pytest.mark.skipif(
+    importlib.util.find_spec("fastembed") is None, reason="fastembed not installed"
+)
+def test_fastembed_captures_semantics_without_shared_words():
+    """Real semantics: paraphrases with NO shared words rank above an unrelated sentence —
+    something the lexical hashing embedder cannot do."""
+    from helix_core.embed import cosine
+    from helix_core.embed.local import LocalEmbedder
+
+    e = LocalEmbedder()
+    query = e.embed(["how do we persist application data"])[0]
+    related = e.embed(["the database we chose for storage"])[0]
+    unrelated = e.embed(["my favourite breakfast is pancakes"])[0]
+    assert cosine(query, related) > cosine(query, unrelated)

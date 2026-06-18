@@ -548,6 +548,26 @@ behind the same format/version. Updated in [`docs/DNA_FORMAT.md`](docs/DNA_FORMA
 
 ---
 
+## ADR-033 — Phase 5 dashboard: stdlib HTTP daemon + self-contained HTML (refines the FastAPI/React plan)
+**Status:** Accepted · **Date:** 2026-06-18
+
+**Context.** The architecture sketched a FastAPI daemon + React/Vite dashboard. For the
+local-first MVP that is heavier than needed: it adds a build step and a server framework just to
+show a single-user localhost UI.
+
+**Decision.** Ship the dashboard as a **dependency-free stdlib `http.server` daemon** (bound to
+`127.0.0.1`, single-threaded/serial) exposing a small JSON API, serving a **single self-contained
+HTML page** (vanilla JS + inline CSS, no CDN) — so it runs offline with zero build and zero new
+runtime deps, honoring the $0/local-first ethos even for the UI. `helix dashboard` launches it.
+The richer **React/Vite/Tailwind** frontend and a FastAPI backend remain valid upgrades for the
+hosted/team product; they are not required for the local experience.
+
+**Consequences.** Instantly runnable and testable (API driven over HTTP in tests, no browser).
+SQLite is opened with `check_same_thread=False` so the daemon thread can serve it; access stays
+serialized. Curation depth (inline edit, history timeline, graph viz) grows iteratively.
+
+---
+
 ## How to add a decision
 
 1. Copy the ADR skeleton below, bump the number, set Status/Date.

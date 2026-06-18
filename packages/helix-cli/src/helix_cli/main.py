@@ -180,6 +180,19 @@ def connect(
 
 
 @app.command()
+def dashboard(
+    port: int = typer.Option(8787),
+    host: str = typer.Option("127.0.0.1"),
+    open_browser: bool = typer.Option(True, "--open/--no-open"),
+) -> None:
+    """Launch the local memory dashboard (browse, search, edit, curate) in your browser."""
+    from helix_core.daemon import serve
+
+    console.print(f"[green]Helix dashboard[/] -> [cyan]http://{host}:{port}[/]  [dim](Ctrl-C to stop)[/]")
+    serve(host=host, port=port, open_browser=open_browser)
+
+
+@app.command()
 def doctor() -> None:
     """Diagnose setup: strand, embeddings, store, optional accelerators."""
     eng = _engine()

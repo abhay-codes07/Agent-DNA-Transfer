@@ -250,9 +250,13 @@ class Engine:
 
         return verify_dna(Path(path))
 
-    def import_strand(self, path, *, passphrase: str | None = None,
-                      as_strand: str | None = None, replace: bool = False) -> dict:
-        """Import a .dna into a new strand, or replace the active one (rollback)."""
+    def import_strand(self, path, *, passphrase: str | None = None, as_strand: str | None = None,
+                      replace: bool = False, reembed: bool = True) -> dict:
+        """Import a .dna into a new strand, or replace the active one (rollback).
+
+        If the imported strand's embedding space differs from the local embedder, its vectors
+        are re-embedded so recall works on this machine (ADR-006 / Phase 4 hardening).
+        """
         from .strand.codec import import_dna
 
         pw = self._passphrase(passphrase)
@@ -262,12 +266,25 @@ class Engine:
                 manifest = import_dna(Path(path), self.config.strand_path, passphrase=pw)
             finally:
                 self.store = SqliteStore(self.config.strand_path)
+            reembedded = self._reembed_if_needed(self.store) if reembed else 0
             return {"strand": self.config.strand, "dest": str(self.config.strand_path),
-                    "manifest": manifest}
+                    "manifest": manifest, "reembedded": reembedded}
         name = as_strand or "imported"
         dest = self.config.home / f"{name}.helix.db"
         manifest = import_dna(Path(path), dest, passphrase=pw)
-        return {"strand": name, "dest": str(dest), "manifest": manifest}
+        reembedded = 0
+        if reembed:
+            dest_store = SqliteStore(dest)
+            try:
+                reembedded = self._reembed_if_needed(dest_store)
+            finally:
+                dest_store.close()
+        return {"strand": name, "dest": str(dest), "manifest": manifest, "reembedded": reembedded}
+
+    def _reembed_if_needed(self, store: SqliteStore) -> int:
+        if store.get_meta("embedding_model") == self.embedder.model:
+            return 0
+        return store.reembed(self.embedder)
 
     def merge_strand(self, path, *, passphrase: str | None = None) -> dict:
         """Merge another .dna into the current strand, reusing consolidation (dedup)."""

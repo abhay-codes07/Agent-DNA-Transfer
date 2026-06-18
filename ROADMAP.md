@@ -86,15 +86,18 @@ in tests (round-trip, tamper detection, wrong-passphrase, merge dedup, diff).
 
 ---
 
-## Phase 5 — Curation UX (dashboard)
+## Phase 5 — Curation UX (dashboard) ✅ shipped (v1)
 Make memory visible, accountable, and editable.
 
-- ☐ Local daemon API (FastAPI) + dashboard (React/Vite/Tailwind)
-- ☐ Browse/search the graph; edit/confirm/forget; provenance ("why it believes this")
-- ☐ History timeline; cost & telemetry panel; strand/key management
-- ☐ Memory decay/reinforcement surfaced and tunable
+- ☑ Local daemon API (stdlib `http.server`, 127.0.0.1) + self-contained HTML dashboard
+  ([ADR-033](DECISIONS.md)); `helix dashboard`
+- ☑ Browse/search memories; add/forget; per-memory type/scope/origin; Stats panel
+- ☑ Graph tab (nodes + typed relations)
+- ☐ Inline edit, provenance "why it believes this" drill-down, history timeline UI (next)
+- ☐ React/Vite/Tailwind frontend + decay/reinforcement tuning (next)
 
-**Exit:** a user can fully audit and curate their memory without the CLI.
+**Exit:** ✅ a user can browse, search, add, and forget memories in a browser without the CLI;
+deeper curation (inline edit, history) is iterative. API tested over HTTP.
 
 ---
 

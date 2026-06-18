@@ -91,7 +91,9 @@ class SqliteStore:
     def __init__(self, path: str | Path) -> None:
         self.path = Path(path)
         self.path.parent.mkdir(parents=True, exist_ok=True)
-        self.conn = sqlite3.connect(str(self.path))
+        # check_same_thread=False so the local dashboard daemon can serve from its own thread;
+        # access is serialized (single-threaded HTTPServer / the engine's tx()).
+        self.conn = sqlite3.connect(str(self.path), check_same_thread=False)
         self.conn.row_factory = sqlite3.Row
         self.conn.execute("PRAGMA journal_mode=WAL")
         self.conn.execute("PRAGMA foreign_keys=ON")
@@ -348,6 +350,28 @@ class SqliteStore:
         v = self.get_version() + 1
         self.set_meta("version", str(v))
         return v
+
+    def reembed(self, embedder) -> int:
+        """Recompute every stored vector with `embedder` and re-pin the embedding space.
+
+        Used on import when a strand's embedding space differs from the local one (ADR-006);
+        avoids mixing vector spaces. Hub nodes have no vector and are left untouched.
+        """
+        rows = self.conn.execute(
+            "SELECT v.id AS id, m.content AS content FROM vectors v JOIN memories m ON m.id=v.id"
+        ).fetchall()
+        if rows:
+            vecs = embedder.embed([r["content"] for r in rows])
+            for r, vec in zip(rows, vecs):
+                self.conn.execute(
+                    "UPDATE vectors SET dim=?, data=? WHERE id=?",
+                    (len(vec), to_bytes(vec), r["id"]),
+                )
+        self.set_meta("embedding_provider", "local")
+        self.set_meta("embedding_model", embedder.model)
+        self.set_meta("embedding_dim", str(embedder.dim))
+        self.conn.commit()
+        return len(rows)
 
     def fingerprints(self) -> list[str]:
         """Stable per-row content strings for the integrity Merkle tree (active rows)."""
