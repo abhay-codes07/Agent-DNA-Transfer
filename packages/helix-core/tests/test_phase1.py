@@ -17,7 +17,6 @@ from helix_core.engine import Engine
 from helix_core.models import Cognitive, Memory, MemoryType
 from helix_core.stores import SqliteStore
 
-
 # --- embeddings ---
 
 

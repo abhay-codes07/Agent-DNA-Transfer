@@ -23,7 +23,8 @@ jobs:
         # The $0/offline core needs no third-party deps, but the optional features
         # (.dna crypto, MCP server) and the dev tools do. fastembed is intentionally
         # omitted so the suite stays fast and offline (its tests skip).
-        run: pip install pytest pytest-cov ruff black mypy pynacl "mcp>=1.0" typer rich
+        # Tool versions are pinned so format/lint/type checks are reproducible (no drift).
+        run: pip install pytest pytest-cov "ruff==0.15.17" "black==26.5.1" "mypy==2.1.0" pynacl "mcp>=1.0" typer rich
 
       - name: Ruff (lint)
         run: ruff check packages conftest.py

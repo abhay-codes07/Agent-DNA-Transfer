@@ -53,8 +53,7 @@ class PgVectorStore:
         self._init_schema()
 
     def _init_schema(self) -> None:
-        self.conn.execute(
-            """
+        self.conn.execute("""
             CREATE TABLE IF NOT EXISTS meta (key TEXT PRIMARY KEY, value TEXT);
             CREATE TABLE IF NOT EXISTS memories (
                 id TEXT PRIMARY KEY, type TEXT, cognitive TEXT, content TEXT, scope TEXT,
@@ -68,8 +67,7 @@ class PgVectorStore:
                 weight REAL DEFAULT 1.0, created_at TEXT);
             CREATE TABLE IF NOT EXISTS history (
                 seq BIGSERIAL PRIMARY KEY, ts TEXT, op TEXT, memory_id TEXT, detail JSONB);
-            """
-        )
+            """)
 
     # --- vectors table is created lazily once the embedding dim is known ---
     def _ensure_vectors_table(self, dim: int) -> None:

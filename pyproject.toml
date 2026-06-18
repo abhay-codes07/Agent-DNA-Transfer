@@ -37,9 +37,9 @@ helix-sdk-python = { workspace = true }
 dev = [
   "pytest>=8",
   "pytest-cov",
-  "ruff",
-  "black",
-  "mypy",
+  "ruff==0.15.17",
+  "black==26.5.1",
+  "mypy==2.1.0",
 ]
 
 [tool.ruff]
