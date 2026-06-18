@@ -36,8 +36,9 @@ class Helix:
     def recall(self, query: str, *, scope: str | None = None, k: int = 8):
         return self._engine.recall(query, scope=scope, k=k)
 
-    def context(self, *, scope: str | None = None, query: str | None = None,
-                budget_tokens: int = 1500) -> str:
+    def context(
+        self, *, scope: str | None = None, query: str | None = None, budget_tokens: int = 1500
+    ) -> str:
         return self._engine.context(scope=scope, query=query, budget_tokens=budget_tokens)
 
     def list(self, *, scope: str | None = None, limit: int = 100):
@@ -49,7 +50,7 @@ class Helix:
     def edit(self, memory_id: str, **fields):
         return self._engine.edit_memory(memory_id, **fields)
 
-    def forget(self, id_or_query: str) -> list[str]:
+    def forget(self, id_or_query: str):
         return self._engine.forget(id_or_query)
 
     def relate(self, from_id: str, to_id: str, relation: str = "related_to") -> str:
@@ -58,7 +59,7 @@ class Helix:
     def maintain(self, **kw) -> dict:
         return self._engine.maintain(**kw)
 
-    def history(self, limit: int = 50) -> list[dict]:
+    def history(self, limit: int = 50):
         return self._engine.history(limit)
 
     def stats(self) -> dict:
@@ -71,10 +72,17 @@ class Helix:
     def verify(self, path: str) -> dict:
         return self._engine.verify_strand(path)
 
-    def import_(self, path: str, *, passphrase: str | None = None,
-                as_strand: str | None = None, replace: bool = False) -> dict:
-        return self._engine.import_strand(path, passphrase=passphrase, as_strand=as_strand,
-                                          replace=replace)
+    def import_(
+        self,
+        path: str,
+        *,
+        passphrase: str | None = None,
+        as_strand: str | None = None,
+        replace: bool = False,
+    ) -> dict:
+        return self._engine.import_strand(
+            path, passphrase=passphrase, as_strand=as_strand, replace=replace
+        )
 
     def merge(self, path: str, *, passphrase: str | None = None) -> dict:
         return self._engine.merge_strand(path, passphrase=passphrase)
@@ -83,11 +91,19 @@ class Helix:
         return self._engine.diff_strand(path, passphrase=passphrase)
 
     # --- sync ---
-    def push(self, location: str, *, passphrase: str | None = None, name: str | None = None) -> dict:
+    def push(
+        self, location: str, *, passphrase: str | None = None, name: str | None = None
+    ) -> dict:
         return self._engine.push(location, passphrase=passphrase, name=name)
 
-    def pull(self, location: str, *, passphrase: str | None = None, name: str | None = None,
-             merge: bool = True) -> dict:
+    def pull(
+        self,
+        location: str,
+        *,
+        passphrase: str | None = None,
+        name: str | None = None,
+        merge: bool = True,
+    ) -> dict:
         return self._engine.pull(location, passphrase=passphrase, name=name, merge=merge)
 
     def close(self) -> None:

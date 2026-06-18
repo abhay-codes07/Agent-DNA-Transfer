@@ -62,7 +62,10 @@ def build_providers(config: Config) -> list[Provider]:
 
 class LLMRouter:
     def __init__(
-        self, config: Config, *, cache: LLMCache | None = None,
+        self,
+        config: Config,
+        *,
+        cache: LLMCache | None = None,
         providers: list[Provider] | None = None,
     ) -> None:
         self.config = config
@@ -74,7 +77,11 @@ class LLMRouter:
         return len(self.providers) > 0
 
     def complete(
-        self, prompt: str, *, system: str | None = None, json_mode: bool = True,
+        self,
+        prompt: str,
+        *,
+        system: str | None = None,
+        json_mode: bool = True,
         max_tokens: int = 1024,
     ) -> LLMResult:
         if not self.providers:
@@ -96,8 +103,9 @@ class LLMRouter:
                     budget_blocked = True
                     continue
             try:
-                resp = provider.complete(prompt, system=system, json_mode=json_mode,
-                                         max_tokens=max_tokens)
+                resp = provider.complete(
+                    prompt, system=system, json_mode=json_mode, max_tokens=max_tokens
+                )
             except ProviderError as exc:
                 last_err = exc
                 continue
@@ -107,9 +115,13 @@ class LLMRouter:
                 self.cache.put(key, resp.text)
                 if provider.paid:
                     self.cache.add_tokens(month, total)
-            return LLMResult(resp.text, resp.model, cached=False,
-                             prompt_tokens=resp.prompt_tokens,
-                             completion_tokens=resp.completion_tokens)
+            return LLMResult(
+                resp.text,
+                resp.model,
+                cached=False,
+                prompt_tokens=resp.prompt_tokens,
+                completion_tokens=resp.completion_tokens,
+            )
 
         if budget_blocked and last_err is None:
             raise BudgetExceeded(f"monthly token budget {budget} reached")

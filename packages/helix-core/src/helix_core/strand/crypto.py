@@ -37,10 +37,12 @@ def _nacl():
 
 # --- key derivation (Argon2id) ---
 
+
 def derive_key(passphrase: str, salt: bytes, ops: int, mem: int) -> bytes:
     _, pwhash, _, _ = _nacl()
-    return pwhash.argon2id.kdf(KEY_BYTES, passphrase.encode("utf-8"), salt,
-                               opslimit=ops, memlimit=mem)
+    return pwhash.argon2id.kdf(
+        KEY_BYTES, passphrase.encode("utf-8"), salt, opslimit=ops, memlimit=mem
+    )
 
 
 def argon2_params() -> tuple[int, int]:
@@ -54,6 +56,7 @@ def random_bytes(n: int) -> bytes:
 
 
 # --- AEAD (XChaCha20-Poly1305) ---
+
 
 def encrypt(key: bytes, message: bytes, aad: bytes = b"") -> tuple[bytes, bytes]:
     bindings, _, _, _ = _nacl()
@@ -132,7 +135,9 @@ def decrypt_stream(key: bytes, blob: bytes, aad: bytes = b"") -> bytes:
         try:
             msg, tag = bindings.crypto_secretstream_xchacha20poly1305_pull(state, frame, aad)
         except exceptions.CryptoError as exc:
-            raise DecryptionError("decryption failed (wrong passphrase or tampered strand)") from exc
+            raise DecryptionError(
+                "decryption failed (wrong passphrase or tampered strand)"
+            ) from exc
         out += msg
         if tag == final_tag:
             saw_final = True
@@ -143,6 +148,7 @@ def decrypt_stream(key: bytes, blob: bytes, aad: bytes = b"") -> bytes:
 
 
 # --- Ed25519 identity / signing ---
+
 
 def load_or_create_identity(path: Path) -> bytes:
     """Return the Ed25519 seed (32 bytes), generating + persisting it on first use."""
@@ -178,6 +184,7 @@ def verify(public_key_hex: str, data: bytes, signature: bytes) -> bool:
 
 
 # --- hashing / Merkle (BLAKE2b) ---
+
 
 def blake2b_hex(data: bytes) -> str:
     return hashlib.blake2b(data, digest_size=32).hexdigest()

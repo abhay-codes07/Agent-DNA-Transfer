@@ -34,14 +34,20 @@ class Provider(Protocol):
     paid: bool
 
     def complete(
-        self, prompt: str, *, system: str | None = None, json_mode: bool = True,
+        self,
+        prompt: str,
+        *,
+        system: str | None = None,
+        json_mode: bool = True,
         max_tokens: int = 1024,
     ) -> LLMResponse: ...
 
 
 def _post_json(url: str, payload: dict, headers: dict, timeout: float = 30.0) -> dict:
     data = json.dumps(payload).encode("utf-8")
-    req = urllib.request.Request(url, data=data, headers={"Content-Type": "application/json", **headers})
+    req = urllib.request.Request(
+        url, data=data, headers={"Content-Type": "application/json", **headers}
+    )
     try:
         with urllib.request.urlopen(req, timeout=timeout) as resp:
             return json.loads(resp.read().decode("utf-8"))
@@ -78,8 +84,9 @@ class GeminiProvider:
         except (KeyError, IndexError) as exc:
             raise ProviderError(f"unexpected Gemini response: {body}") from exc
         usage = body.get("usageMetadata", {})
-        return LLMResponse(text, self.model, usage.get("promptTokenCount", 0),
-                           usage.get("candidatesTokenCount", 0))
+        return LLMResponse(
+            text, self.model, usage.get("promptTokenCount", 0), usage.get("candidatesTokenCount", 0)
+        )
 
 
 class OpenAIProvider:
@@ -96,19 +103,27 @@ class OpenAIProvider:
         messages = ([{"role": "system", "content": system}] if system else []) + [
             {"role": "user", "content": prompt}
         ]
-        payload: dict = {"model": self.model, "messages": messages, "max_tokens": max_tokens,
-                         "temperature": 0.1}
+        payload: dict = {
+            "model": self.model,
+            "messages": messages,
+            "max_tokens": max_tokens,
+            "temperature": 0.1,
+        }
         if json_mode:
             payload["response_format"] = {"type": "json_object"}
-        body = _post_json("https://api.openai.com/v1/chat/completions", payload,
-                          headers={"Authorization": f"Bearer {self._key}"})
+        body = _post_json(
+            "https://api.openai.com/v1/chat/completions",
+            payload,
+            headers={"Authorization": f"Bearer {self._key}"},
+        )
         try:
             text = body["choices"][0]["message"]["content"]
         except (KeyError, IndexError) as exc:
             raise ProviderError(f"unexpected OpenAI response: {body}") from exc
         usage = body.get("usage", {})
-        return LLMResponse(text, self.model, usage.get("prompt_tokens", 0),
-                           usage.get("completion_tokens", 0))
+        return LLMResponse(
+            text, self.model, usage.get("prompt_tokens", 0), usage.get("completion_tokens", 0)
+        )
 
 
 class OllamaProvider:
@@ -123,7 +138,9 @@ class OllamaProvider:
 
     def complete(self, prompt, *, system=None, json_mode=True, max_tokens=1024) -> LLMResponse:
         payload: dict = {
-            "model": self.model, "prompt": prompt, "stream": False,
+            "model": self.model,
+            "prompt": prompt,
+            "stream": False,
             "options": {"temperature": 0.1, "num_predict": max_tokens},
         }
         if system:
@@ -134,8 +151,9 @@ class OllamaProvider:
         text = body.get("response")
         if text is None:
             raise ProviderError(f"unexpected Ollama response: {body}")
-        return LLMResponse(text, self.model,
-                           body.get("prompt_eval_count", 0), body.get("eval_count", 0))
+        return LLMResponse(
+            text, self.model, body.get("prompt_eval_count", 0), body.get("eval_count", 0)
+        )
 
 
 class FakeProvider:
@@ -143,8 +161,9 @@ class FakeProvider:
 
     name = "fake"
 
-    def __init__(self, response: str = '{"facts": []}', *, paid: bool = False,
-                 fail: bool = False) -> None:
+    def __init__(
+        self, response: str = '{"facts": []}', *, paid: bool = False, fail: bool = False
+    ) -> None:
         self.response = response
         self.model = "fake-model"
         self.paid = paid

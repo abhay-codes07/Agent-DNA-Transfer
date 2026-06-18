@@ -44,12 +44,18 @@ class HelixToolset:
     def context(
         self, *, scope: str | None = None, query: str | None = None, budget_tokens: int = 1500
     ) -> dict:
-        return {"ok": True, "context": self.engine.context(
-            scope=scope, query=query, budget_tokens=budget_tokens)}
+        return {
+            "ok": True,
+            "context": self.engine.context(scope=scope, query=query, budget_tokens=budget_tokens),
+        }
 
     # memory.write / add --------------------------------------------------
     def write(
-        self, content: str, *, scope: str = "global", source: str = "agent",
+        self,
+        content: str,
+        *,
+        scope: str = "global",
+        source: str = "agent",
         origin: str = "agent-ingested",
     ) -> dict:
         try:

@@ -14,11 +14,12 @@ from helix_core.config import Config
 from helix_core.decay import salience
 from helix_core.embed import HashingEmbedder, cosine, from_bytes, to_bytes
 from helix_core.engine import Engine
-from helix_core.models import Cognitive, Memory, MemoryType, utcnow
+from helix_core.models import Cognitive, Memory, MemoryType
 from helix_core.stores import SqliteStore
 
 
 # --- embeddings ---
+
 
 def test_embedding_is_normalized_and_semantic():
     e = HashingEmbedder(dim=256)
@@ -38,6 +39,7 @@ def test_vector_byte_roundtrip():
 
 
 # --- store ---
+
 
 def test_store_roundtrip_and_search(tmp_path):
     e = HashingEmbedder()
@@ -66,10 +68,14 @@ def test_embedding_space_mismatch_is_rejected(tmp_path):
 
 # --- decay ---
 
+
 def test_episodic_decays_to_half_life():
     m = Memory(
-        id="ep1", type=MemoryType.EPISODE, content="x",
-        cognitive=Cognitive.EPISODIC, importance=1.0,
+        id="ep1",
+        type=MemoryType.EPISODE,
+        content="x",
+        cognitive=Cognitive.EPISODIC,
+        importance=1.0,
     )
     now = m.last_seen_at
     assert salience(m, now) == pytest.approx(1.0, abs=1e-6)
@@ -81,6 +87,7 @@ def test_episodic_decays_to_half_life():
 
 
 # --- engine: remember / recall / forget ---
+
 
 def _engine(tmp_path) -> Engine:
     return Engine(Config(home=tmp_path))

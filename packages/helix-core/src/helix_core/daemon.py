@@ -56,22 +56,30 @@ def _make_handler(engine: Engine):
             elif u.path == "/api/stats":
                 self._json(engine.stats())
             elif u.path == "/api/memories":
-                mems = engine.list_memories(scope=q.get("scope") or None,
-                                            limit=int(q.get("limit", 200)))
+                mems = engine.list_memories(
+                    scope=q.get("scope") or None, limit=int(q.get("limit", 200))
+                )
                 self._json({"memories": [memory_to_dict(m) for m in mems]})
             elif u.path == "/api/search":
-                hits = engine.recall(q.get("q", ""), scope=q.get("scope") or None,
-                                     k=int(q.get("k", 10)))
+                hits = engine.recall(
+                    q.get("q", ""), scope=q.get("scope") or None, k=int(q.get("k", 10))
+                )
                 self._json({"results": [hit_to_dict(h) for h in hits]})
             elif u.path == "/api/context":
-                self._json({"context": engine.context(scope=q.get("scope") or None,
-                                                       query=q.get("q") or None)})
+                self._json(
+                    {
+                        "context": engine.context(
+                            scope=q.get("scope") or None, query=q.get("q") or None
+                        )
+                    }
+                )
             elif u.path == "/api/graph":
                 self._json(_graph(engine))
             elif u.path == "/api/memory":
                 mem = engine.get_memory(q.get("id", ""))
-                self._json(memory_detail_dict(mem) if mem else {"error": "not found"},
-                           200 if mem else 404)
+                self._json(
+                    memory_detail_dict(mem) if mem else {"error": "not found"}, 200 if mem else 404
+                )
             elif u.path == "/api/history":
                 self._json({"history": engine.history(int(q.get("limit", 50)))})
             else:
@@ -81,23 +89,30 @@ def _make_handler(engine: Engine):
             u = urlparse(self.path)
             body = self._body()
             if u.path == "/api/remember":
-                res = engine.remember(str(body.get("content", "")),
-                                      scope=str(body.get("scope") or "global"), source="dashboard")
+                res = engine.remember(
+                    str(body.get("content", "")),
+                    scope=str(body.get("scope") or "global"),
+                    source="dashboard",
+                )
                 self._json({"results": [{"op": r.op, "id": r.memory_id} for r in res]})
             elif u.path == "/api/forget":
                 self._json({"forgot": engine.forget(str(body.get("id", "")))})
             elif u.path == "/api/relate":
-                eid = engine.relate(str(body["from"]), str(body["to"]),
-                                    str(body.get("relation", "related_to")))
+                eid = engine.relate(
+                    str(body["from"]), str(body["to"]), str(body.get("relation", "related_to"))
+                )
                 self._json({"edge": eid})
             elif u.path == "/api/edit":
                 mem = engine.edit_memory(
                     str(body.get("id", "")),
-                    content=body.get("content"), scope=body.get("scope"),
-                    type=body.get("type"), importance=body.get("importance"),
+                    content=body.get("content"),
+                    scope=body.get("scope"),
+                    type=body.get("type"),
+                    importance=body.get("importance"),
                 )
-                self._json(memory_detail_dict(mem) if mem else {"error": "not found"},
-                           200 if mem else 404)
+                self._json(
+                    memory_detail_dict(mem) if mem else {"error": "not found"}, 200 if mem else 404
+                )
             else:
                 self._json({"error": "not found"}, 404)
 
@@ -107,8 +122,15 @@ def _make_handler(engine: Engine):
 def _graph(engine: Engine) -> dict:
     nodes = []
     for m in engine.store.all_memories(limit=2000):
-        nodes.append({"id": m.id, "type": m.type.value, "content": m.content,
-                      "scope": m.scope, "hub": bool(m.attributes.get("_hub"))})
+        nodes.append(
+            {
+                "id": m.id,
+                "type": m.type.value,
+                "content": m.content,
+                "scope": m.scope,
+                "hub": bool(m.attributes.get("_hub")),
+            }
+        )
     edges = [
         {"from": r["from_id"], "to": r["to_id"], "relation": r["relation"]}
         for r in engine.store.conn.execute("SELECT from_id,to_id,relation FROM edges")
@@ -121,8 +143,13 @@ def build_server(host: str = "127.0.0.1", port: int = 8787, engine: Engine | Non
     return HTTPServer((host, port), _make_handler(engine))
 
 
-def serve(host: str = "127.0.0.1", port: int = 8787, *, engine: Engine | None = None,
-          open_browser: bool = True) -> None:
+def serve(
+    host: str = "127.0.0.1",
+    port: int = 8787,
+    *,
+    engine: Engine | None = None,
+    open_browser: bool = True,
+) -> None:
     httpd = build_server(host, port, engine)
     url = f"http://{host}:{port}"
     if open_browser:

@@ -25,6 +25,7 @@ from ..models import (
     Origin,
     Provenance,
     Status,
+    utcnow,
 )
 
 ACTIVE = (Status.ACTIVE.value,)
@@ -165,11 +166,22 @@ class SqliteStore:
                  recorded_at=excluded.recorded_at, updated_at=excluded.updated_at,
                  last_seen_at=excluded.last_seen_at""",
             (
-                mem.id, mem.type.value, mem.cognitive.value, mem.content, mem.scope,
-                json.dumps(_clean_attrs(mem.attributes)), mem.importance, mem.confidence,
-                mem.status.value, json.dumps([_prov_to_dict(p) for p in mem.provenance]),
-                _iso(mem.valid_from), _iso(mem.valid_to), _iso(mem.recorded_at),
-                _iso(mem.created_at), _iso(mem.updated_at), _iso(mem.last_seen_at),
+                mem.id,
+                mem.type.value,
+                mem.cognitive.value,
+                mem.content,
+                mem.scope,
+                json.dumps(_clean_attrs(mem.attributes)),
+                mem.importance,
+                mem.confidence,
+                mem.status.value,
+                json.dumps([_prov_to_dict(p) for p in mem.provenance]),
+                _iso(mem.valid_from),
+                _iso(mem.valid_to),
+                _iso(mem.recorded_at),
+                _iso(mem.created_at),
+                _iso(mem.updated_at),
+                _iso(mem.last_seen_at),
             ),
         )
         if embedding is not None:
@@ -207,8 +219,6 @@ class SqliteStore:
         )
 
     def add_history(self, op: str, memory_id: str, detail: dict | None = None) -> None:
-        from ..models import utcnow
-
         self.conn.execute(
             "INSERT INTO history(ts,op,memory_id,detail) VALUES(?,?,?,?)",
             (_iso(utcnow()), op, memory_id, json.dumps(detail or {})),
@@ -338,8 +348,13 @@ class SqliteStore:
             (limit,),
         ).fetchall()
         return [
-            {"seq": r["seq"], "ts": r["ts"], "op": r["op"], "memory_id": r["memory_id"],
-             "detail": json.loads(r["detail"] or "{}")}
+            {
+                "seq": r["seq"],
+                "ts": r["ts"],
+                "op": r["op"],
+                "memory_id": r["memory_id"],
+                "detail": json.loads(r["detail"] or "{}"),
+            }
             for r in rows
         ]
 
@@ -379,8 +394,13 @@ class SqliteStore:
         for r in self.conn.execute(
             "SELECT id,type,content,scope,status,valid_from,valid_to FROM memories"
         ):
-            out.append("M|" + "|".join(str(r[c]) for c in
-                       ("id", "type", "content", "scope", "status", "valid_from", "valid_to")))
+            out.append(
+                "M|"
+                + "|".join(
+                    str(r[c])
+                    for c in ("id", "type", "content", "scope", "status", "valid_from", "valid_to")
+                )
+            )
         for r in self.conn.execute("SELECT id,from_id,to_id,relation FROM edges"):
             out.append("E|" + "|".join(str(r[c]) for c in ("id", "from_id", "to_id", "relation")))
         return out
@@ -433,12 +453,12 @@ def _row_to_memory(row: sqlite3.Row) -> Memory:
         confidence=row["confidence"],
         status=Status(row["status"]),
         provenance=[_dict_to_prov(d) for d in json.loads(row["provenance"] or "[]")],
-        valid_from=_dt(row["valid_from"]),
-        valid_to=_dt(row["valid_to"]),
-        recorded_at=_dt(row["recorded_at"]),
-        created_at=_dt(row["created_at"]),
-        updated_at=_dt(row["updated_at"]),
-        last_seen_at=_dt(row["last_seen_at"]),
+        valid_from=_dt(row["valid_from"]) or utcnow(),
+        valid_to=_dt(row["valid_to"]),  # genuinely optional (None = still valid)
+        recorded_at=_dt(row["recorded_at"]) or utcnow(),
+        created_at=_dt(row["created_at"]) or utcnow(),
+        updated_at=_dt(row["updated_at"]) or utcnow(),
+        last_seen_at=_dt(row["last_seen_at"]) or utcnow(),
     )
 
 

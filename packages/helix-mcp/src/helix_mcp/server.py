@@ -45,15 +45,18 @@ def build_server(toolset: HelixToolset | None = None):
     )
 
     @mcp.tool(description="Search the user's memory (hybrid semantic + keyword + graph).")
-    def memory_search(query: str, scope: str = "", k: int = 8,
-                      response_format: str = "concise") -> str:
-        return json.dumps(ts.search(query, scope=scope or None, k=k,
-                                    response_format=response_format))
+    def memory_search(
+        query: str, scope: str = "", k: int = 8, response_format: str = "concise"
+    ) -> str:
+        return json.dumps(
+            ts.search(query, scope=scope or None, k=k, response_format=response_format)
+        )
 
     @mcp.tool(description="Get a packed context block of what matters for this scope/query.")
     def memory_context(scope: str = "", query: str = "", budget_tokens: int = 1500) -> str:
-        return json.dumps(ts.context(scope=scope or None, query=query or None,
-                                     budget_tokens=budget_tokens))
+        return json.dumps(
+            ts.context(scope=scope or None, query=query or None, budget_tokens=budget_tokens)
+        )
 
     @mcp.tool(description="Record a durable new fact in the user's memory.")
     def memory_write(content: str, scope: str = "global") -> str:
@@ -76,7 +79,9 @@ def build_server(toolset: HelixToolset | None = None):
         return json.dumps(ts.list(scope=scope or None, limit=limit))
 
     # --- resources (application-controlled context; ADR-023) ---
-    @mcp.resource("helix://strand/manifest", description="Strand metadata: embedding space, counts.")
+    @mcp.resource(
+        "helix://strand/manifest", description="Strand metadata: embedding space, counts."
+    )
     def strand_manifest() -> str:
         return json.dumps(ts.engine.stats())
 

@@ -53,7 +53,9 @@ def consolidate(
 
     # UPDATE / SUPERSEDE — same subject area.
     if best and best_sim >= UPDATE_THRESHOLD and best.type == candidate.type:
-        contradicts = bool(_NEGATION.search(candidate.content)) or candidate.type.value in _SINGLETON
+        contradicts = (
+            bool(_NEGATION.search(candidate.content)) or candidate.type.value in _SINGLETON
+        )
         if contradicts:
             return _supersede(store, best, candidate, embedding, provenance, now, best_sim)
         # Refine in place: prefer the richer statement, merge metadata, reinforce.
@@ -76,15 +78,23 @@ def consolidate(
     return ConsolidationResult("ADD", mem.id)
 
 
-def _supersede(store, old: Memory, candidate, embedding, provenance, now, sim) -> ConsolidationResult:
+def _supersede(
+    store, old: Memory, candidate, embedding, provenance, now, sim
+) -> ConsolidationResult:
     old.valid_to = now
     old.status = Status.SUPERSEDED
     old.updated_at = now
     store.upsert_memory(old)  # drops it from FTS/active retrieval
     new = _new_memory(candidate, provenance, now)
     store.upsert_memory(new, embedding)
-    store.add_edge(Edge(id=edge_id(new.id, "supersedes", old.id),
-                        from_id=new.id, to_id=old.id, relation="supersedes"))
+    store.add_edge(
+        Edge(
+            id=edge_id(new.id, "supersedes", old.id),
+            from_id=new.id,
+            to_id=old.id,
+            relation="supersedes",
+        )
+    )
     store.add_history("supersede", new.id, {"superseded": old.id, "sim": round(sim, 3)})
     return ConsolidationResult("SUPERSEDE", new.id)
 

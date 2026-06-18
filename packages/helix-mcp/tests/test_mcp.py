@@ -24,6 +24,7 @@ def _toolset(tmp_path) -> HelixToolset:
 
 # --- toolset ---
 
+
 def test_toolset_write_search_get(tmp_path):
     t = _toolset(tmp_path)
     w = t.write("We use Postgres for the billing service.", scope="project:billing")
@@ -61,6 +62,7 @@ def test_toolset_relate_and_forget(tmp_path):
 
 # --- server (real mcp SDK) ---
 
+
 def test_server_registers_the_tool_surface(tmp_path):
     server = build_server(_toolset(tmp_path))
     tools = asyncio.run(server.list_tools())
@@ -71,10 +73,12 @@ def test_server_registers_the_tool_surface(tmp_path):
 
 def test_server_call_tool_round_trip(tmp_path):
     server = build_server(_toolset(tmp_path))
-    asyncio.run(server.call_tool("memory_write",
-                                 {"content": "We deploy on Fridays.", "scope": "project:p"}))
-    result = asyncio.run(server.call_tool("memory_search",
-                                          {"query": "when do we deploy", "scope": "project:p"}))
+    asyncio.run(
+        server.call_tool("memory_write", {"content": "We deploy on Fridays.", "scope": "project:p"})
+    )
+    result = asyncio.run(
+        server.call_tool("memory_search", {"query": "when do we deploy", "scope": "project:p"})
+    )
     # FastMCP returns content; find the JSON text payload and verify it parsed.
     blob = _extract_text(result)
     payload = json.loads(blob)
@@ -97,6 +101,7 @@ def _extract_text(result) -> str:
 
 
 # --- connect ---
+
 
 def test_connect_writes_json_dialects(tmp_path):
     for agent, key in [("cursor", "mcpServers"), ("vscode", "servers"), ("zed", "context_servers")]:
@@ -142,8 +147,13 @@ def test_connect_claude_desktop_per_os(tmp_path):
 
 def test_connect_custom_path_and_key_override(tmp_path):
     custom = tmp_path / "nested" / "any_client.json"
-    res = connect("some-mcp-client", home=tmp_path, cwd=tmp_path,
-                  path_override=str(custom), key_override="servers")
+    res = connect(
+        "some-mcp-client",
+        home=tmp_path,
+        cwd=tmp_path,
+        path_override=str(custom),
+        key_override="servers",
+    )
     data = json.loads(custom.read_text(encoding="utf-8"))
     assert "helix" in data["servers"]
     assert res["path"] == str(custom)

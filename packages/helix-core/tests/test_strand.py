@@ -64,7 +64,11 @@ def test_tampered_ciphertext_is_detected(tmp_path):
 
     bad = tmp_path / "tampered.dna"
     with zipfile.ZipFile(src) as z:
-        manifest, sig, ct = z.read("manifest.json"), z.read("manifest.sig"), bytearray(z.read("strand.db.enc"))
+        manifest, sig, ct = (
+            z.read("manifest.json"),
+            z.read("manifest.sig"),
+            bytearray(z.read("strand.db.enc")),
+        )
     ct[10] ^= 0xFF  # flip a byte of the encrypted DB
     with zipfile.ZipFile(bad, "w") as z:
         z.writestr("manifest.json", manifest)

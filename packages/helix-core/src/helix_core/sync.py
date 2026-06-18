@@ -9,7 +9,7 @@ reuses the Phase 4 merge, so two people's memories combine with conflict-aware d
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Protocol, runtime_checkable
+from typing import NoReturn, Protocol, runtime_checkable
 
 
 @runtime_checkable
@@ -45,7 +45,7 @@ class S3Backend:
     def __init__(self, uri: str) -> None:
         self.uri = uri
 
-    def _todo(self):
+    def _todo(self) -> NoReturn:
         raise NotImplementedError(
             "S3/R2 sync backend is not implemented yet; use a bring-your-own directory "
             "(e.g. a Dropbox/Drive-synced folder) for now."

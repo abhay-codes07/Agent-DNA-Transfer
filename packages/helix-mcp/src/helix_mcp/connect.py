@@ -56,15 +56,20 @@ def entry_for(agent: str) -> dict:
 
 def _toml_snippet() -> str:
     return (
-        f'\n[mcp_servers.{SERVER_NAME}]\n'
+        f"\n[mcp_servers.{SERVER_NAME}]\n"
         f'command = "{BASE_ENTRY["command"]}"\n'
         f'args = ["serve", "--stdio"]\n'
     )
 
 
 def connect(
-    agent: str, *, home: Path | None = None, cwd: Path | None = None, dry_run: bool = False,
-    path_override: str | None = None, key_override: str | None = None,
+    agent: str,
+    *,
+    home: Path | None = None,
+    cwd: Path | None = None,
+    dry_run: bool = False,
+    path_override: str | None = None,
+    key_override: str | None = None,
 ) -> dict:
     """Write (or preview) the MCP config for `agent`. `--path`/`--key` target any client.
 
@@ -112,5 +117,11 @@ def connect(
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(new_text, encoding="utf-8")
 
-    return {"agent": agent, "path": str(path), "key": key, "format": fmt,
-            "preview": preview, "written": not dry_run}
+    return {
+        "agent": agent,
+        "path": str(path),
+        "key": key,
+        "format": fmt,
+        "preview": preview,
+        "written": not dry_run,
+    }

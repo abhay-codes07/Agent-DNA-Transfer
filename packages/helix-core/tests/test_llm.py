@@ -22,6 +22,7 @@ from helix_core.llm.router import (
 
 # --- router ---
 
+
 def test_router_unavailable_without_providers():
     r = LLMRouter(Config(), providers=[])
     assert r.available() is False
@@ -75,6 +76,7 @@ def test_config_llm_enabled_for_ollama(monkeypatch):
 
 
 # --- extractor ---
+
 
 def test_llm_extractor_parses_structured_facts():
     resp = (

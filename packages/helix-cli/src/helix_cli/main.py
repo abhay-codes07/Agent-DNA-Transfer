@@ -158,7 +158,9 @@ def maintain(
 
 @app.command()
 def connect(
-    agent: str = typer.Argument(..., help="claude-code | claude-desktop | cursor | windsurf | vscode | gemini | zed | codex"),
+    agent: str = typer.Argument(
+        ..., help="claude-code | claude-desktop | cursor | windsurf | vscode | gemini | zed | codex"
+    ),
     print_only: bool = typer.Option(False, "--print", help="preview the config without writing"),
     path: str = typer.Option(None, "--path", help="write to a custom config file (any MCP client)"),
     key: str = typer.Option(None, "--key", help="config key for --path (default: mcpServers)"),
@@ -175,7 +177,9 @@ def connect(
         console.print(f"[red]{exc}[/]")
         raise typer.Exit(1)
     verb = "would write" if print_only else "wrote"
-    console.print(f"[green]{verb}[/] helix MCP config -> [cyan]{res['path']}[/]  (key: {res['key']})")
+    console.print(
+        f"[green]{verb}[/] helix MCP config -> [cyan]{res['path']}[/]  (key: {res['key']})"
+    )
     console.print(res["preview"], markup=False)  # don't let rich parse [section] as markup
     if not print_only:
         console.print("[dim]restart the agent to load the new server[/]")
@@ -190,7 +194,9 @@ def dashboard(
     """Launch the local memory dashboard (browse, search, edit, curate) in your browser."""
     from helix_core.daemon import serve
 
-    console.print(f"[green]Helix dashboard[/] -> [cyan]http://{host}:{port}[/]  [dim](Ctrl-C to stop)[/]")
+    console.print(
+        f"[green]Helix dashboard[/] -> [cyan]http://{host}:{port}[/]  [dim](Ctrl-C to stop)[/]"
+    )
     serve(host=host, port=port, open_browser=open_browser)
 
 
@@ -205,8 +211,11 @@ def doctor() -> None:
     for key, val in s.items():
         table.add_row(key, str(val))
     console.print(table)
-    console.print("[green]OK - running fully local and $0[/]" if not s["fastembed"]
-                  else "[green]OK - fastembed available (local embeddings)[/]")
+    console.print(
+        "[green]OK - running fully local and $0[/]"
+        if not s["fastembed"]
+        else "[green]OK - fastembed available (local embeddings)[/]"
+    )
     eng.close()
 
 
@@ -217,6 +226,7 @@ def status() -> None:
 
 
 # --- transfer: the portable .dna strand (Phase 4) ---
+
 
 @app.command(name="export")
 def export_cmd(
@@ -233,7 +243,9 @@ def export_cmd(
         raise typer.Exit(1)
     console.print(f"[green]exported[/] -> [cyan]{out}[/]")
     console.print(f"  version {m.version} · {m.count_memories} memories · {m.count_edges} edges")
-    console.print(f"  merkle [dim]{m.merkle_root[:16]}…[/]  signed by [dim]{m.created_by_pubkey[:16]}…[/]")
+    console.print(
+        f"  merkle [dim]{m.merkle_root[:16]}…[/]  signed by [dim]{m.created_by_pubkey[:16]}…[/]"
+    )
     eng.close()
 
 
@@ -280,8 +292,10 @@ def merge(file: str, passphrase: str = typer.Option(None, help="or set HELIX_PAS
         console.print(f"[red]{exc}[/]")
         raise typer.Exit(1)
     o = res["merged"]
-    console.print(f"[green]merged[/]: {o['ADD']} added, {o['UPDATE']} updated, "
-                  f"{o['NOOP']} already known, {o['SUPERSEDE']} superseded")
+    console.print(
+        f"[green]merged[/]: {o['ADD']} added, {o['UPDATE']} updated, "
+        f"{o['NOOP']} already known, {o['SUPERSEDE']} superseded"
+    )
     eng.close()
 
 
@@ -294,8 +308,10 @@ def diff(file: str, passphrase: str = typer.Option(None, help="or set HELIX_PASS
     except (ValueError, RuntimeError) as exc:
         console.print(f"[red]{exc}[/]")
         raise typer.Exit(1)
-    console.print(f"[green]+{d['added']}[/] in the .dna only, [red]-{d['removed']}[/] here only, "
-                  f"{d['common']} in common")
+    console.print(
+        f"[green]+{d['added']}[/] in the .dna only, [red]-{d['removed']}[/] here only, "
+        f"{d['common']} in common"
+    )
     for c in d["added_samples"]:
         console.print(f"  [green]+[/] {c}")
     for c in d["removed_samples"]:
@@ -304,7 +320,9 @@ def diff(file: str, passphrase: str = typer.Option(None, help="or set HELIX_PASS
 
 
 @app.command()
-def rollback(file: str, passphrase: str = typer.Option(None, help="or set HELIX_PASSPHRASE")) -> None:
+def rollback(
+    file: str, passphrase: str = typer.Option(None, help="or set HELIX_PASSPHRASE")
+) -> None:
     """Restore the active strand from a prior .dna export (replaces current)."""
     eng = _engine()
     try:
@@ -329,7 +347,9 @@ def push(
     except (ValueError, RuntimeError, NotImplementedError) as exc:
         console.print(f"[red]{exc}[/]")
         raise typer.Exit(1)
-    console.print(f"[green]pushed[/] {res['pushed']} ({res['bytes']} bytes, encrypted) -> {res['location']}")
+    console.print(
+        f"[green]pushed[/] {res['pushed']} ({res['bytes']} bytes, encrypted) -> {res['location']}"
+    )
     eng.close()
 
 
@@ -349,8 +369,10 @@ def pull(
         raise typer.Exit(1)
     if res.get("mode") == "merge":
         o = res["merged"]
-        console.print(f"[green]pulled + merged[/]: {o['ADD']} added, {o['UPDATE']} updated, "
-                      f"{o['NOOP']} already known, {o['SUPERSEDE']} superseded")
+        console.print(
+            f"[green]pulled + merged[/]: {o['ADD']} added, {o['UPDATE']} updated, "
+            f"{o['NOOP']} already known, {o['SUPERSEDE']} superseded"
+        )
     else:
         console.print("[green]pulled[/] and replaced the active strand")
     eng.close()

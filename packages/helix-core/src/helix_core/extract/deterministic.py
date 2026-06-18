@@ -16,21 +16,45 @@ _SENT_SPLIT = re.compile(r"(?<=[.!?])\s+|\n+")
 
 # Ordered cue rules: first match wins. (compiled, case-insensitive)
 _RULES: list[tuple[MemoryType, re.Pattern[str]]] = [
-    (MemoryType.DECISION, re.compile(
-        r"\b(decided|chose|chosen|opted for|going with|will use|we use .+ because|"
-        r"decision|picked)\b", re.I)),
-    (MemoryType.CONVENTION, re.compile(
-        r"\b(convention|standard|rule|guideline|must|should always|always use|never use|"
-        r"style guide|policy)\b", re.I)),
-    (MemoryType.PREFERENCE, re.compile(
-        r"\b(prefer|favou?r|i like|i dislike|avoid|rather than|over \w+|don'?t use)\b", re.I)),
+    (
+        MemoryType.DECISION,
+        re.compile(
+            r"\b(decided|chose|chosen|opted for|going with|will use|we use .+ because|"
+            r"decision|picked)\b",
+            re.I,
+        ),
+    ),
+    (
+        MemoryType.CONVENTION,
+        re.compile(
+            r"\b(convention|standard|rule|guideline|must|should always|always use|never use|"
+            r"style guide|policy)\b",
+            re.I,
+        ),
+    ),
+    (
+        MemoryType.PREFERENCE,
+        re.compile(
+            r"\b(prefer|favou?r|i like|i dislike|avoid|rather than|over \w+|don'?t use)\b", re.I
+        ),
+    ),
     (MemoryType.SNIPPET, re.compile(r"```|\b(snippet|helper|boilerplate|pattern for)\b", re.I)),
-    (MemoryType.PROJECT, re.compile(
-        r"\b(project|service|repo|repository|architecture|microservice|the stack|built with|"
-        r"runs on)\b", re.I)),
-    (MemoryType.IDENTITY, re.compile(
-        r"\b(i am|i'?m a|my name is|i work as|i'?m the|my role)\b", re.I)),
-    (MemoryType.ENTITY, re.compile(r"\b(owns|owner of|maintains|on the .+ team|reports to)\b", re.I)),
+    (
+        MemoryType.PROJECT,
+        re.compile(
+            r"\b(project|service|repo|repository|architecture|microservice|the stack|built with|"
+            r"runs on)\b",
+            re.I,
+        ),
+    ),
+    (
+        MemoryType.IDENTITY,
+        re.compile(r"\b(i am|i'?m a|my name is|i work as|i'?m the|my role)\b", re.I),
+    ),
+    (
+        MemoryType.ENTITY,
+        re.compile(r"\b(owns|owner of|maintains|on the .+ team|reports to)\b", re.I),
+    ),
 ]
 
 
@@ -79,8 +103,12 @@ class DeterministicExtractor:
             mtype = _infer_type(text)
             facts.append(
                 CandidateFact(
-                    type=mtype, content=text, scope=scope, cognitive=COGNITIVE_OF[mtype],
-                    importance=_importance(mtype, 0.5), confidence=0.6,
+                    type=mtype,
+                    content=text,
+                    scope=scope,
+                    cognitive=COGNITIVE_OF[mtype],
+                    importance=_importance(mtype, 0.5),
+                    confidence=0.6,
                 )
             )
         return facts

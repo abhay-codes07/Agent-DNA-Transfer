@@ -99,8 +99,12 @@ class Engine:
             return
         hub_id = self._ensure_hub(scope)
         self.store.add_edge(
-            Edge(id=edge_id(hub_id, "has_member", memory_id),
-                 from_id=hub_id, to_id=memory_id, relation="has_member")
+            Edge(
+                id=edge_id(hub_id, "has_member", memory_id),
+                from_id=hub_id,
+                to_id=memory_id,
+                relation="has_member",
+            )
         )
 
     def _ensure_hub(self, scope: Scope) -> str:
@@ -109,10 +113,19 @@ class Engine:
         if self.store.get_memory(hub_id) is None:
             now = utcnow()
             hub = Memory(
-                id=hub_id, type=MemoryType.ENTITY, content=f"Project: {name}", scope=scope,
-                cognitive=Cognitive.ENTITY, attributes={"_hub": True}, importance=0.2,
-                confidence=0.9, valid_from=now, recorded_at=now, created_at=now,
-                updated_at=now, last_seen_at=now,
+                id=hub_id,
+                type=MemoryType.ENTITY,
+                content=f"Project: {name}",
+                scope=scope,
+                cognitive=Cognitive.ENTITY,
+                attributes={"_hub": True},
+                importance=0.2,
+                confidence=0.9,
+                valid_from=now,
+                recorded_at=now,
+                created_at=now,
+                updated_at=now,
+                last_seen_at=now,
             )
             self.store.upsert_memory(hub)  # no embedding -> invisible to vector search
         return hub_id
@@ -144,8 +157,11 @@ class Engine:
             hits = self.recall(query, scope=scope, k=20)
         else:
             now = utcnow()
-            mems = [m for m in self.store.all_memories(scope=scope, limit=200)
-                    if not m.attributes.get("_hub")]
+            mems = [
+                m
+                for m in self.store.all_memories(scope=scope, limit=200)
+                if not m.attributes.get("_hub")
+            ]
             hits = sorted(
                 (Hit(memory=m, score=salience(m, now), salience=salience(m, now)) for m in mems),
                 key=lambda h: h.score,
@@ -169,11 +185,21 @@ class Engine:
         return [mem.id]
 
     def list_memories(self, *, scope: Scope | None = None, limit: int = 100) -> list[Memory]:
-        return [m for m in self.store.all_memories(scope=scope, limit=limit)
-                if not m.attributes.get("_hub")]
+        return [
+            m
+            for m in self.store.all_memories(scope=scope, limit=limit)
+            if not m.attributes.get("_hub")
+        ]
 
-    def edit_memory(self, memory_id: str, *, content: str | None = None, scope: str | None = None,
-                    type: str | None = None, importance: float | None = None) -> Memory | None:
+    def edit_memory(
+        self,
+        memory_id: str,
+        *,
+        content: str | None = None,
+        scope: str | None = None,
+        type: str | None = None,
+        importance: float | None = None,
+    ) -> Memory | None:
         """Edit a memory in place (re-embeds if the content changed). Returns the updated memory."""
         mem = self.store.get_memory(memory_id)
         if mem is None:
@@ -211,7 +237,11 @@ class Engine:
         return eid
 
     def maintain(
-        self, *, now: datetime | None = None, archive_below: float = 0.05, min_age_days: float = 30.0
+        self,
+        *,
+        now: datetime | None = None,
+        archive_below: float = 0.05,
+        min_age_days: float = 30.0,
     ) -> dict:
         """Decay-driven housekeeping: archive stale, low-salience memories (never delete).
 
@@ -270,16 +300,28 @@ class Engine:
         """Package the strand into a signed, encrypted, portable .dna file."""
         from .strand.codec import export_dna
 
-        return export_dna(self.store, Path(out_path), passphrase=self._passphrase(passphrase),
-                          identity_path=self._identity_path, label=label)
+        return export_dna(
+            self.store,
+            Path(out_path),
+            passphrase=self._passphrase(passphrase),
+            identity_path=self._identity_path,
+            label=label,
+        )
 
     def verify_strand(self, path) -> dict:
         from .strand.codec import verify_dna
 
         return verify_dna(Path(path))
 
-    def import_strand(self, path, *, passphrase: str | None = None, as_strand: str | None = None,
-                      replace: bool = False, reembed: bool = True) -> dict:
+    def import_strand(
+        self,
+        path,
+        *,
+        passphrase: str | None = None,
+        as_strand: str | None = None,
+        replace: bool = False,
+        reembed: bool = True,
+    ) -> dict:
         """Import a .dna into a new strand, or replace the active one (rollback).
 
         If the imported strand's embedding space differs from the local embedder, its vectors
@@ -295,8 +337,12 @@ class Engine:
             finally:
                 self.store = SqliteStore(self.config.strand_path)
             reembedded = self._reembed_if_needed(self.store) if reembed else 0
-            return {"strand": self.config.strand, "dest": str(self.config.strand_path),
-                    "manifest": manifest, "reembedded": reembedded}
+            return {
+                "strand": self.config.strand,
+                "dest": str(self.config.strand_path),
+                "manifest": manifest,
+                "reembedded": reembedded,
+            }
         name = as_strand or "imported"
         dest = self.config.home / f"{name}.helix.db"
         manifest = import_dna(Path(path), dest, passphrase=pw)
@@ -330,12 +376,18 @@ class Engine:
                         if mem.attributes.get("_hub"):
                             continue
                         cand = CandidateFact(
-                            type=mem.type, content=mem.content, scope=mem.scope,
-                            cognitive=mem.cognitive, attributes=dict(mem.attributes),
-                            importance=mem.importance, confidence=mem.confidence,
+                            type=mem.type,
+                            content=mem.content,
+                            scope=mem.scope,
+                            cognitive=mem.cognitive,
+                            attributes=dict(mem.attributes),
+                            importance=mem.importance,
+                            confidence=mem.confidence,
                         )
                         emb = self.embedder.embed([mem.content])[0]
-                        origin = mem.provenance[0].origin if mem.provenance else Origin.USER_ASSERTED
+                        origin = (
+                            mem.provenance[0].origin if mem.provenance else Origin.USER_ASSERTED
+                        )
                         prov = Provenance(agent="merge", extractor="merge", origin=origin)
                         res = consolidate(self.store, cand, emb, prov)
                         self._link_to_scope(res.memory_id, mem.scope)
@@ -355,14 +407,19 @@ class Engine:
             import_dna(Path(path), other_path, passphrase=pw)
             other = SqliteStore(other_path)
             try:
-                theirs = {(m.type.value, m.content) for m in other.all_memories(limit=1_000_000)
-                          if not m.attributes.get("_hub")}
+                theirs = {
+                    (m.type.value, m.content)
+                    for m in other.all_memories(limit=1_000_000)
+                    if not m.attributes.get("_hub")
+                }
             finally:
                 other.close()
         added = theirs - mine  # present in the .dna, missing here
         removed = mine - theirs  # present here, missing in the .dna
         return {
-            "added": len(added), "removed": len(removed), "common": len(mine & theirs),
+            "added": len(added),
+            "removed": len(removed),
+            "common": len(mine & theirs),
             "added_samples": [c for _, c in list(added)[:5]],
             "removed_samples": [c for _, c in list(removed)[:5]],
         }
@@ -371,7 +428,9 @@ class Engine:
         return self.store.history(limit)
 
     # --- optional encrypted sync (Phase 7) -----------------------------------
-    def push(self, location: str, *, passphrase: str | None = None, name: str | None = None) -> dict:
+    def push(
+        self, location: str, *, passphrase: str | None = None, name: str | None = None
+    ) -> dict:
         """Export the strand and upload the encrypted .dna to a shared location (E2E)."""
         from .sync import backend_from_uri
 
@@ -384,8 +443,14 @@ class Engine:
         backend_from_uri(location).put(name, data)
         return {"pushed": name, "bytes": len(data), "location": location}
 
-    def pull(self, location: str, *, passphrase: str | None = None, name: str | None = None,
-             merge: bool = True) -> dict:
+    def pull(
+        self,
+        location: str,
+        *,
+        passphrase: str | None = None,
+        name: str | None = None,
+        merge: bool = True,
+    ) -> dict:
         """Download an encrypted .dna from a shared location and merge (or replace) locally."""
         from .sync import backend_from_uri
 

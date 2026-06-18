@@ -34,13 +34,16 @@ TEXT:
 class LLMExtractor:
     name = "llm"
 
-    def __init__(self, router, fallback: DeterministicExtractor | None = None,
-                 cutoff: float = 0.75) -> None:
+    def __init__(
+        self, router, fallback: DeterministicExtractor | None = None, cutoff: float = 0.75
+    ) -> None:
         self.router = router
         self.fallback = fallback or DeterministicExtractor(cutoff)
         self._cutoff = cutoff
 
-    def extract(self, text: str, *, scope: str = "global", force: bool = False) -> list[CandidateFact]:
+    def extract(
+        self, text: str, *, scope: str = "global", force: bool = False
+    ) -> list[CandidateFact]:
         text = text.strip()
         if not text:
             return []
@@ -81,8 +84,12 @@ def _parse(raw: str, scope: str) -> list[CandidateFact]:
             importance = 0.6
         out.append(
             CandidateFact(
-                type=mtype, content=content, scope=scope, cognitive=COGNITIVE_OF[mtype],
-                importance=min(max(importance, 0.0), 1.0), confidence=0.7,
+                type=mtype,
+                content=content,
+                scope=scope,
+                cognitive=COGNITIVE_OF[mtype],
+                importance=min(max(importance, 0.0), 1.0),
+                confidence=0.7,
             )
         )
     return out

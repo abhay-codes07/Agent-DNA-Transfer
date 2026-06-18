@@ -28,8 +28,9 @@ M_DB = "strand.db.enc"
 SUPPORTED_FORMAT_VERSION = 1
 
 
-def export_dna(store, out_path: Path, *, passphrase: str, identity_path: Path,
-               label: str = "") -> Manifest:
+def export_dna(
+    store, out_path: Path, *, passphrase: str, identity_path: Path, label: str = ""
+) -> Manifest:
     out_path = Path(out_path)
     db_bytes = _snapshot_bytes(store)
 
@@ -40,7 +41,9 @@ def export_dna(store, out_path: Path, *, passphrase: str, identity_path: Path,
     salt = crypto.random_bytes(crypto.SALT_BYTES)
     ops, mem = crypto.argon2_params()
     kek = crypto.derive_key(passphrase, salt, ops, mem)
-    wrap_nonce, wrapped_key = crypto.encrypt(kek, data_key)  # wrap the data key (small, single AEAD)
+    wrap_nonce, wrapped_key = crypto.encrypt(
+        kek, data_key
+    )  # wrap the data key (small, single AEAD)
     db_ct = crypto.encrypt_stream(data_key, db_bytes)  # chunked, truncation-resistant (ADR-032)
 
     seed = crypto.load_or_create_identity(identity_path)
@@ -59,10 +62,15 @@ def export_dna(store, out_path: Path, *, passphrase: str, identity_path: Path,
         embedding_dim=int(store.get_meta("embedding_dim") or 0),
         count_memories=_user_count(store),
         count_edges=_edge_count(store),
-        kdf_ops=ops, kdf_mem=mem,
-        salt=salt.hex(), wrap_nonce=wrap_nonce.hex(), wrapped_key=wrapped_key.hex(),
-        db_nonce="", enc_mode="stream",
-        merkle_root=merkle, db_sha256=crypto.sha256_hex(db_ct),
+        kdf_ops=ops,
+        kdf_mem=mem,
+        salt=salt.hex(),
+        wrap_nonce=wrap_nonce.hex(),
+        wrapped_key=wrapped_key.hex(),
+        db_nonce="",
+        enc_mode="stream",
+        merkle_root=merkle,
+        db_sha256=crypto.sha256_hex(db_ct),
         parents=[prev] if prev else [],
     )
     signature = crypto.sign(seed, manifest.signing_bytes())
@@ -98,22 +106,27 @@ def verify_dna(path: Path) -> dict:
     }
 
 
-def import_dna(path: Path, dest_db_path: Path, *, passphrase: str,
-               require_signature: bool = True) -> Manifest:
+def import_dna(
+    path: Path, dest_db_path: Path, *, passphrase: str, require_signature: bool = True
+) -> Manifest:
     manifest, sig, db_ct = read_manifest(path)
     if manifest.format_version > SUPPORTED_FORMAT_VERSION:
-        raise ValueError(f"strand format v{manifest.format_version} is newer than supported "
-                         f"v{SUPPORTED_FORMAT_VERSION}; upgrade Helix to import it")
-    if require_signature and not crypto.verify(manifest.created_by_pubkey,
-                                               manifest.signing_bytes(), sig):
+        raise ValueError(
+            f"strand format v{manifest.format_version} is newer than supported "
+            f"v{SUPPORTED_FORMAT_VERSION}; upgrade Helix to import it"
+        )
+    if require_signature and not crypto.verify(
+        manifest.created_by_pubkey, manifest.signing_bytes(), sig
+    ):
         raise ValueError("invalid signature — refusing to import (tampered or untrusted strand)")
     if crypto.sha256_hex(db_ct) != manifest.db_sha256:
         raise ValueError("ciphertext hash mismatch — strand is corrupt or tampered")
 
     ops, mem = manifest.kdf_ops, manifest.kdf_mem
     kek = crypto.derive_key(passphrase, bytes.fromhex(manifest.salt), ops, mem)
-    data_key = crypto.decrypt(kek, bytes.fromhex(manifest.wrap_nonce),
-                              bytes.fromhex(manifest.wrapped_key))
+    data_key = crypto.decrypt(
+        kek, bytes.fromhex(manifest.wrap_nonce), bytes.fromhex(manifest.wrapped_key)
+    )
     if manifest.enc_mode == "stream":
         db_bytes = crypto.decrypt_stream(data_key, db_ct)
     else:  # legacy single-blob AEAD
@@ -128,6 +141,7 @@ def import_dna(path: Path, dest_db_path: Path, *, passphrase: str,
 
 
 # --- helpers ---
+
 
 def _snapshot_bytes(store) -> bytes:
     with tempfile.TemporaryDirectory() as d:

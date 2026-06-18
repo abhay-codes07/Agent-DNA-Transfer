@@ -30,7 +30,9 @@ def _get(url):
 
 def _post(url, obj):
     req = urllib.request.Request(
-        url, data=json.dumps(obj).encode(), headers={"Content-Type": "application/json"},
+        url,
+        data=json.dumps(obj).encode(),
+        headers={"Content-Type": "application/json"},
         method="POST",
     )
     return json.loads(urllib.request.urlopen(req, timeout=5).read())
@@ -41,8 +43,10 @@ def test_daemon_full_crud_cycle(tmp_path):
     try:
         assert _get(base + "/api/health")["ok"] is True
 
-        r = _post(base + "/api/remember",
-                  {"content": "We use Postgres for the billing service.", "scope": "project:billing"})
+        r = _post(
+            base + "/api/remember",
+            {"content": "We use Postgres for the billing service.", "scope": "project:billing"},
+        )
         assert r["results"][0]["op"] == "ADD"
         mid = r["results"][0]["id"]
 
@@ -72,8 +76,10 @@ def test_daemon_full_crud_cycle(tmp_path):
 def test_daemon_edit_provenance_and_history(tmp_path):
     httpd, base, engine = _start(tmp_path)
     try:
-        mid = _post(base + "/api/remember",
-                    {"content": "We use Mongo for billing.", "scope": "project:billing"})["results"][0]["id"]
+        mid = _post(
+            base + "/api/remember",
+            {"content": "We use Mongo for billing.", "scope": "project:billing"},
+        )["results"][0]["id"]
 
         detail = _get(base + "/api/memory?id=" + mid)
         assert detail["id"] == mid

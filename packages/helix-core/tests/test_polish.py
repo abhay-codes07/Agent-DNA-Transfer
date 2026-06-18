@@ -24,7 +24,9 @@ def _engine(tmp_path) -> Engine:
 
 def test_dotenv_is_loaded_and_env_wins(tmp_path):
     env = tmp_path / ".env"
-    env.write_text("HELIX_TELEMETRY=local\nHELIX_STRAND=teststrand\n# a comment\n", encoding="utf-8")
+    env.write_text(
+        "HELIX_TELEMETRY=local\nHELIX_STRAND=teststrand\n# a comment\n", encoding="utf-8"
+    )
     saved = dict(os.environ)
     try:
         os.environ.pop("HELIX_TELEMETRY", None)
@@ -44,10 +46,10 @@ def test_dotenv_is_loaded_and_env_wins(tmp_path):
 
 def test_graph_expansion_boosts_connected_memory(tmp_path):
     eng = _engine(tmp_path)
-    a = eng.remember("The billing service is owned by the payments team.",
-                     scope="project:billing")[0].memory_id
-    b = eng.remember("Release checklist lives in the team wiki.",
-                     scope="project:ops")[0].memory_id
+    a = eng.remember("The billing service is owned by the payments team.", scope="project:billing")[
+        0
+    ].memory_id
+    b = eng.remember("Release checklist lives in the team wiki.", scope="project:ops")[0].memory_id
     eng.relate(a, b, "documented_in")
 
     q = "who owns the billing service"
@@ -77,9 +79,16 @@ def test_maintain_archives_stale_episodic(tmp_path):
     eng = _engine(tmp_path)
     old = utcnow() - timedelta(days=60)
     m = Memory(
-        id="ep_old_event", type=MemoryType.EPISODE, content="transient: CI was flaky on tuesday",
-        cognitive=Cognitive.EPISODIC, importance=0.3,
-        valid_from=old, recorded_at=old, created_at=old, updated_at=old, last_seen_at=old,
+        id="ep_old_event",
+        type=MemoryType.EPISODE,
+        content="transient: CI was flaky on tuesday",
+        cognitive=Cognitive.EPISODIC,
+        importance=0.3,
+        valid_from=old,
+        recorded_at=old,
+        created_at=old,
+        updated_at=old,
+        last_seen_at=old,
     )
     with eng.store.tx():
         eng.store.upsert_memory(m, eng.embedder.embed([m.content])[0])
@@ -108,9 +117,7 @@ def test_hit_serialization_hides_internal_fields(tmp_path):
     eng.close()
 
 
-@pytest.mark.skipif(
-    importlib.util.find_spec("fastembed") is None, reason="fastembed not installed"
-)
+@pytest.mark.skipif(importlib.util.find_spec("fastembed") is None, reason="fastembed not installed")
 def test_fastembed_adapter_when_present():
     from helix_core.embed.local import LocalEmbedder
 
@@ -120,9 +127,7 @@ def test_fastembed_adapter_when_present():
     assert abs(sum(x * x for x in v) - 1.0) < 1e-3  # normalized
 
 
-@pytest.mark.skipif(
-    importlib.util.find_spec("fastembed") is None, reason="fastembed not installed"
-)
+@pytest.mark.skipif(importlib.util.find_spec("fastembed") is None, reason="fastembed not installed")
 def test_fastembed_captures_semantics_without_shared_words():
     """Real semantics: paraphrases with NO shared words rank above an unrelated sentence —
     something the lexical hashing embedder cannot do."""
