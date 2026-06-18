@@ -158,8 +158,10 @@ def maintain(
 
 @app.command()
 def connect(
-    agent: str = typer.Argument(..., help="claude-code | cursor | windsurf | vscode | gemini | zed | codex"),
+    agent: str = typer.Argument(..., help="claude-code | claude-desktop | cursor | windsurf | vscode | gemini | zed | codex"),
     print_only: bool = typer.Option(False, "--print", help="preview the config without writing"),
+    path: str = typer.Option(None, "--path", help="write to a custom config file (any MCP client)"),
+    key: str = typer.Option(None, "--key", help="config key for --path (default: mcpServers)"),
 ) -> None:
     """Wire Helix into an AI agent over MCP by writing its config (idempotent)."""
     try:
@@ -168,7 +170,7 @@ def connect(
         console.print("[red]helix-mcp is not installed[/] (pip install helix-mcp)")
         raise typer.Exit(1)
     try:
-        res = do_connect(agent, dry_run=print_only)
+        res = do_connect(agent, dry_run=print_only, path_override=path, key_override=key)
     except (ValueError, RuntimeError) as exc:
         console.print(f"[red]{exc}[/]")
         raise typer.Exit(1)

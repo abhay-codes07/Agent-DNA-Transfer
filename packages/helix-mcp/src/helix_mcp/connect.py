@@ -13,8 +13,10 @@ SERVER_NAME = "helix"
 BASE_ENTRY = {"command": "helix-mcp", "args": ["serve", "--stdio"]}
 
 # agent -> (path_template, config_key, format, needs_type_stdio)
+# (claude-desktop uses a per-OS path resolved in _claude_desktop_path)
 AGENTS: dict[str, tuple[str, str, str, bool]] = {
     "claude-code": ("~/.claude.json", "mcpServers", "json", False),
+    "claude-desktop": ("", "mcpServers", "json", False),
     "cursor": ("~/.cursor/mcp.json", "mcpServers", "json", False),
     "windsurf": ("~/.codeium/windsurf/mcp_config.json", "mcpServers", "json", False),
     "vscode": (".vscode/mcp.json", "servers", "json", True),
@@ -34,6 +36,16 @@ def _resolve(template: str, home: Path, cwd: Path) -> Path:
     return cwd / template
 
 
+def _claude_desktop_path(home: Path) -> Path:
+    import sys
+
+    if sys.platform == "win32":
+        return home / "AppData" / "Roaming" / "Claude" / "claude_desktop_config.json"
+    if sys.platform == "darwin":
+        return home / "Library" / "Application Support" / "Claude" / "claude_desktop_config.json"
+    return home / ".config" / "Claude" / "claude_desktop_config.json"
+
+
 def entry_for(agent: str) -> dict:
     _, _, _, needs_type = AGENTS[agent]
     entry = dict(BASE_ENTRY)
@@ -51,16 +63,34 @@ def _toml_snippet() -> str:
 
 
 def connect(
-    agent: str, *, home: Path | None = None, cwd: Path | None = None, dry_run: bool = False
+    agent: str, *, home: Path | None = None, cwd: Path | None = None, dry_run: bool = False,
+    path_override: str | None = None, key_override: str | None = None,
 ) -> dict:
-    """Write (or preview) the MCP config for `agent`. Returns details for display."""
-    if agent not in AGENTS:
-        raise ValueError(f"unknown agent '{agent}'. Supported: {', '.join(supported())}")
+    """Write (or preview) the MCP config for `agent`. `--path`/`--key` target any client.
+
+    Returns details for display.
+    """
     home = home or Path.home()
     cwd = cwd or Path.cwd()
-    template, key, fmt, _ = AGENTS[agent]
-    path = _resolve(template, home, cwd)
-    entry = entry_for(agent)
+    needs_type = False
+    if agent == "claude-desktop":
+        path, key, fmt = _claude_desktop_path(home), "mcpServers", "json"
+    elif agent in AGENTS:
+        template, key, fmt, needs_type = AGENTS[agent]
+        path = _resolve(template, home, cwd)
+    elif path_override:
+        key, fmt = "mcpServers", "json"
+        path = Path(path_override)
+    else:
+        raise ValueError(
+            f"unknown agent '{agent}'. Supported: {', '.join(supported())} (or pass --path)"
+        )
+    if path_override:
+        p = Path(path_override)
+        path = p if p.is_absolute() else cwd / p
+    if key_override:
+        key = key_override
+    entry = {"type": "stdio", **BASE_ENTRY} if needs_type else dict(BASE_ENTRY)
 
     if fmt == "toml":
         existing = path.read_text(encoding="utf-8") if path.exists() else ""

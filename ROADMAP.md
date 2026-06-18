@@ -102,15 +102,17 @@ deeper curation (inline edit, history) is iterative. API tested over HTTP.
 
 ---
 
-## Phase 6 — SDKs & ecosystem
+## Phase 6 — SDKs & ecosystem ✅ v1 shipped
 Let others build on Helix.
 
-- ☐ Python SDK (`helix-sdk-python`) parity with core ops
-- ☐ TypeScript SDK + MCP client helpers
-- ☐ `examples/` recipes; connectors for Copilot, Windsurf, ChatGPT desktop
-- ☐ Public docs site; MCP-directory listings; "Add to …" one-liners
+- ☑ Python SDK (`helix_sdk.Helix`) — full parity (memory, transfer, sync, edit, history, stats)
+- ☑ TypeScript SDK (`@helix-memory/sdk`) — fetch client against the local daemon API
+- ☑ Connectors: 8 named clients (incl. **claude-desktop**, per-OS) + a generic
+  `helix connect <name> --path <file> --key <key>` for any MCP client
+- ☐ Public docs site; MCP-directory listings; more example recipes (next)
 
-**Exit:** a third party can embed Helix in a custom agent in an afternoon.
+**Exit:** ✅ a third party can embed Helix via the Python or TS SDK, and wire it into essentially
+any MCP client. SDK parity verified in tests.
 
 ---
 

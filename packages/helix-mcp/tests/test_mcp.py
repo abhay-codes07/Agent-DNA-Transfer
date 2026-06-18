@@ -131,3 +131,19 @@ def test_connect_unknown_agent(tmp_path):
     with pytest.raises(ValueError):
         connect("not-an-agent", home=tmp_path, cwd=tmp_path)
     assert "cursor" in supported()
+
+
+def test_connect_claude_desktop_per_os(tmp_path):
+    res = connect("claude-desktop", home=tmp_path, cwd=tmp_path)
+    data = json.loads(Path(res["path"]).read_text(encoding="utf-8"))
+    assert data["mcpServers"]["helix"]["command"] == "helix-mcp"
+    assert "claude-desktop" in supported()
+
+
+def test_connect_custom_path_and_key_override(tmp_path):
+    custom = tmp_path / "nested" / "any_client.json"
+    res = connect("some-mcp-client", home=tmp_path, cwd=tmp_path,
+                  path_override=str(custom), key_override="servers")
+    data = json.loads(custom.read_text(encoding="utf-8"))
+    assert "helix" in data["servers"]
+    assert res["path"] == str(custom)
