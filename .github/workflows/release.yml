@@ -21,6 +21,7 @@ jobs:
 
       - name: Build all packages (sdist + wheel)
         run: |
+          uv build . --out-dir dist   # the helix-dna meta-package (metadata only)
           for pkg in helix-core helix-cli helix-mcp helix-sdk-python; do
             uv build "packages/$pkg" --out-dir dist
           done
