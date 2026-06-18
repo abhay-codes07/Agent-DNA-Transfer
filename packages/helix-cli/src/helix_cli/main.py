@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import json
 import sys
+from pathlib import Path
 
 import typer
 from rich.console import Console
@@ -63,6 +64,34 @@ def add(
         console.print(f"  [{color}]{r.op}[/] [cyan]{r.memory_id}[/]")
     if not results:
         console.print("[dim]nothing durable to remember in that input[/]")
+    eng.close()
+
+
+@app.command()
+def ingest(
+    path: str,
+    scope: str = typer.Option(GLOBAL, help="global or project:<id>"),
+) -> None:
+    """Seed memory from a markdown/text file or directory of notes."""
+    eng = _engine()
+    p = Path(path)
+    if p.is_dir():
+        res = eng.ingest_dir(str(p), scope=scope)
+        console.print(
+            f"[green]ingested[/] {res['files']} files, {res['slices']} slices -> {res['stored']}"
+        )
+    else:
+        res = eng.ingest_file(str(p), scope=scope)
+        console.print(f"[green]ingested[/] {res['slices']} slices -> {res['stored']}")
+    eng.close()
+
+
+@app.command(name="export-md")
+def export_md(out: str) -> None:
+    """Export your memory as human-readable, portable Markdown."""
+    eng = _engine()
+    n = eng.export_markdown(out)
+    console.print(f"[green]exported[/] {n} memories -> [cyan]{out}[/] (markdown)")
     eng.close()
 
 

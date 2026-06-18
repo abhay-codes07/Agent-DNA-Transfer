@@ -132,3 +132,32 @@ def test_consolidation_llm_distinct_keeps_both(tmp_path):
     actives = [m for m in eng.list_memories() if "billing service" in m.content.lower()]
     assert len(actives) == 2
     eng.close()
+
+
+# --- batched extraction (one LLM call for many slices) ---
+
+
+def test_llm_extract_batch_uses_a_single_call():
+    resp = (
+        '{"notes": ['
+        '{"i": 0, "facts": [{"type": "decision", "content": "Chose Postgres"}]},'
+        '{"i": 1, "facts": [{"type": "preference", "content": "Prefers pytest"}]}]}'
+    )
+    fake = FakeProvider(resp)
+    ex = LLMExtractor(LLMRouter(Config(), providers=[fake]))
+    out = ex.extract_batch(
+        ["we decided on postgres for billing", "i really prefer pytest"], scope="g", force=True
+    )
+    assert len(out) == 2
+    assert out[0][0].content == "Chose Postgres" and out[0][0].type.value == "decision"
+    assert out[1][0].content == "Prefers pytest"
+    assert fake.calls == 1  # ONE model call for both notes (cost lever)
+
+
+def test_deterministic_extract_batch_maps_over_inputs():
+    from helix_core.extract.deterministic import DeterministicExtractor
+
+    out = DeterministicExtractor().extract_batch(
+        ["We use Postgres for billing.", "We deploy on Fridays."], scope="g", force=True
+    )
+    assert len(out) == 2 and out[0] and out[1]

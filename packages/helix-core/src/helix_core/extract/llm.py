@@ -30,6 +30,16 @@ TEXT:
 {text}
 """
 
+_BATCH_PROMPT = """Extract durable memory facts from each numbered note below.
+
+Return JSON: {{"notes": [{{"i": <note number>, "facts": [{{"type": "<type>", "content": "<one concise fact>", "importance": <0..1>}}]}}]}}
+Allowed types: identity, preference, project, decision, convention, snippet, entity, fact.
+Include a note only if it has durable facts; omit notes that have none.
+
+NOTES:
+{notes}
+"""
+
 
 class LLMExtractor:
     name = "llm"
@@ -59,6 +69,33 @@ class LLMExtractor:
         if not facts and force:
             return self.fallback.extract(text, scope=scope, force=True)
         return facts
+
+    def extract_batch(
+        self, texts: list[str], *, scope: str = "global", force: bool = False
+    ) -> list[list[CandidateFact]]:
+        """Extract from many slices in ONE LLM call (cost lever). Gated + fallback-safe."""
+        results: list[list[CandidateFact]] = [[] for _ in texts]
+        passing = [
+            (i, t.strip())
+            for i, t in enumerate(texts)
+            if t.strip() and (force or evaluate(t).should_extract(self._cutoff))
+        ]
+        if not passing:
+            return results
+        prompt = _BATCH_PROMPT.format(notes="\n".join(f"[{i}] {t}" for i, t in passing))
+        try:
+            result = self.router.complete(prompt, system=_SYSTEM, json_mode=True)
+            per_index = _parse_batch(result.text, scope)
+        except Exception:
+            for i, t in passing:
+                results[i] = self.fallback.extract(t, scope=scope, force=force)
+            return results
+        for i, t in passing:
+            facts = per_index.get(i, [])
+            if not facts and force:
+                facts = self.fallback.extract(t, scope=scope, force=True)
+            results[i] = facts
+        return results
 
 
 def _parse(raw: str, scope: str) -> list[CandidateFact]:
@@ -92,4 +129,22 @@ def _parse(raw: str, scope: str) -> list[CandidateFact]:
                 confidence=0.7,
             )
         )
+    return out
+
+
+def _parse_batch(raw: str, scope: str) -> dict[int, list[CandidateFact]]:
+    out: dict[int, list[CandidateFact]] = {}
+    try:
+        data = json.loads(raw)
+    except json.JSONDecodeError:
+        return out
+    notes = data.get("notes", []) if isinstance(data, dict) else []
+    for note in notes if isinstance(notes, list) else []:
+        if not isinstance(note, dict):
+            continue
+        try:
+            idx = int(note.get("i"))  # type: ignore[arg-type]
+        except (TypeError, ValueError):
+            continue
+        out[idx] = _parse(json.dumps({"facts": note.get("facts", [])}), scope)
     return out

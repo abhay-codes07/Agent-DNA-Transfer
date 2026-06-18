@@ -7,6 +7,7 @@ rank). Transfer (export/import/merge) lands in Phase 4.
 
 from __future__ import annotations
 
+import re
 import tempfile
 from datetime import datetime
 from pathlib import Path
@@ -129,6 +130,69 @@ class Engine:
             )
             self.store.upsert_memory(hub)  # no embedding -> invisible to vector search
         return hub_id
+
+    def remember_batch(
+        self,
+        contents: list[str],
+        *,
+        scope: Scope = GLOBAL,
+        source: str = "cli",
+        origin: Origin = Origin.USER_ASSERTED,
+        force: bool = False,
+    ) -> list[ConsolidationResult]:
+        """Remember many slices efficiently — one LLM extraction call for the whole batch.
+
+        The cost lever (heuristic gate) still drops slices with no durable fact; only the
+        survivors are sent to the model, together, in a single call.
+        """
+        cleaned = [redact(c) for c in contents]
+        per_slice = self.extractor.extract_batch(cleaned, scope=scope, force=force)
+        results: list[ConsolidationResult] = []
+        with self.store.tx():
+            for cands in per_slice:
+                for cand in cands:
+                    emb = self.embedder.embed([cand.content])[0]
+                    prov = Provenance(agent=source, extractor=self.extractor.name, origin=origin)
+                    res = consolidate(self.store, cand, emb, prov, router=self.router)
+                    self._link_to_scope(res.memory_id, cand.scope)
+                    results.append(res)
+        return results
+
+    def ingest(self, text: str, *, scope: Scope = GLOBAL, source: str = "ingest") -> dict:
+        """Seed memory from a block of notes/markdown: slice into facts and remember them."""
+        slices = _slice_notes(text)
+        results = self.remember_batch(
+            slices, scope=scope, source=source, origin=Origin.AGENT_INGESTED, force=True
+        )
+        ops: dict[str, int] = {"ADD": 0, "UPDATE": 0, "NOOP": 0, "SUPERSEDE": 0}
+        for r in results:
+            ops[r.op] = ops.get(r.op, 0) + 1
+        return {"slices": len(slices), "stored": ops}
+
+    def ingest_file(self, path, *, scope: Scope = GLOBAL) -> dict:
+        # utf-8-sig strips a BOM if present (e.g. files written by some editors/shells).
+        text = Path(path).read_text(encoding="utf-8-sig")
+        return self.ingest(text, scope=scope, source="ingest:file")
+
+    def ingest_dir(self, path, *, scope: Scope = GLOBAL, pattern: str = "*.md") -> dict:
+        files = 0
+        slices = 0
+        stored: dict[str, int] = {"ADD": 0, "UPDATE": 0, "NOOP": 0, "SUPERSEDE": 0}
+        for fp in sorted(Path(path).rglob(pattern)):
+            res = self.ingest_file(fp, scope=scope)
+            files += 1
+            slices += res["slices"]
+            for key, val in res["stored"].items():
+                stored[key] = stored.get(key, 0) + val
+        return {"files": files, "slices": slices, "stored": stored}
+
+    def export_markdown(self, path) -> int:
+        """Dump active memories to human-readable Markdown (portable, editable). Returns count."""
+        from .serialize import memories_to_markdown
+
+        mems = self.list_memories(limit=1_000_000)
+        Path(path).write_text(memories_to_markdown(mems), encoding="utf-8")
+        return len(mems)
 
     # --- read path ------------------------------------------------------------
     def recall(
@@ -479,3 +543,25 @@ def _has(module: str) -> bool:
     import importlib.util
 
     return importlib.util.find_spec(module) is not None
+
+
+_BULLET = re.compile(r"^([-*+]|\d+[.)])\s+")
+
+
+def _slice_notes(text: str) -> list[str]:
+    """Split markdown/text notes into candidate fact slices (skips headers, fences, fluff)."""
+    slices: list[str] = []
+    in_code = False
+    for raw in text.splitlines():
+        line = raw.strip().lstrip("﻿")  # tolerate a UTF-8 BOM on the first line
+        if line.startswith("```"):
+            in_code = not in_code
+            continue
+        if in_code or not line or line.startswith("#"):
+            continue
+        if set(line) <= set("-=*_"):  # horizontal rule
+            continue
+        line = _BULLET.sub("", line).strip()
+        if len(line.split()) >= 3:
+            slices.append(line)
+    return slices

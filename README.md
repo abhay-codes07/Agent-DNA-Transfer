@@ -133,8 +133,10 @@ when installed, else a dependency-free hashing embedder), an embedded vector + g
 one SQLite file, and an LLM router that only calls a model when it needs one — preferring a
 free tier. See [Cost Optimization](docs/COST_OPTIMIZATION.md).
 
-Full CLI: `init · add · search · context · list · forget · relate · maintain · dashboard ·
-connect · export · verify · import · merge · diff · rollback · push · pull · log · eval · doctor`.
+Full CLI: `init · add · ingest · search · context · list · forget · relate · maintain ·
+dashboard · connect · export · verify · import · merge · diff · rollback · push · pull ·
+export-md · log · eval · doctor`. (`ingest` seeds memory from a markdown/notes file or folder;
+`export-md` dumps it as human-readable Markdown.)
 
 ## Documentation
 

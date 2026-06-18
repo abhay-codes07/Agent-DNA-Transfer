@@ -21,3 +21,9 @@ class Extractor(Protocol):
     ) -> list[CandidateFact]:
         """Turn a (redacted) slice into candidate typed facts."""
         ...
+
+    def extract_batch(
+        self, texts: list[str], *, scope: str = "global", force: bool = False
+    ) -> list[list[CandidateFact]]:
+        """Extract from many slices at once (LLM: one call; deterministic: a loop)."""
+        ...

@@ -63,7 +63,7 @@ Better extraction quality without breaking the cost promise.
 - ☑ LLM-backed extractor (gate-gated; always falls back to deterministic on failure/budget)
 - ☑ Optional local LLM (Ollama) extractor path
 - ☑ LLM-assisted conflict adjudication for gray-band consolidation ([ADR-034](DECISIONS.md))
-- ☐ Batched multi-turn extraction (deferred)
+- ☑ Batched extraction — one LLM call for many slices (`remember_batch`); powers `helix ingest`
 
 **Exit:** ✅ quality jumps with a key, default stays $0/offline. Verified offline with a fake
 provider (cache, budget, fallback) + graceful degradation when no provider is reachable.

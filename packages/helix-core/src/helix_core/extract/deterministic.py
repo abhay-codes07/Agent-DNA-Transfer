@@ -113,6 +113,12 @@ class DeterministicExtractor:
             )
         return facts
 
+    def extract_batch(
+        self, texts: list[str], *, scope: str = "global", force: bool = False
+    ) -> list[list[CandidateFact]]:
+        # Deterministic extraction is free, so there's nothing to batch — just map over.
+        return [self.extract(t, scope=scope, force=force) for t in texts]
+
 
 def _importance(mtype: MemoryType, gate_score: float) -> float:
     base = 0.4 + 0.4 * gate_score

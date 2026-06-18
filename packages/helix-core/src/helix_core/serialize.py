@@ -47,6 +47,23 @@ def memory_detail_dict(mem: Memory) -> dict:
     return d
 
 
+def memories_to_markdown(mems: list[Memory]) -> str:
+    """Render memories as portable, human-readable Markdown grouped by scope (basic-memory style)."""
+    from collections import defaultdict
+
+    by_scope: dict[str, list[Memory]] = defaultdict(list)
+    for m in mems:
+        by_scope[m.scope].append(m)
+    lines = ["# Helix memory", ""]
+    for scope in sorted(by_scope):
+        lines.append(f"## {scope}")
+        lines.append("")
+        for m in sorted(by_scope[scope], key=lambda x: x.type.value):
+            lines.append(f"- **{m.type.value}**: {m.content}")
+        lines.append("")
+    return "\n".join(lines).rstrip() + "\n"
+
+
 def hit_to_dict(hit: Hit) -> dict:
     d = memory_to_dict(hit.memory)
     d["score"] = round(hit.score, 4)
