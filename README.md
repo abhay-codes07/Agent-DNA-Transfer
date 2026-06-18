@@ -1,8 +1,8 @@
 <div align="center">
 
-# 🧬 Helix
+<img src="assets/banner.svg" alt="Helix — take your AI's memory anywhere" width="760">
 
-### Take your AI's memory anywhere.
+### 🧬 Take your AI's memory anywhere.
 
 **A local-first, git-like portable memory layer for every AI coding agent.**
 
@@ -22,7 +22,7 @@ One memory. Every agent. Owned by you.
 ![license](https://img.shields.io/badge/license-Apache--2.0-blue)
 ![local-first](https://img.shields.io/badge/local--first-yes-brightgreen)
 ![cost](https://img.shields.io/badge/default%20cost-%240%2Fmo-brightgreen)
-![tests](https://img.shields.io/badge/tests-82%20passing-brightgreen)
+![tests](https://img.shields.io/badge/tests-84%20passing-brightgreen)
 ![version](https://img.shields.io/badge/version-0.1.0--alpha-blue)
 
 </div>
