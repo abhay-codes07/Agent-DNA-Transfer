@@ -132,8 +132,7 @@ def _graph(engine: Engine) -> dict:
             }
         )
     edges = [
-        {"from": r["from_id"], "to": r["to_id"], "relation": r["relation"]}
-        for r in engine.store.conn.execute("SELECT from_id,to_id,relation FROM edges")
+        {"from": e.from_id, "to": e.to_id, "relation": e.relation} for e in engine.store.all_edges()
     ]
     return {"nodes": nodes, "edges": edges}
 

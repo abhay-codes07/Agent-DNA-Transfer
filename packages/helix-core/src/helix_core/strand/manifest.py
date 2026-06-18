@@ -40,6 +40,7 @@ class Manifest:
     cipher: str = "xchacha20poly1305-ietf"
     kdf: str = "argon2id"
     enc_mode: str = "blob"  # "stream" (chunked secretstream) | "blob" (legacy single AEAD)
+    hash_algo: str = "blake2b"  # Merkle hash: "blake3" | "blake2b"
 
     def to_dict(self) -> dict:
         return asdict(self)

@@ -34,8 +34,9 @@ def export_dna(
     out_path = Path(out_path)
     db_bytes = _snapshot_bytes(store)
 
-    leaves = [crypto.blake2b_hex(fp.encode("utf-8")) for fp in store.fingerprints()]
-    merkle = crypto.merkle_root(leaves)
+    algo = crypto.hash_algo()
+    leaves = [crypto.leaf_hex(fp.encode("utf-8"), algo) for fp in store.fingerprints()]
+    merkle = crypto.merkle_root(leaves, algo)
 
     data_key = crypto.random_bytes(crypto.KEY_BYTES)
     salt = crypto.random_bytes(crypto.SALT_BYTES)
@@ -69,6 +70,7 @@ def export_dna(
         wrapped_key=wrapped_key.hex(),
         db_nonce="",
         enc_mode="stream",
+        hash_algo=algo,
         merkle_root=merkle,
         db_sha256=crypto.sha256_hex(db_ct),
         parents=[prev] if prev else [],
@@ -137,7 +139,30 @@ def import_dna(
     tmp = dest_db_path.with_suffix(dest_db_path.suffix + ".tmp")
     tmp.write_bytes(db_bytes)
     tmp.replace(dest_db_path)
+
+    _verify_merkle(dest_db_path, manifest)
     return manifest
+
+
+def _verify_merkle(db_path: Path, manifest: Manifest) -> None:
+    """Recompute the Merkle root from the decrypted strand and compare to the signed manifest.
+
+    Skipped (not failed) if the strand's hash algorithm isn't available locally — the Ed25519
+    signature + ciphertext hash already guarantee authenticity/integrity.
+    """
+    if not crypto.supports_algo(manifest.hash_algo):
+        return
+    from ..stores.sqlite_store import SqliteStore
+
+    store = SqliteStore(db_path)
+    try:
+        leaves = [
+            crypto.leaf_hex(fp.encode("utf-8"), manifest.hash_algo) for fp in store.fingerprints()
+        ]
+    finally:
+        store.close()
+    if crypto.merkle_root(leaves, manifest.hash_algo) != manifest.merkle_root:
+        raise ValueError("Merkle root mismatch — strand content does not match its signed manifest")
 
 
 # --- helpers ---
@@ -151,7 +176,7 @@ def _snapshot_bytes(store) -> bytes:
 
 
 def _edge_count(store) -> int:
-    return int(store.conn.execute("SELECT COUNT(*) FROM edges").fetchone()[0])
+    return store.edge_count()
 
 
 def _user_count(store) -> int:

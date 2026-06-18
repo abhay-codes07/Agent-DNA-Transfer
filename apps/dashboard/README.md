@@ -1,16 +1,29 @@
-# Helix Dashboard
+# Helix Dashboard (React + Vite)
 
-The local web UI for curating your memory — making it visible, accountable, and editable
-(PRD §6.4, ROADMAP Phase 5). React + Vite + Tailwind, talking to the local Helix daemon over
-a localhost API.
+The richer frontend for curating your memory. It talks to the local Helix daemon's JSON API —
+the same endpoints the built-in zero-build dashboard uses.
 
-Planned views:
+> **Two dashboards, one API.** `helix dashboard` already serves a dependency-free, zero-build
+> HTML UI on `127.0.0.1:8787` — that's the default and needs no Node. This React app is the
+> optional richer client; build it with Node when you want it.
 
-- **Graph** — browse/search the typed memory graph; see relations.
-- **Inspect** — for any fact: source, date, confidence, and *why it believes this* (provenance).
-- **Curate** — edit / confirm / forget; tune decay.
-- **History** — git-style timeline; diff and rollback.
-- **Strands & keys** — export/import/merge `.dna`; manage your signing identity.
-- **Cost & telemetry** — local-only: LLM calls/tokens/spend and gate drop-rate (prove you're at $0).
+## Run (dev)
 
-**Status:** pre-alpha placeholder. Scaffolded in Phase 5.
+```bash
+helix dashboard --no-open      # start the daemon + API on 127.0.0.1:8787
+cd apps/dashboard
+npm install
+npm run dev                    # Vite dev server; /api is proxied to the daemon (vite.config.ts)
+```
+
+## Build
+
+```bash
+npm run build                  # -> dist/ (static; serve behind the daemon or any static host)
+```
+
+Views: **Memories** (search / add / inline edit / "why?" provenance / forget), **History**
+(timeline), **Stats**. Planned: graph visualization, decay tuning, strand/key management.
+
+Status: scaffolded against the daemon API; not yet built in CI (no Node toolchain in the Python
+test env). The Python daemon + stdlib dashboard are the tested, shipping default.

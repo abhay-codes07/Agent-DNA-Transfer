@@ -366,6 +366,25 @@ class SqliteStore:
         self.set_meta("version", str(v))
         return v
 
+    def all_edges(self) -> list[Edge]:
+        rows = self.conn.execute(
+            "SELECT id,from_id,to_id,relation,weight,created_at FROM edges"
+        ).fetchall()
+        return [
+            Edge(
+                id=r["id"],
+                from_id=r["from_id"],
+                to_id=r["to_id"],
+                relation=r["relation"],
+                weight=r["weight"],
+                created_at=_dt(r["created_at"]) or utcnow(),
+            )
+            for r in rows
+        ]
+
+    def edge_count(self) -> int:
+        return int(self.conn.execute("SELECT COUNT(*) FROM edges").fetchone()[0])
+
     def reembed(self, embedder) -> int:
         """Recompute every stored vector with `embedder` and re-pin the embedding space.
 

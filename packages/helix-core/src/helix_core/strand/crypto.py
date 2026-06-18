@@ -183,7 +183,37 @@ def verify(public_key_hex: str, data: bytes, signature: bytes) -> bool:
         return False
 
 
-# --- hashing / Merkle (BLAKE2b) ---
+# --- hashing / Merkle (BLAKE3 when available, BLAKE2b fallback — ADR-019/032) ---
+
+try:
+    import blake3 as _blake3
+
+    HAVE_BLAKE3 = True
+except ImportError:  # pragma: no cover - exercised only without the dep
+    HAVE_BLAKE3 = False
+
+
+def hash_algo() -> str:
+    """The preferred Merkle hash for new exports: BLAKE3 if installed, else BLAKE2b."""
+    return "blake3" if HAVE_BLAKE3 else "blake2b"
+
+
+def supports_algo(algo: str) -> bool:
+    return algo == "blake2b" or (algo == "blake3" and HAVE_BLAKE3)
+
+
+def _digest(data: bytes, algo: str) -> bytes:
+    if algo == "blake3":
+        if not HAVE_BLAKE3:
+            raise RuntimeError(
+                "strand uses BLAKE3 hashing but the `blake3` package isn't installed"
+            )
+        return _blake3.blake3(data).digest(length=32)
+    return hashlib.blake2b(data, digest_size=32).digest()
+
+
+def leaf_hex(data: bytes, algo: str | None = None) -> str:
+    return _digest(data, algo or hash_algo()).hex()
 
 
 def blake2b_hex(data: bytes) -> str:
@@ -194,16 +224,17 @@ def sha256_hex(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
-def merkle_root(leaf_hexes: list[str]) -> str:
-    """Order-independent BLAKE2b Merkle root over leaf digests (sorted for determinism)."""
+def merkle_root(leaf_hexes: list[str], algo: str | None = None) -> str:
+    """Order-independent Merkle root over leaf digests (sorted for determinism)."""
+    algo = algo or hash_algo()
     if not leaf_hexes:
-        return blake2b_hex(b"")
+        return _digest(b"", algo).hex()
     level = [bytes.fromhex(h) for h in sorted(leaf_hexes)]
     while len(level) > 1:
         nxt: list[bytes] = []
         for i in range(0, len(level), 2):
             a = level[i]
             b = level[i + 1] if i + 1 < len(level) else level[i]
-            nxt.append(hashlib.blake2b(a + b, digest_size=32).digest())
+            nxt.append(_digest(a + b, algo))
         level = nxt
     return level[0].hex()

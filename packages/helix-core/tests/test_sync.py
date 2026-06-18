@@ -137,6 +137,51 @@ def test_engine_sync_over_http(tmp_path):
         httpd.server_close()
 
 
+def test_relay_auth_and_name_validation(tmp_path):
+    import threading
+    import urllib.error
+
+    from helix_core.relay import build_relay
+    from helix_core.sync import HttpBackend
+
+    httpd = build_relay(tmp_path / "store", "127.0.0.1", 0, token="secret")
+    threading.Thread(target=httpd.serve_forever, daemon=True).start()
+    base = f"http://127.0.0.1:{httpd.server_address[1]}"
+    try:
+        auth = HttpBackend(base, headers={"Authorization": "Bearer secret"})
+        auth.put("team.dna", b"ciphertext")
+        assert auth.get("team.dna") == b"ciphertext"
+        with pytest.raises(urllib.error.HTTPError):  # no token -> 401
+            HttpBackend(base).put("x.dna", b"y")
+        with pytest.raises(urllib.error.HTTPError):  # non-.dna name -> 400
+            auth.put("evil.txt", b"y")
+    finally:
+        httpd.shutdown()
+        httpd.server_close()
+
+
+def test_relay_full_sync_cycle(tmp_path):
+    import threading
+
+    from helix_core.relay import build_relay
+
+    httpd = build_relay(tmp_path / "store", "127.0.0.1", 0)
+    threading.Thread(target=httpd.serve_forever, daemon=True).start()
+    base = f"http://127.0.0.1:{httpd.server_address[1]}"
+    try:
+        a = _engine(tmp_path / "a")
+        a.remember("We use Postgres for billing.", scope="project:b")
+        a.push(base, passphrase=PW, name="team.dna")
+        a.close()
+        b = _engine(tmp_path / "b")
+        b.pull(base, passphrase=PW, name="team.dna")
+        assert any("postgres" in m.content.lower() for m in b.list_memories())
+        b.close()
+    finally:
+        httpd.shutdown()
+        httpd.server_close()
+
+
 def test_local_dir_backend_roundtrip(tmp_path):
     backend = LocalDirBackend(tmp_path / "store")
     backend.put("a.dna", b"hello")

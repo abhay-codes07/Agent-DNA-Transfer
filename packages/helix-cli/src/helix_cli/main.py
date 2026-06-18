@@ -229,6 +229,26 @@ def dashboard(
     serve(host=host, port=port, open_browser=open_browser)
 
 
+@app.command()
+def relay(
+    directory: str = typer.Argument("./helix-relay", help="where to store encrypted strands"),
+    host: str = typer.Option("127.0.0.1"),
+    port: int = typer.Option(8788),
+    token: str = typer.Option(None, help="optional bearer token (or HELIX_RELAY_TOKEN)"),
+) -> None:
+    """Run a thin HTTP relay so teammates can `push`/`pull` encrypted .dna strands."""
+    import os
+
+    from helix_core.relay import serve_relay
+
+    tok = token or os.environ.get("HELIX_RELAY_TOKEN")
+    console.print(
+        f"[green]Helix relay[/] on [cyan]http://{host}:{port}[/] serving {directory}"
+        f"  [dim](Ctrl-C to stop)[/]"
+    )
+    serve_relay(directory, host=host, port=port, token=tok)
+
+
 @app.command(name="eval")
 def eval_cmd(k: int = typer.Option(5, help="top-k for precision/recall")) -> None:
     """Run the built-in recall-quality benchmark (precision/recall@k, MRR, latency)."""

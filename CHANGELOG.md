@@ -25,10 +25,12 @@ graceful opt-ins). 74 tests; ruff + black + mypy clean; CI configured.
 - **Optional LLM router** (Gemini free-tier → gpt-4o-mini → Ollama), cached + token-budgeted;
   **batched extraction** (one call for many slices).
 - **Portable `.dna` strand** — signed (Ed25519), encrypted (XChaCha20-Poly1305, chunked,
-  truncation-resistant), versioned; export / verify / import / merge / diff / rollback;
-  re-embed on import.
+  truncation-resistant), versioned; **BLAKE3** Merkle (BLAKE2b fallback) **verified on import**;
+  export / verify / import / merge / diff / rollback; re-embed on import.
 - **Encrypted team sync** — `push` / `pull` over a local folder, an **HTTP object store**, or
-  **S3/R2**; the backend only ever sees ciphertext.
+  **S3/R2**, plus a thin **`helix relay`** server; the backend only ever sees ciphertext.
+- **Swappable store interface** (`Store`) with the default SQLite backend and an experimental
+  **Postgres + pgvector** backend (`PgVectorStore`) for large/shared strands.
 
 ### Added — surfaces & quality
 - Local **dashboard** (stdlib HTTP daemon + self-contained HTML): browse/search/add/edit/forget,
@@ -38,8 +40,14 @@ graceful opt-ins). 74 tests; ruff + black + mypy clean; CI configured.
 - Apache-2.0; zero-dependency core packaged with optional extras (`[embeddings]`, `[crypto]`,
   `[all]`); `py.typed`; GitHub Actions CI.
 
+### Tooling
+- GitHub Actions: CI (ruff + black + mypy + pytest), a release workflow (PyPI Trusted
+  Publishing on tag), and a docs deploy (MkDocs Material).
+
 ### Known gaps (see ROADMAP)
-PyPI publish, a React/Vite dashboard, BLAKE3 Merkle, a Postgres store backend, and a public docs
-site remain. The TypeScript SDK is written against the daemon API but not yet built in CI.
+PyPI publish (workflow ready, not yet published) and full Node-built frontends remain. The
+React/Vite dashboard and TypeScript SDK are written against the daemon API but not built in CI;
+the `PgVectorStore` is experimental (no Postgres in CI). The stdlib dashboard + SQLite are the
+tested defaults.
 
 [0.1.0]: https://github.com/abhay-codes07/Agent-DNA-Transfer/releases/tag/v0.1.0

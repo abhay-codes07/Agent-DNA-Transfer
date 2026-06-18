@@ -1,0 +1,50 @@
+site_name: Helix
+site_description: Take your AI's memory anywhere — a local-first, portable, git-like memory layer for AI coding agents.
+repo_url: https://github.com/abhay-codes07/Agent-DNA-Transfer
+docs_dir: docs
+
+theme:
+  name: material
+  palette:
+    scheme: slate
+    primary: indigo
+  features:
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+
+markdown_extensions:
+  - admonition
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.superfences
+
+nav:
+  - Home: index.md
+  - Product & strategy:
+      - PRD: PRD.md
+      - Competitive Analysis: COMPETITIVE_ANALYSIS.md
+      - Business & GTM: BUSINESS.md
+      - Research Survey: RESEARCH.md
+  - Engineering:
+      - Technical Spec: TSD.md
+      - System Architecture: SYSTEM_ARCHITECTURE.md
+      - Memory Model: MEMORY_MODEL.md
+      - Consolidation: CONSOLIDATION.md
+      - Retrieval: RETRIEVAL.md
+      - .dna Format: DNA_FORMAT.md
+      - Sync & Merge: SYNC.md
+      - Cost Optimization: COST_OPTIMIZATION.md
+      - API Reference: API_REFERENCE.md
+      - MCP Integration: MCP_INTEGRATION.md
+      - Plugins: PLUGINS.md
+      - Observability: OBSERVABILITY.md
+  - Trust, quality & process:
+      - Security Model: SECURITY_MODEL.md
+      - Privacy & Compliance: PRIVACY_COMPLIANCE.md
+      - Evaluation: EVALUATION.md
+      - Governance: GOVERNANCE.md
+      - Glossary: GLOSSARY.md
+
+# Build the site with:  pip install mkdocs-material && mkdocs serve

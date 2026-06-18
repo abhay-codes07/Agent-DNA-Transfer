@@ -1,0 +1,32 @@
+:root {
+  --bg: #0b0e14;
+  --panel: #141925;
+  --line: #232a3a;
+  --fg: #e6e9ef;
+  --dim: #8b95a7;
+  --accent: #5b8cff;
+  --green: #4ec9a3;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 14px/1.5 ui-sans-serif, system-ui, "Segoe UI", Roboto; }
+.wrap { max-width: 980px; margin: 0 auto; padding: 20px; }
+header { display: flex; align-items: baseline; gap: 12px; padding: 6px 0 16px; }
+header h1 { font-size: 18px; margin: 0; }
+header .tag { color: var(--dim); font-size: 12px; }
+.tabs { display: flex; gap: 6px; margin-bottom: 16px; }
+.tabs button { background: var(--panel); color: var(--fg); border: 1px solid var(--line); padding: 7px 14px; border-radius: 8px; cursor: pointer; text-transform: capitalize; }
+.tabs button.active { border-color: var(--accent); color: var(--accent); }
+.row { display: flex; gap: 8px; margin-bottom: 14px; }
+input, textarea { background: var(--panel); color: var(--fg); border: 1px solid var(--line); border-radius: 8px; padding: 9px 11px; flex: 1; font: inherit; }
+input.scope { flex: 0 0 160px; }
+textarea { width: 100%; min-height: 62px; }
+button.go { background: var(--accent); color: #fff; border: none; border-radius: 8px; padding: 9px 16px; cursor: pointer; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; margin-bottom: 9px; }
+.card .meta { color: var(--dim); font-size: 12px; display: flex; gap: 10px; margin-top: 6px; align-items: center; }
+.pill { border: 1px solid var(--line); border-radius: 999px; padding: 1px 8px; font-size: 11px; }
+.score { color: var(--green); font-variant-numeric: tabular-nums; }
+.x { cursor: pointer; border: 1px solid var(--line); border-radius: 6px; padding: 1px 8px; }
+.x:hover { color: #ff6b6b; border-color: #ff6b6b; }
+.prov { color: var(--dim); font-size: 12px; border-top: 1px dashed var(--line); padding-top: 6px; margin-top: 8px; }
+.stat { display: flex; justify-content: space-between; gap: 10px; border-bottom: 1px solid var(--line); padding: 7px 0; }
+.muted { color: var(--dim); }

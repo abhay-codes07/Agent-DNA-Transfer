@@ -187,3 +187,43 @@ def test_dna_uses_chunked_stream_mode(tmp_path):
     manifest, _, _ = read_manifest(out)
     assert manifest.enc_mode == "stream"  # chunked secretstream, not legacy single-blob
     eng.close()
+
+
+def test_export_records_merkle_hash_algo(tmp_path):
+    from helix_core.strand import crypto
+    from helix_core.strand.codec import read_manifest
+
+    eng = _engine(tmp_path)
+    eng.remember("a durable fact", scope="g")
+    out = tmp_path / "h.dna"
+    eng.export_strand(str(out), passphrase=PW)
+    manifest, _, _ = read_manifest(out)
+    assert manifest.hash_algo in {"blake3", "blake2b"}
+    assert manifest.hash_algo == crypto.hash_algo()  # BLAKE3 when installed, else BLAKE2b
+    eng.close()
+
+
+def test_merkle_root_is_algo_specific_and_deterministic():
+    from helix_core.strand import crypto
+
+    leaves = [crypto.leaf_hex(b"a", "blake2b"), crypto.leaf_hex(b"b", "blake2b")]
+    assert crypto.merkle_root(leaves, "blake2b") == crypto.merkle_root(leaves, "blake2b")
+    if crypto.HAVE_BLAKE3:
+        l3 = [crypto.leaf_hex(b"a", "blake3"), crypto.leaf_hex(b"b", "blake3")]
+        assert crypto.merkle_root(l3, "blake3") != crypto.merkle_root(leaves, "blake2b")
+
+
+def test_verify_merkle_detects_content_mismatch(tmp_path):
+    from helix_core.strand.codec import _verify_merkle, import_dna
+
+    eng = _engine(tmp_path)
+    eng.remember("an important fact", scope="g")
+    out = tmp_path / "a.dna"
+    eng.export_strand(str(out), passphrase=PW)
+    eng.close()
+
+    dest = tmp_path / "imp.helix.db"
+    manifest = import_dna(out, dest, passphrase=PW)  # happy path: merkle verified, no error
+    manifest.merkle_root = "00" * 32  # doctor the expected root
+    with pytest.raises(ValueError):
+        _verify_merkle(dest, manifest)

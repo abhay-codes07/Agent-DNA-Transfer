@@ -14,9 +14,12 @@ dependencies = []
 # Semantic embeddings (bge-small via fastembed ONNX); without it, a dependency-free hashing
 # embedder is used. The LLM router (Gemini/OpenAI/Ollama) uses stdlib urllib — no extra needed.
 embeddings = ["fastembed>=0.3"]
-# The portable .dna strand: XChaCha20-Poly1305 + Ed25519 + Argon2id (libsodium).
-crypto = ["pynacl>=1.5"]
-all = ["fastembed>=0.3", "pynacl>=1.5"]
+# The portable .dna strand: XChaCha20-Poly1305 + Ed25519 + Argon2id (libsodium) + BLAKE3
+# (BLAKE3 is optional — a stdlib BLAKE2b Merkle is used when it's absent).
+crypto = ["pynacl>=1.5", "blake3>=0.4"]
+# Experimental Postgres+pgvector backend for large/shared strands (PgVectorStore).
+postgres = ["psycopg[binary]>=3.1", "pgvector>=0.2"]
+all = ["fastembed>=0.3", "pynacl>=1.5", "blake3>=0.4"]
 
 [build-system]
 requires = ["hatchling"]
