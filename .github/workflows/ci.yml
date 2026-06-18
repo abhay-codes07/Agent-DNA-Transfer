@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  quality-and-tests:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Install dev + runtime deps
+        # The $0/offline core needs no third-party deps, but the optional features
+        # (.dna crypto, MCP server) and the dev tools do. fastembed is intentionally
+        # omitted so the suite stays fast and offline (its tests skip).
+        run: pip install pytest pytest-cov ruff black mypy pynacl "mcp>=1.0" typer rich
+
+      - name: Ruff (lint)
+        run: ruff check packages conftest.py
+
+      - name: Black (format check)
+        run: black --check packages conftest.py examples
+
+      - name: Mypy (types)
+        run: mypy packages/helix-core/src packages/helix-cli/src packages/helix-mcp/src packages/helix-sdk-python/src
+
+      - name: Pytest
+        env:
+          HELIX_EMBEDDINGS_PROVIDER: hashing # hermetic, offline, no model download
+        run: pytest -p no:cacheprovider --cov=packages --cov-report=term-missing

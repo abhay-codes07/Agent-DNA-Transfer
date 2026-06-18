@@ -146,8 +146,9 @@ Generalize the wedge.
 ## Cross-phase, always-on
 - Security: tiered redaction tests, crypto review, anti-poisoning guardrails, **external audit
   before any public launch** ([Security](docs/SECURITY_MODEL.md), [Privacy](docs/PRIVACY_COMPLIANCE.md))
-- **Evaluation harness** from Phase 1: LongMemEval-style metrics + a coding-agent memory
-  benchmark; the $0/offline path tested as a first-class CI config ([Evaluation](docs/EVALUATION.md))
+- ☑ **Evaluation harness** (`helix eval` / `helix_core.eval`): precision/recall@k, MRR, and
+  recall latency on a built-in coding-agent benchmark ([Evaluation](docs/EVALUATION.md));
+  $0/offline path tested as a first-class CI config (GitHub Actions: ruff + black + mypy + pytest)
 - Trademark/availability check for "Helix" before public launch ([ADR-002](DECISIONS.md))
 - Performance budgets (recall p95, footprint) enforced in CI
 - Docs and ADRs kept in lockstep with code (spec-first invariant)

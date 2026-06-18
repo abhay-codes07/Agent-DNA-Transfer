@@ -18,10 +18,11 @@ One memory. Every agent. Owned by you.
 [Decisions](DECISIONS.md) ·
 [Roadmap](ROADMAP.md)
 
-![status](https://img.shields.io/badge/status-pre--alpha-orange)
+![status](https://img.shields.io/badge/status-alpha-green)
 ![license](https://img.shields.io/badge/license-Apache--2.0-blue)
 ![local-first](https://img.shields.io/badge/local--first-yes-brightgreen)
 ![cost](https://img.shields.io/badge/default%20cost-%240%2Fmo-brightgreen)
+![tests](https://img.shields.io/badge/tests-67%20passing-brightgreen)
 
 </div>
 
@@ -102,31 +103,38 @@ Helix doesn't store raw chat logs. It distills them into a typed **memory graph*
 
 Every node is timestamped, sourced, confidence-scored, and editable.
 
-## Quick start (target experience — see [Roadmap](ROADMAP.md) for status)
+## Quick start
+
+These commands work today (run from source during alpha; PyPI packaging is next):
 
 ```bash
-# 1. Install
-pipx install helix-memory          # or: uv tool install helix-memory
+# from a clone: put the packages on the path, then use the `helix` CLI
+uv sync                       # or: pip install pynacl mcp typer rich fastembed
 
-# 2. Create your memory strand (one local, encrypted file)
-helix init
+helix init                    # create your local strand
+helix add "We chose Postgres over Mongo for billing — needs ACID." --scope project:billing
+helix add "All API errors use RFC-7807." --scope project:billing
+helix search "which database for billing and why" --scope project:billing   # ranks the decision
 
-# 3. Connect it to your agents (writes MCP config for each)
-helix connect claude-code
-helix connect cursor
+helix connect cursor          # wire Helix into an agent over MCP (also: claude-code, vscode, …)
+helix dashboard               # browse / edit / curate in your browser (localhost)
 
-# 4. ...just work. Helix learns in the background.
-
-# 5. Take it anywhere
-helix export ~/Desktop/my-brain.dna      # signed + encrypted bundle
-helix import my-brain.dna                 # on a new machine
-helix merge teammate.dna                  # combine memories, resolve conflicts
-helix log                                 # see how your memory evolved, git-style
+# take it anywhere — signed + encrypted + chunked .dna
+helix export my-brain.dna     #  verify offline with: helix verify my-brain.dna
+helix import my-brain.dna --as work          # on another machine
+helix merge teammate.dna                      # combine memories (conflict-aware dedup)
+helix push  ~/Dropbox/team    # encrypted team sync (push/pull a shared .dna)
+helix log                     # git-style history
+helix eval                    # the built-in recall-quality benchmark
 ```
 
-By default Helix runs **100% locally and free**: local embeddings, an embedded vector +
-graph store, and an LLM router that only calls a model when it actually needs one — and
-prefers a free tier when it does. See [Cost Optimization](docs/COST_OPTIMIZATION.md).
+By default Helix runs **100% locally and free**: local embeddings (bge-small via fastembed
+when installed, else a dependency-free hashing embedder), an embedded vector + graph store in
+one SQLite file, and an LLM router that only calls a model when it needs one — preferring a
+free tier. See [Cost Optimization](docs/COST_OPTIMIZATION.md).
+
+Full CLI: `init · add · search · context · list · forget · relate · maintain · dashboard ·
+connect · export · verify · import · merge · diff · rollback · push · pull · log · eval · doctor`.
 
 ## Documentation
 
@@ -168,10 +176,22 @@ prefers a free tier when it does. See [Cost Optimization](docs/COST_OPTIMIZATION
 
 ## Project status
 
-**Pre-alpha — planning & scaffolding.** This repository currently contains the full
-product and technical design. Implementation is phased; see the [Roadmap](ROADMAP.md).
-Everything here is intentionally specified before being built so contributors (human and
-AI) share one source of truth.
+**Alpha — working.** The core product is built and tested (67 tests; ruff + black + mypy
+clean). Shipped so far:
+
+- **Local memory** ($0/offline): redact → gate → extract → embed → consolidate → store, with
+  hybrid (dense + keyword + graph) retrieval, decay/reinforcement, and bi-temporal facts.
+- **MCP server** + `helix connect` for 8 clients (Claude Code/Desktop, Cursor, Windsurf,
+  VS Code, Gemini, Zed, Codex) and a `--path` override for any other.
+- **Optional LLM router** (free-tier-first Gemini → gpt-4o-mini → Ollama), cached + budgeted.
+- **Portable `.dna`** — signed (Ed25519), encrypted (XChaCha20-Poly1305, chunked), versioned;
+  export/verify/import/merge/diff/rollback, re-embed on import.
+- **Dashboard** (browse/search/add/edit/forget, provenance, history, graph) and **team sync**
+  (encrypted push/pull).
+- **SDKs** (Python + TypeScript) and a built-in **recall benchmark** (`helix eval`).
+
+Still phased (see the [Roadmap](ROADMAP.md)): React dashboard, BLAKE3 + S3 sync backend,
+LLM-assisted consolidation, PyPI packaging, and a public docs site.
 
 ## License
 

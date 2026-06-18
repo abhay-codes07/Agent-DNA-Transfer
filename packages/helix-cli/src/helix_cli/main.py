@@ -200,6 +200,21 @@ def dashboard(
     serve(host=host, port=port, open_browser=open_browser)
 
 
+@app.command(name="eval")
+def eval_cmd(k: int = typer.Option(5, help="top-k for precision/recall")) -> None:
+    """Run the built-in recall-quality benchmark (precision/recall@k, MRR, latency)."""
+    from helix_core.eval import CODING_BENCHMARK, run_eval
+
+    res = run_eval(CODING_BENCHMARK, k=k)
+    table = Table(title="Helix recall benchmark (coding-agent memory)", show_header=False)
+    table.add_column(style="cyan")
+    table.add_column(justify="right")
+    for key, val in res.as_dict().items():
+        table.add_row(key, str(val))
+    console.print(table)
+    console.print("[dim]metrics depend on the active embedder (hashing vs fastembed)[/]")
+
+
 @app.command()
 def doctor() -> None:
     """Diagnose setup: strand, embeddings, store, optional accelerators."""
