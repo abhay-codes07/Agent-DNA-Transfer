@@ -39,7 +39,28 @@ class Engine:
         self.embedder = get_embedder(self.config)
         self.store = SqliteStore(self.config.strand_path)
         self.store.ensure_embedding_space(self.embedder.model, self.embedder.dim)
-        self.extractor = DeterministicExtractor(self.config.heuristic_confidence_cutoff)
+        self.router = None
+        self.extractor = self._build_extractor()
+
+    def _build_extractor(self):
+        """Deterministic by default ($0); LLM-backed when a provider is configured (Phase 3)."""
+        cutoff = self.config.heuristic_confidence_cutoff
+        deterministic = DeterministicExtractor(cutoff)
+        if not self.config.llm_enabled():
+            return deterministic
+        try:
+            from .extract.llm import LLMExtractor
+            from .llm.cache import LLMCache
+            from .llm.router import LLMRouter
+
+            cache = LLMCache(self.config.home / "llm-cache.db")
+            router = LLMRouter(self.config, cache=cache)
+            if not router.available():
+                return deterministic
+            self.router = router
+            return LLMExtractor(router, deterministic, cutoff)
+        except Exception:
+            return deterministic  # never let LLM setup break the $0 path
 
     # --- write path -----------------------------------------------------------
     def remember(
@@ -191,6 +212,9 @@ class Engine:
             "fts5": self.store.fts,
             "active_memories": self.store.count(),
             "archived_memories": self.store.count((Status.ARCHIVED.value,)),
+            "extractor": getattr(self.extractor, "name", "deterministic"),
+            "llm_provider": self.config.llm_provider,
+            "llm_enabled": self.router is not None and self.router.available(),
             "fastembed": _has("fastembed"),
             "sqlite_vec": _has("sqlite_vec"),
         }

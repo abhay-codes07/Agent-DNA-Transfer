@@ -54,15 +54,19 @@ real `fastembed` semantic embeddings + the `.dna` portability layer.
 
 ---
 
-## Phase 3 — LLM-enhanced, still ~$0
+## Phase 3 — LLM-enhanced, still ~$0 ✅ mostly shipped
 Better extraction quality without breaking the cost promise.
 
-- ☐ LLM router (LiteLLM): Gemini 2.0 Flash free tier → gpt-4o-mini fallback
-- ☐ Response cache + batching + structured JSON output + token-budget guardrail
-- ☐ LLM-backed extractor + LLM-assisted conflict adjudication (gray-band only)
-- ☐ Optional local LLM (Ollama) extractor path
+- ☑ LLM router: Gemini 2.0 Flash free tier → gpt-4o-mini fallback (stdlib provider clients;
+  LiteLLM optional — [ADR-031](DECISIONS.md))
+- ☑ Response cache (SQLite, pay-once) + structured JSON output + token-budget guardrail
+- ☑ LLM-backed extractor (gate-gated; always falls back to deterministic on failure/budget)
+- ☑ Optional local LLM (Ollama) extractor path
+- ☐ LLM-assisted conflict adjudication for gray-band consolidation (deferred)
+- ☐ Batched multi-turn extraction (deferred)
 
-**Exit:** quality jumps with a key, yet ≥ 90% of users still incur $0 (PRD §9).
+**Exit:** ✅ quality jumps with a key, default stays $0/offline. Verified offline with a fake
+provider (cache, budget, fallback) + graceful degradation when no provider is reachable.
 
 ---
 

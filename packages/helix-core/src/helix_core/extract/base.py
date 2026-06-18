@@ -2,7 +2,7 @@
 
 Two interchangeable engines behind one Protocol:
   - DeterministicExtractor (deterministic.py): rules + cues. No key, $0, the floor.
-  - LLMExtractor: structured-output prompt, batched (Phase 3).
+  - LLMExtractor (llm.py): structured-output prompt via the router, with deterministic fallback.
 
 Any code path that calls a model MUST keep the deterministic fallback working (CLAUDE.md).
 """
@@ -21,12 +21,3 @@ class Extractor(Protocol):
     ) -> list[CandidateFact]:
         """Turn a (redacted) slice into candidate typed facts."""
         ...
-
-
-class LLMExtractor:
-    """LLM-backed extractor via the router. (Implemented in Phase 3.)"""
-
-    def extract(
-        self, text: str, *, scope: str = "global", force: bool = False
-    ) -> list[CandidateFact]:
-        raise NotImplementedError("Phase 3: structured JSON extraction, batched + cached")

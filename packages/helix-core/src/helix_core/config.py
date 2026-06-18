@@ -109,6 +109,8 @@ class Config:
             return self.gemini_api_key is not None
         if self.llm_provider == "openai":
             return self.openai_api_key is not None
+        if self.llm_provider == "ollama":
+            return True  # local, no key required
         return False
 
 

@@ -503,6 +503,28 @@ without touching the engine. Spec: [`docs/PLUGINS.md`](docs/PLUGINS.md).
 
 ---
 
+## ADR-031 — Phase 3 LLM layer: stdlib provider clients; LiteLLM optional (refines ADR-007)
+**Status:** Accepted · **Date:** 2026-06-18
+
+**Context.** ADR-007 specified a LiteLLM-based router. Implementing Phase 3, requiring LiteLLM
+in the core path would add a heavy dependency and make the offline core un-installable on a
+bare Python; it would also make the LLM path hard to unit-test without network/keys.
+
+**Decision.** Implement the router over a small **Provider interface** with **dependency-free
+stdlib `urllib`** clients for **Gemini** (free-tier-first), **OpenAI** (`gpt-4o-mini` fallback),
+and **Ollama** (local, $0). A **FakeProvider** makes the entire LLM path testable offline. The
+router adds a **SQLite response cache** (pay once), a **monthly token budget guardrail** that
+caps *paid* usage and degrades to deterministic extraction when exhausted, and an
+**LLMExtractor** that always falls back to the deterministic extractor on any failure. LiteLLM
+remains a valid drop-in behind the same Provider interface for users who want its breadth.
+
+**Consequences.** The default stays **$0/offline/deterministic** with no new dependency; the
+LLM path is opt-in (set `HELIX_LLM_PROVIDER` + a key) and fully covered by tests via the fake
+provider. This refines — does not reverse — ADR-007's policy (free-tier-first, cached, budgeted,
+optional); only the "LiteLLM is the implementation" detail is relaxed.
+
+---
+
 ## How to add a decision
 
 1. Copy the ADR skeleton below, bump the number, set Status/Date.
