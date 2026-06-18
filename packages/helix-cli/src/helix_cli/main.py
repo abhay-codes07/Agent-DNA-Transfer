@@ -169,7 +169,7 @@ def connect(
         raise typer.Exit(1)
     try:
         res = do_connect(agent, dry_run=print_only)
-    except ValueError as exc:
+    except (ValueError, RuntimeError) as exc:
         console.print(f"[red]{exc}[/]")
         raise typer.Exit(1)
     verb = "would write" if print_only else "wrote"
@@ -199,6 +199,124 @@ def doctor() -> None:
 def status() -> None:
     """Alias for `doctor`."""
     doctor()
+
+
+# --- transfer: the portable .dna strand (Phase 4) ---
+
+@app.command(name="export")
+def export_cmd(
+    out: str,
+    passphrase: str = typer.Option(None, help="or set HELIX_PASSPHRASE"),
+    label: str = typer.Option("", help="a label for this export"),
+) -> None:
+    """Export your memory to a portable, signed, encrypted .dna strand."""
+    eng = _engine()
+    try:
+        m = eng.export_strand(out, passphrase=passphrase, label=label)
+    except (ValueError, RuntimeError) as exc:
+        console.print(f"[red]{exc}[/]")
+        raise typer.Exit(1)
+    console.print(f"[green]exported[/] -> [cyan]{out}[/]")
+    console.print(f"  version {m.version} · {m.count_memories} memories · {m.count_edges} edges")
+    console.print(f"  merkle [dim]{m.merkle_root[:16]}…[/]  signed by [dim]{m.created_by_pubkey[:16]}…[/]")
+    eng.close()
+
+
+@app.command()
+def verify(file: str) -> None:
+    """Verify a .dna signature and integrity (no passphrase needed)."""
+    eng = _engine()
+    v = eng.verify_strand(file)
+    sig = "[green]valid[/]" if v["signature_valid"] else "[red]INVALID[/]"
+    dbh = "[green]valid[/]" if v["db_hash_valid"] else "[red]INVALID[/]"
+    console.print(f"signature: {sig}   integrity hash: {dbh}")
+    console.print(f"signed by: [dim]{v['pubkey']}[/]")
+    eng.close()
+
+
+@app.command(name="import")
+def import_cmd(
+    file: str,
+    passphrase: str = typer.Option(None, help="or set HELIX_PASSPHRASE"),
+    as_strand: str = typer.Option(None, "--as", help="import as a new named strand"),
+    replace: bool = typer.Option(False, help="replace the active strand (rollback)"),
+) -> None:
+    """Import a .dna strand (verifies signature, decrypts, checks integrity)."""
+    eng = _engine()
+    try:
+        res = eng.import_strand(file, passphrase=passphrase, as_strand=as_strand, replace=replace)
+    except (ValueError, RuntimeError) as exc:
+        console.print(f"[red]{exc}[/]")
+        raise typer.Exit(1)
+    m = res["manifest"]
+    console.print(f"[green]imported[/] {m.count_memories} memories -> [cyan]{res['dest']}[/]")
+    if not replace and res["strand"] != "default":
+        console.print(f"[dim]switch to it with HELIX_STRAND={res['strand']}[/]")
+    eng.close()
+
+
+@app.command()
+def merge(file: str, passphrase: str = typer.Option(None, help="or set HELIX_PASSPHRASE")) -> None:
+    """Merge another .dna strand into yours (conflict-aware dedup)."""
+    eng = _engine()
+    try:
+        res = eng.merge_strand(file, passphrase=passphrase)
+    except (ValueError, RuntimeError) as exc:
+        console.print(f"[red]{exc}[/]")
+        raise typer.Exit(1)
+    o = res["merged"]
+    console.print(f"[green]merged[/]: {o['ADD']} added, {o['UPDATE']} updated, "
+                  f"{o['NOOP']} already known, {o['SUPERSEDE']} superseded")
+    eng.close()
+
+
+@app.command()
+def diff(file: str, passphrase: str = typer.Option(None, help="or set HELIX_PASSPHRASE")) -> None:
+    """Show what differs between your strand and a .dna."""
+    eng = _engine()
+    try:
+        d = eng.diff_strand(file, passphrase=passphrase)
+    except (ValueError, RuntimeError) as exc:
+        console.print(f"[red]{exc}[/]")
+        raise typer.Exit(1)
+    console.print(f"[green]+{d['added']}[/] in the .dna only, [red]-{d['removed']}[/] here only, "
+                  f"{d['common']} in common")
+    for c in d["added_samples"]:
+        console.print(f"  [green]+[/] {c}")
+    for c in d["removed_samples"]:
+        console.print(f"  [red]-[/] {c}")
+    eng.close()
+
+
+@app.command()
+def rollback(file: str, passphrase: str = typer.Option(None, help="or set HELIX_PASSPHRASE")) -> None:
+    """Restore the active strand from a prior .dna export (replaces current)."""
+    eng = _engine()
+    try:
+        eng.import_strand(file, passphrase=passphrase, replace=True)
+    except (ValueError, RuntimeError) as exc:
+        console.print(f"[red]{exc}[/]")
+        raise typer.Exit(1)
+    console.print("[magenta]rolled back[/] the active strand to the imported .dna")
+    eng.close()
+
+
+@app.command()
+def log(limit: int = typer.Option(20)) -> None:
+    """Show how your memory evolved (git-style history)."""
+    eng = _engine()
+    rows = eng.history(limit)
+    if not rows:
+        console.print("[dim]no history yet[/]")
+    else:
+        table = Table(show_lines=False)
+        table.add_column("#", justify="right", style="dim")
+        table.add_column("op", style="cyan")
+        table.add_column("memory")
+        for r in rows:
+            table.add_row(str(r["seq"]), r["op"], r["memory_id"] or "")
+        console.print(table)
+    eng.close()
 
 
 if __name__ == "__main__":

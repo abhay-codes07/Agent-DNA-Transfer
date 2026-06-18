@@ -525,6 +525,29 @@ optional); only the "LiteLLM is the implementation" detail is relaxed.
 
 ---
 
+## ADR-032 — Phase 4 `.dna` implementation choices (refines ADR-008/019)
+**Status:** Accepted · **Date:** 2026-06-18
+
+**Context.** Implementing the `.dna` codec, a few spec primitives weren't available as
+stdlib/installed deps, and some streaming features are more than the MVP needs.
+
+**Decision.** Build the `.dna` codec on **PyNaCl/libsodium**, which matches the spec where it
+counts: **XChaCha20-Poly1305** (AEAD), **Ed25519** (detached signature over the manifest),
+**Argon2id** (KDF, interactive limits). Deviations from ADR-019, recorded here:
+- **Merkle hash = BLAKE2b (stdlib)**, not BLAKE3 (not stdlib; optional future upgrade).
+- **Container = zip (DEFLATE)**, not tar+zstd — simpler, stdlib, fine for individual strands.
+- **Single-blob AEAD** over the snapshot, not 64 KiB **secretstream chunks** — the strand is
+  small for individuals; chunked/streaming is a future enhancement for very large strands.
+Crypto is **lazily imported** so the always-on $0 memory loop stays dependency-free; only
+`export`/`import`/`merge` need PyNaCl. Wrap-don't-encrypt, signed Merkle root, fail-closed
+verification, and offline verifiability are all preserved.
+
+**Consequences.** Spec-accurate enough to deliver verifiable, portable, encrypted strands today
+(round-trip/tamper/wrong-passphrase tested); BLAKE3 + chunked streaming remain clean upgrades
+behind the same format/version. Updated in [`docs/DNA_FORMAT.md`](docs/DNA_FORMAT.md).
+
+---
+
 ## How to add a decision
 
 1. Copy the ADR skeleton below, bump the number, set Status/Date.

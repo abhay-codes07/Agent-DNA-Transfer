@@ -313,6 +313,54 @@ class SqliteStore:
         ids = seen - {memory_id}
         return [m for m in (self.get_memory(i) for i in ids) if m and m.status == Status.ACTIVE]
 
+    # --- strand transfer support (Phase 4) ---
+    def checkpoint(self) -> None:
+        self.conn.commit()
+        try:
+            self.conn.execute("PRAGMA wal_checkpoint(TRUNCATE)")
+        except sqlite3.OperationalError:
+            pass
+
+    def backup_to(self, dest: str | Path) -> None:
+        """Write a clean, standalone snapshot of this strand to `dest` (online backup API)."""
+        self.checkpoint()
+        target = sqlite3.connect(str(dest))
+        try:
+            self.conn.backup(target)
+        finally:
+            target.close()
+
+    def history(self, limit: int = 100) -> list[dict]:
+        rows = self.conn.execute(
+            "SELECT seq, ts, op, memory_id, detail FROM history ORDER BY seq DESC LIMIT ?",
+            (limit,),
+        ).fetchall()
+        return [
+            {"seq": r["seq"], "ts": r["ts"], "op": r["op"], "memory_id": r["memory_id"],
+             "detail": json.loads(r["detail"] or "{}")}
+            for r in rows
+        ]
+
+    def get_version(self) -> int:
+        return int(self.get_meta("version") or 0)
+
+    def bump_version(self) -> int:
+        v = self.get_version() + 1
+        self.set_meta("version", str(v))
+        return v
+
+    def fingerprints(self) -> list[str]:
+        """Stable per-row content strings for the integrity Merkle tree (active rows)."""
+        out: list[str] = []
+        for r in self.conn.execute(
+            "SELECT id,type,content,scope,status,valid_from,valid_to FROM memories"
+        ):
+            out.append("M|" + "|".join(str(r[c]) for c in
+                       ("id", "type", "content", "scope", "status", "valid_from", "valid_to")))
+        for r in self.conn.execute("SELECT id,from_id,to_id,relation FROM edges"):
+            out.append("E|" + "|".join(str(r[c]) for c in ("id", "from_id", "to_id", "relation")))
+        return out
+
     def close(self) -> None:
         self.conn.commit()
         self.conn.close()

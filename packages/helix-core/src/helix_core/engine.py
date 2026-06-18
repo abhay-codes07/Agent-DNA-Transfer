@@ -7,7 +7,9 @@ rank). Transfer (export/import/merge) lands in Phase 4.
 
 from __future__ import annotations
 
+import tempfile
 from datetime import datetime
+from pathlib import Path
 
 from .config import Config, load
 from .consolidate import ConsolidationResult, consolidate
@@ -17,6 +19,7 @@ from .extract.deterministic import DeterministicExtractor
 from .ids import edge_id, slug
 from .models import (
     GLOBAL,
+    CandidateFact,
     Cognitive,
     Edge,
     Hit,
@@ -222,15 +225,109 @@ class Engine:
     def close(self) -> None:
         self.store.close()
 
-    # transfer (Phase 4) ------------------------------------------------------
-    def export_strand(self, path) -> None:  # noqa: ANN001
-        raise NotImplementedError("Phase 4: strand codec export (docs/DNA_FORMAT.md)")
+    # transfer (Phase 4 — the portable .dna strand) ---------------------------
+    def _passphrase(self, override: str | None) -> str:
+        pw = override or self.config.passphrase
+        if not pw:
+            raise ValueError(
+                "a passphrase is required for .dna — pass --passphrase or set HELIX_PASSPHRASE"
+            )
+        return pw
 
-    def import_strand(self, path) -> None:  # noqa: ANN001
-        raise NotImplementedError("Phase 4: strand codec import")
+    @property
+    def _identity_path(self) -> Path:
+        return self.config.home / "identity.key"
 
-    def merge_strand(self, path) -> None:  # noqa: ANN001
-        raise NotImplementedError("Phase 4: three-way merge (docs/SYNC.md)")
+    def export_strand(self, out_path, *, passphrase: str | None = None, label: str = ""):
+        """Package the strand into a signed, encrypted, portable .dna file."""
+        from .strand.codec import export_dna
+
+        return export_dna(self.store, Path(out_path), passphrase=self._passphrase(passphrase),
+                          identity_path=self._identity_path, label=label)
+
+    def verify_strand(self, path) -> dict:
+        from .strand.codec import verify_dna
+
+        return verify_dna(Path(path))
+
+    def import_strand(self, path, *, passphrase: str | None = None,
+                      as_strand: str | None = None, replace: bool = False) -> dict:
+        """Import a .dna into a new strand, or replace the active one (rollback)."""
+        from .strand.codec import import_dna
+
+        pw = self._passphrase(passphrase)
+        if replace:
+            self.store.close()
+            try:
+                manifest = import_dna(Path(path), self.config.strand_path, passphrase=pw)
+            finally:
+                self.store = SqliteStore(self.config.strand_path)
+            return {"strand": self.config.strand, "dest": str(self.config.strand_path),
+                    "manifest": manifest}
+        name = as_strand or "imported"
+        dest = self.config.home / f"{name}.helix.db"
+        manifest = import_dna(Path(path), dest, passphrase=pw)
+        return {"strand": name, "dest": str(dest), "manifest": manifest}
+
+    def merge_strand(self, path, *, passphrase: str | None = None) -> dict:
+        """Merge another .dna into the current strand, reusing consolidation (dedup)."""
+        from .strand.codec import import_dna
+
+        pw = self._passphrase(passphrase)
+        ops = {"ADD": 0, "UPDATE": 0, "NOOP": 0, "SUPERSEDE": 0}
+        with tempfile.TemporaryDirectory() as d:
+            other_path = Path(d) / "other.helix.db"
+            manifest = import_dna(Path(path), other_path, passphrase=pw)
+            other = SqliteStore(other_path)
+            try:
+                with self.store.tx():
+                    for mem in other.all_memories(limit=1_000_000):
+                        if mem.attributes.get("_hub"):
+                            continue
+                        cand = CandidateFact(
+                            type=mem.type, content=mem.content, scope=mem.scope,
+                            cognitive=mem.cognitive, attributes=dict(mem.attributes),
+                            importance=mem.importance, confidence=mem.confidence,
+                        )
+                        emb = self.embedder.embed([mem.content])[0]
+                        origin = mem.provenance[0].origin if mem.provenance else Origin.USER_ASSERTED
+                        prov = Provenance(agent="merge", extractor="merge", origin=origin)
+                        res = consolidate(self.store, cand, emb, prov)
+                        self._link_to_scope(res.memory_id, mem.scope)
+                        ops[res.op] += 1
+            finally:
+                other.close()
+        return {"merged": ops, "from_strand": manifest.strand_id}
+
+    def diff_strand(self, path, *, passphrase: str | None = None) -> dict:
+        """Compare the current strand with a .dna: what's added/removed/common."""
+        pw = self._passphrase(passphrase)
+        from .strand.codec import import_dna
+
+        mine = {(m.type.value, m.content) for m in self.list_memories(limit=1_000_000)}
+        with tempfile.TemporaryDirectory() as d:
+            other_path = Path(d) / "other.helix.db"
+            import_dna(Path(path), other_path, passphrase=pw)
+            other = SqliteStore(other_path)
+            try:
+                theirs = {(m.type.value, m.content) for m in other.all_memories(limit=1_000_000)
+                          if not m.attributes.get("_hub")}
+            finally:
+                other.close()
+        added = theirs - mine  # present in the .dna, missing here
+        removed = mine - theirs  # present here, missing in the .dna
+        return {
+            "added": len(added), "removed": len(removed), "common": len(mine & theirs),
+            "added_samples": [c for _, c in list(added)[:5]],
+            "removed_samples": [c for _, c in list(removed)[:5]],
+        }
+
+    def history(self, limit: int = 50) -> list[dict]:
+        return self.store.history(limit)
+
+    def rollback(self, path, *, passphrase: str | None = None) -> dict:
+        """Restore the active strand from a prior .dna export (verify, then replace)."""
+        return self.import_strand(path, passphrase=passphrase, replace=True)
 
 
 def _has(module: str) -> bool:

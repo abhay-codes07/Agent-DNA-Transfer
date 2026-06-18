@@ -15,10 +15,9 @@ dependencies = [
   "fastembed",            # BAAI/bge-small-en-v1.5 on CPU
   # llm router (optional path)
   "litellm",              # provider-agnostic; Gemini free tier -> gpt-4o-mini
-  # crypto for the .dna strand
-  "pynacl",               # XChaCha20-Poly1305 + Ed25519
-  "argon2-cffi",          # passphrase KDF
-  "blake3",               # content addressing / Merkle integrity
+  # crypto for the .dna strand (lazily imported; only needed for export/import)
+  "pynacl",               # XChaCha20-Poly1305 + Ed25519 + Argon2id (libsodium)
+  # BLAKE2b (stdlib) is used for the Merkle tree; blake3 is an optional future upgrade.
   # misc
   "pydantic>=2",
   "platformdirs",

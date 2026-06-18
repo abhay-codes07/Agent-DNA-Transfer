@@ -70,16 +70,19 @@ provider (cache, budget, fallback) + graceful degradation when no provider is re
 
 ---
 
-## Phase 4 — Portability: the `.dna` strand
+## Phase 4 — Portability: the `.dna` strand ✅ shipped
 Deliver the headline: take your memory anywhere.
 
-- ☐ Strand codec: package/sign (Ed25519)/encrypt (XChaCha20-Poly1305)/verify
-- ☐ `export` / `import` with schema + embedding-space compatibility (re-embed on mismatch)
-- ☐ `log` / `diff` / `rollback` (history)
-- ☐ `merge` two strands (reuse consolidation + conflict resolution)
+- ☑ Strand codec: package/sign (Ed25519)/encrypt (XChaCha20-Poly1305)/Argon2id/verify
+  (PyNaCl; BLAKE2b Merkle — [ADR-032](DECISIONS.md))
+- ☑ `export` / `import` (signature + integrity verified; fail-closed on tamper/wrong passphrase)
+- ☑ `verify` (offline, no passphrase) · `log` (history) · `diff` · `rollback` (restore from .dna)
+- ☑ `merge` two strands (reuses consolidation → dedup/supersede)
+- ☐ Embedding-space re-embed on import mismatch (deferred; same-embedder import works today)
+- ☐ BLAKE3 + 64 KiB chunked streaming for very large strands (deferred)
 
-**Exit:** a user exports on machine A and imports/merges on machine B and it "just works"
-(PRD G2 / metric: portability proof).
+**Exit:** ✅ exported on home A, imported on a fresh home B, and recall works — verified live and
+in tests (round-trip, tamper detection, wrong-passphrase, merge dedup, diff).
 
 ---
 

@@ -8,6 +8,14 @@ file and version like code, without a server or a blockchain.
 
 ---
 
+> **Implementation status (Phase 4, shipped).** The codec is built on PyNaCl/libsodium:
+> **XChaCha20-Poly1305** encryption, **Ed25519** signatures, **Argon2id** KDF — matching this
+> spec. Current deviations ([ADR-032](../DECISIONS.md)): the Merkle hash is **BLAKE2b** (stdlib;
+> BLAKE3 is a future upgrade), the container is a **zip** (not tar+zstd), and encryption is a
+> **single AEAD blob** (64 KiB secretstream chunking is a future enhancement for very large
+> strands). Export/import/verify/merge/diff are implemented and tested (round-trip, tamper
+> detection, wrong-passphrase). `log` reads history; `rollback` restores from a prior `.dna`.
+
 ## 1. Container
 
 A `.dna` file is a single archive (tar, optionally zstd-compressed) containing:
