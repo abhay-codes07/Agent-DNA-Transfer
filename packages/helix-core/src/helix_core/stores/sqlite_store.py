@@ -182,7 +182,8 @@ class SqliteStore:
         if not self.fts:
             return
         self.conn.execute("DELETE FROM memories_fts WHERE id=?", (mem.id,))
-        if mem.status == Status.ACTIVE:
+        # Hub/connector nodes bridge the graph but are not retrievable content.
+        if mem.status == Status.ACTIVE and not mem.attributes.get("_hub"):
             self.conn.execute(
                 "INSERT INTO memories_fts(content,id,scope) VALUES(?,?,?)",
                 (mem.content, mem.id, mem.scope),

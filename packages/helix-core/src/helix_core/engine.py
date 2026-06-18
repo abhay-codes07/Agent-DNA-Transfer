@@ -14,7 +14,20 @@ from .consolidate import ConsolidationResult, consolidate
 from .decay import reinforce, salience
 from .embed import get_embedder
 from .extract.deterministic import DeterministicExtractor
-from .models import GLOBAL, Hit, Memory, Origin, Provenance, Scope, Status, utcnow
+from .ids import edge_id, slug
+from .models import (
+    GLOBAL,
+    Cognitive,
+    Edge,
+    Hit,
+    Memory,
+    MemoryType,
+    Origin,
+    Provenance,
+    Scope,
+    Status,
+    utcnow,
+)
 from .redaction import redact
 from .retrieve import pack_context, recall
 from .stores.sqlite_store import SqliteStore
@@ -51,8 +64,34 @@ class Engine:
             for cand in candidates:
                 emb = self.embedder.embed([cand.content])[0]
                 prov = Provenance(agent=source, extractor=self.extractor.name, origin=origin)
-                results.append(consolidate(self.store, cand, emb, prov))
+                res = consolidate(self.store, cand, emb, prov)
+                self._link_to_scope(res.memory_id, scope)
+                results.append(res)
         return results
+
+    def _link_to_scope(self, memory_id: str, scope: Scope) -> None:
+        """Attach a memory to its project hub node so graph expansion can bridge facts."""
+        if not scope.startswith("project:"):
+            return
+        hub_id = self._ensure_hub(scope)
+        self.store.add_edge(
+            Edge(id=edge_id(hub_id, "has_member", memory_id),
+                 from_id=hub_id, to_id=memory_id, relation="has_member")
+        )
+
+    def _ensure_hub(self, scope: Scope) -> str:
+        name = scope.split(":", 1)[1]
+        hub_id = f"hub_{slug(scope)}"
+        if self.store.get_memory(hub_id) is None:
+            now = utcnow()
+            hub = Memory(
+                id=hub_id, type=MemoryType.ENTITY, content=f"Project: {name}", scope=scope,
+                cognitive=Cognitive.ENTITY, attributes={"_hub": True}, importance=0.2,
+                confidence=0.9, valid_from=now, recorded_at=now, created_at=now,
+                updated_at=now, last_seen_at=now,
+            )
+            self.store.upsert_memory(hub)  # no embedding -> invisible to vector search
+        return hub_id
 
     # --- read path ------------------------------------------------------------
     def recall(
@@ -81,7 +120,8 @@ class Engine:
             hits = self.recall(query, scope=scope, k=20)
         else:
             now = utcnow()
-            mems = self.store.all_memories(scope=scope, limit=200)
+            mems = [m for m in self.store.all_memories(scope=scope, limit=200)
+                    if not m.attributes.get("_hub")]
             hits = sorted(
                 (Hit(memory=m, score=salience(m, now), salience=salience(m, now)) for m in mems),
                 key=lambda h: h.score,
@@ -105,7 +145,42 @@ class Engine:
         return [mem.id]
 
     def list_memories(self, *, scope: Scope | None = None, limit: int = 100) -> list[Memory]:
-        return self.store.all_memories(scope=scope, limit=limit)
+        return [m for m in self.store.all_memories(scope=scope, limit=limit)
+                if not m.attributes.get("_hub")]
+
+    def relate(self, from_id: str, to_id: str, relation: str, weight: float = 1.0) -> str:
+        """Create a typed edge between two memories (memory.relate)."""
+        eid = edge_id(from_id, relation, to_id)
+        with self.store.tx():
+            self.store.add_edge(
+                Edge(id=eid, from_id=from_id, to_id=to_id, relation=relation, weight=weight)
+            )
+            self.store.add_history("relate", from_id, {"to": to_id, "relation": relation})
+        return eid
+
+    def maintain(
+        self, *, now: datetime | None = None, archive_below: float = 0.05, min_age_days: float = 30.0
+    ) -> dict:
+        """Decay-driven housekeeping: archive stale, low-salience memories (never delete).
+
+        Reflection/insight synthesis (LLM-assisted) is Phase 3; this is the deterministic,
+        $0 part of consolidation (docs/CONSOLIDATION.md).
+        """
+        now = now or utcnow()
+        scanned = archived = 0
+        with self.store.tx():
+            for mem in self.store.all_memories(limit=100000):
+                if mem.attributes.get("_hub"):
+                    continue
+                scanned += 1
+                age_days = (now - mem.last_seen_at).total_seconds() / 86400.0
+                if salience(mem, now) < archive_below and age_days >= min_age_days:
+                    mem.status = Status.ARCHIVED
+                    mem.updated_at = now
+                    self.store.upsert_memory(mem)
+                    self.store.add_history("archive", mem.id, {"age_days": round(age_days, 1)})
+                    archived += 1
+        return {"scanned": scanned, "archived": archived}
 
     # --- diagnostics ----------------------------------------------------------
     def stats(self) -> dict:
@@ -115,6 +190,7 @@ class Engine:
             "embedding_dim": self.embedder.dim,
             "fts5": self.store.fts,
             "active_memories": self.store.count(),
+            "archived_memories": self.store.count((Status.ARCHIVED.value,)),
             "fastembed": _has("fastembed"),
             "sqlite_vec": _has("sqlite_vec"),
         }

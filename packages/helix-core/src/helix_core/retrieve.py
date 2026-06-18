@@ -1,8 +1,9 @@
 """Hybrid retrieval + ranking (TSD §6.4, docs/RETRIEVAL.md, ADR-016).
 
-Dense (cosine) + keyword (FTS/LIKE) candidates → Reciprocal Rank Fusion (k=60) → multi-signal
-ranking (RRF + similarity + salience + recency + confidence) → MMR-lite dedup → optional
-token-budgeted packing. No LLM on this hot path.
+Dense (cosine) + keyword (FTS/LIKE) candidates → Reciprocal Rank Fusion (k=60) → graph
+expansion (PPR-lite: pull neighbors of strong hits) → multi-signal ranking (RRF + similarity +
+salience + recency + confidence + graph proximity) → MMR-lite dedup → optional token-budgeted
+packing. No LLM on this hot path. Hub/connector nodes bridge the graph but never surface.
 """
 
 from __future__ import annotations
@@ -15,14 +16,19 @@ from .models import Hit, Status, utcnow
 
 RRF_K = 60
 
-# Ranking weights (sum ~1.0); tunable per ADR-016. Bias toward fused rank + similarity.
-W_RRF = 0.40
-W_SIM = 0.25
-W_SAL = 0.15
-W_REC = 0.10
-W_CONF = 0.10
+# Ranking weights (sum ~1.0); tunable per ADR-016.
+W_RRF = 0.35
+W_SIM = 0.22
+W_SAL = 0.12
+W_REC = 0.08
+W_CONF = 0.08
+W_GRAPH = 0.15
 
 _TOKEN = re.compile(r"[A-Za-z0-9]+")
+
+
+def _in_scope(mem, scope: str | None) -> bool:
+    return scope is None or mem.scope == scope or mem.scope == "global"
 
 
 def recall(
@@ -33,6 +39,7 @@ def recall(
     scope: str | None = None,
     k: int = 8,
     candidate_n: int = 50,
+    expand: bool = True,
     now: datetime | None = None,
 ) -> list[Hit]:
     now = now or utcnow()
@@ -51,20 +58,39 @@ def recall(
     sim_map = dict(dense)
     max_rrf = max(rrf.values())
 
-    scored: list[Hit] = []
-    for mid, rrf_score in rrf.items():
+    # base candidates: id -> (memory, sim, rrf_norm)
+    base: dict[str, tuple] = {}
+    for mid, score in rrf.items():
         mem = store.get_memory(mid)
-        if not mem or mem.status != Status.ACTIVE:
-            continue
-        sim = sim_map.get(mid, 0.0)
+        if mem and mem.status == Status.ACTIVE:
+            base[mid] = (mem, sim_map.get(mid, 0.0), score / max_rrf)
+
+    # graph expansion (PPR-lite): neighbors of the strongest seeds gain proximity, and
+    # neighbor memories that didn't match textually are pulled in as new candidates.
+    graph_score: dict[str, float] = {}
+    if expand and base:
+        seeds = sorted(base.items(), key=lambda kv: kv[1][2], reverse=True)[:5]
+        for sid, (_smem, _sim, srrf) in seeds:
+            for nb in store.neighbors(sid, depth=1):
+                graph_score[nb.id] = graph_score.get(nb.id, 0.0) + srrf
+                if nb.id not in base and _in_scope(nb, scope):
+                    base[nb.id] = (nb, 0.0, 0.0)
+    max_graph = max(graph_score.values()) if graph_score else 1.0
+
+    scored: list[Hit] = []
+    for mid, (mem, sim, rrf_norm) in base.items():
+        if mem.attributes.get("_hub"):
+            continue  # connectors bridge the graph but never surface as results
         sal = salience(mem, now)
         rec = recency(mem, now)
+        g = graph_score.get(mid, 0.0) / max_graph
         final = (
-            W_RRF * (rrf_score / max_rrf)
+            W_RRF * rrf_norm
             + W_SIM * max(sim, 0.0)
             + W_SAL * sal
             + W_REC * rec
             + W_CONF * mem.confidence
+            + W_GRAPH * g
         )
         scored.append(Hit(memory=mem, score=final, similarity=sim, salience=sal))
 
