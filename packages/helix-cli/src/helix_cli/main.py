@@ -315,6 +315,46 @@ def rollback(file: str, passphrase: str = typer.Option(None, help="or set HELIX_
 
 
 @app.command()
+def push(
+    location: str,
+    passphrase: str = typer.Option(None, help="or set HELIX_PASSPHRASE"),
+    name: str = typer.Option(None, help="strand name on the backend (default: active strand)"),
+) -> None:
+    """Push your encrypted memory to a shared location (a folder / synced drive)."""
+    eng = _engine()
+    try:
+        res = eng.push(location, passphrase=passphrase, name=name)
+    except (ValueError, RuntimeError, NotImplementedError) as exc:
+        console.print(f"[red]{exc}[/]")
+        raise typer.Exit(1)
+    console.print(f"[green]pushed[/] {res['pushed']} ({res['bytes']} bytes, encrypted) -> {res['location']}")
+    eng.close()
+
+
+@app.command()
+def pull(
+    location: str,
+    passphrase: str = typer.Option(None, help="or set HELIX_PASSPHRASE"),
+    name: str = typer.Option(None, help="strand name on the backend (default: active strand)"),
+    replace: bool = typer.Option(False, help="replace instead of merge"),
+) -> None:
+    """Pull a teammate's/your encrypted memory from a shared location and merge it in."""
+    eng = _engine()
+    try:
+        res = eng.pull(location, passphrase=passphrase, name=name, merge=not replace)
+    except (ValueError, RuntimeError, NotImplementedError) as exc:
+        console.print(f"[red]{exc}[/]")
+        raise typer.Exit(1)
+    if res.get("mode") == "merge":
+        o = res["merged"]
+        console.print(f"[green]pulled + merged[/]: {o['ADD']} added, {o['UPDATE']} updated, "
+                      f"{o['NOOP']} already known, {o['SUPERSEDE']} superseded")
+    else:
+        console.print("[green]pulled[/] and replaced the active strand")
+    eng.close()
+
+
+@app.command()
 def log(limit: int = typer.Option(20)) -> None:
     """Show how your memory evolved (git-style history)."""
     eng = _engine()

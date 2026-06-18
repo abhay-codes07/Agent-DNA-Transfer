@@ -342,6 +342,41 @@ class Engine:
     def history(self, limit: int = 50) -> list[dict]:
         return self.store.history(limit)
 
+    # --- optional encrypted sync (Phase 7) -----------------------------------
+    def push(self, location: str, *, passphrase: str | None = None, name: str | None = None) -> dict:
+        """Export the strand and upload the encrypted .dna to a shared location (E2E)."""
+        from .sync import backend_from_uri
+
+        pw = self._passphrase(passphrase)
+        name = name or f"{self.config.strand}.dna"
+        with tempfile.TemporaryDirectory() as d:
+            out = Path(d) / name
+            self.export_strand(str(out), passphrase=pw, label=f"sync:{self.config.strand}")
+            data = out.read_bytes()
+        backend_from_uri(location).put(name, data)
+        return {"pushed": name, "bytes": len(data), "location": location}
+
+    def pull(self, location: str, *, passphrase: str | None = None, name: str | None = None,
+             merge: bool = True) -> dict:
+        """Download an encrypted .dna from a shared location and merge (or replace) locally."""
+        from .sync import backend_from_uri
+
+        pw = self._passphrase(passphrase)
+        name = name or f"{self.config.strand}.dna"
+        data = backend_from_uri(location).get(name)
+        if data is None:
+            raise ValueError(f"no '{name}' found at {location}")
+        with tempfile.TemporaryDirectory() as d:
+            f = Path(d) / name
+            f.write_bytes(data)
+            if merge:
+                res = self.merge_strand(str(f), passphrase=pw)
+                res["mode"] = "merge"
+                return res
+            res = self.import_strand(str(f), passphrase=pw, replace=True)
+            res["mode"] = "replace"
+            return res
+
     def rollback(self, path, *, passphrase: str | None = None) -> dict:
         """Restore the active strand from a prior .dna export (verify, then replace)."""
         return self.import_strand(path, passphrase=passphrase, replace=True)

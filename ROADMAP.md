@@ -113,16 +113,19 @@ Let others build on Helix.
 
 ---
 
-## Phase 7 — Teams & optional sync (open-core)
-Shared memory without giving up local-first ([ADR-010](DECISIONS.md)).
+## Phase 7 — Teams & optional sync (open-core) ✅ v1 shipped
+Shared memory without giving up local-first ([ADR-010](DECISIONS.md), [ADR-022](DECISIONS.md)).
 
-- ☐ Store interface → optional Postgres+pgvector backend
-- ☐ Encrypted team strand sync (bring-your-own storage first; thin relay later)
-- ☐ Scoped sharing, redaction-on-share guarantees, org policy/audit (commercial layer)
-- ☐ Explore decentralized/verifiable backend (Walrus-style) as a pluggable option
+- ☑ Encrypted team sync: `helix push` / `helix pull` move the **encrypted** `.dna` to a shared
+  location; pull reuses the Phase 4 merge (conflict-aware dedup). Backend sees only ciphertext.
+- ☑ `SyncBackend` interface + `LocalDirBackend` (bring-your-own folder / synced drive)
+- ☐ `S3Backend`/R2 + thin relay (interface stubbed; wired later)
+- ☐ Store interface → optional Postgres+pgvector backend (for very large team strands)
+- ☐ Scoped sharing, org policy/audit, "review memory like code" PR flow (commercial layer)
+- ☐ Decentralized/verifiable backend (Walrus-style) as a pluggable option
 
-**Exit:** a team shares and merges a strand with no secret leakage; revenue layer exists
-without ever charging to read your own memory.
+**Exit:** ✅ two people share + merge a strand with no secret leakage (verified live + tests);
+the redaction invariant + E2E encryption mean the backend never sees plaintext.
 
 ---
 
