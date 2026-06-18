@@ -1,6 +1,6 @@
 [project]
 name = "helix-cli"
-version = "0.0.1"
+version = "0.1.0"
 description = "The `helix` command — init, connect, export/import/merge, log, search, doctor."
 readme = "README.md"
 requires-python = ">=3.11"

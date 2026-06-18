@@ -4,7 +4,7 @@
 
 [project]
 name = "helix-memory"
-version = "0.0.1"
+version = "0.1.0"
 description = "Take your AI's memory anywhere — a local-first, portable, git-like memory layer for AI coding agents."
 readme = "README.md"
 requires-python = ">=3.11"

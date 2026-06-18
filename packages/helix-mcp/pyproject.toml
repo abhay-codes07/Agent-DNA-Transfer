@@ -1,6 +1,6 @@
 [project]
 name = "helix-mcp"
-version = "0.0.1"
+version = "0.1.0"
 description = "Helix MCP server — exposes the memory tool/resource surface to any MCP agent."
 readme = "README.md"
 requires-python = ">=3.11"

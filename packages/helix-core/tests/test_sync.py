@@ -11,7 +11,12 @@ pytest.importorskip("nacl")
 
 from helix_core.config import Config  # noqa: E402
 from helix_core.engine import Engine  # noqa: E402
-from helix_core.sync import LocalDirBackend, S3Backend, backend_from_uri  # noqa: E402
+from helix_core.sync import (  # noqa: E402
+    HttpBackend,
+    LocalDirBackend,
+    S3Backend,
+    backend_from_uri,
+)
 
 PW = "team-shared-passphrase"
 
@@ -59,10 +64,77 @@ def test_pull_missing_strand_raises(tmp_path):
 
 def test_backend_selection(tmp_path):
     assert isinstance(backend_from_uri(str(tmp_path / "d")), LocalDirBackend)
-    s3 = backend_from_uri("s3://bucket/prefix")
-    assert isinstance(s3, S3Backend)
-    with pytest.raises(NotImplementedError):
-        s3.put("x.dna", b"data")
+    assert isinstance(backend_from_uri("dir:" + str(tmp_path / "d")), LocalDirBackend)
+    assert isinstance(backend_from_uri("s3://bucket/prefix"), S3Backend)
+    assert isinstance(backend_from_uri("https://example.com/store"), HttpBackend)
+    assert isinstance(backend_from_uri("http://127.0.0.1:9/store"), HttpBackend)
+
+
+# --- HTTP object-store backend (tested against a local stub server) ---
+
+
+def _start_object_server():
+    import threading
+    from http.server import BaseHTTPRequestHandler, HTTPServer
+
+    blobs: dict[str, bytes] = {}
+
+    class Handler(BaseHTTPRequestHandler):
+        def do_PUT(self):
+            n = int(self.headers.get("Content-Length", 0) or 0)
+            blobs[self.path] = self.rfile.read(n)
+            self.send_response(200)
+            self.send_header("Content-Length", "0")
+            self.end_headers()
+
+        def do_GET(self):
+            data = blobs.get(self.path)
+            if data is None:
+                self.send_response(404)
+                self.send_header("Content-Length", "0")
+                self.end_headers()
+                return
+            self.send_response(200)
+            self.send_header("Content-Length", str(len(data)))
+            self.end_headers()
+            self.wfile.write(data)
+
+        def log_message(self, *a):
+            pass
+
+    httpd = HTTPServer(("127.0.0.1", 0), Handler)
+    threading.Thread(target=httpd.serve_forever, daemon=True).start()
+    return httpd, f"http://127.0.0.1:{httpd.server_address[1]}"
+
+
+def test_http_backend_roundtrip():
+    httpd, base = _start_object_server()
+    try:
+        backend = HttpBackend(base)
+        backend.put("x.dna", b"hello-bytes")
+        assert backend.get("x.dna") == b"hello-bytes"
+        assert backend.get("missing.dna") is None
+    finally:
+        httpd.shutdown()
+        httpd.server_close()
+
+
+def test_engine_sync_over_http(tmp_path):
+    httpd, base = _start_object_server()
+    try:
+        a = _engine(tmp_path / "a")
+        a.remember("We use Postgres for billing.", scope="project:billing")
+        a.push(base, passphrase=PW, name="team.dna")
+        a.close()
+
+        b = _engine(tmp_path / "b")
+        b.pull(base, passphrase=PW, name="team.dna")
+        contents = " ".join(m.content.lower() for m in b.list_memories())
+        assert "postgres" in contents  # pulled over HTTP and merged
+        b.close()
+    finally:
+        httpd.shutdown()
+        httpd.server_close()
 
 
 def test_local_dir_backend_roundtrip(tmp_path):

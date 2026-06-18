@@ -1,0 +1,45 @@
+# Changelog
+
+All notable changes to Helix are documented here. Format: [Keep a Changelog](https://keepachangelog.com);
+this project aims for [Semantic Versioning](https://semver.org).
+
+## [0.1.0] — 2026-06-18
+
+First working alpha. A local-first, portable, git-like memory layer for AI coding agents that
+runs **$0 and offline by default** (stdlib-only core; `fastembed`, PyNaCl, an LLM, and MCP are
+graceful opt-ins). 74 tests; ruff + black + mypy clean; CI configured.
+
+### Added — core memory ($0 / offline)
+- Write path: redact → heuristic gate → extract → embed → consolidate → store.
+- Typed, **bi-temporal** knowledge graph in one SQLite file (vectors + graph + FTS + history).
+- Consolidation: ADD / UPDATE / NOOP / **SUPERSEDE**, with **LLM-assisted gray-band
+  adjudication** when a model is configured (deterministic otherwise).
+- Hybrid retrieval: dense + keyword → RRF → graph (PPR-lite) expansion → multi-signal ranking
+  → MMR; read-time decay + SM-2 reinforcement; `maintain` archival.
+- Embeddings: dependency-free hashing embedder default; **fastembed (bge-small)** when installed.
+- `ingest` (seed memory from markdown/notes files or folders, batched) and Markdown export.
+
+### Added — reach & portability
+- **MCP server** (FastMCP/stdio) + `connect` for 8 clients (Claude Code/Desktop, Cursor,
+  Windsurf, VS Code, Gemini, Zed, Codex) and a `--path` override for any other.
+- **Optional LLM router** (Gemini free-tier → gpt-4o-mini → Ollama), cached + token-budgeted;
+  **batched extraction** (one call for many slices).
+- **Portable `.dna` strand** — signed (Ed25519), encrypted (XChaCha20-Poly1305, chunked,
+  truncation-resistant), versioned; export / verify / import / merge / diff / rollback;
+  re-embed on import.
+- **Encrypted team sync** — `push` / `pull` over a local folder, an **HTTP object store**, or
+  **S3/R2**; the backend only ever sees ciphertext.
+
+### Added — surfaces & quality
+- Local **dashboard** (stdlib HTTP daemon + self-contained HTML): browse/search/add/edit/forget,
+  provenance ("why"), history timeline, graph, stats.
+- **SDKs**: Python (full parity) and TypeScript (daemon client).
+- **`helix eval`** recall-quality benchmark (precision/recall@k, MRR, latency).
+- Apache-2.0; zero-dependency core packaged with optional extras (`[embeddings]`, `[crypto]`,
+  `[all]`); `py.typed`; GitHub Actions CI.
+
+### Known gaps (see ROADMAP)
+PyPI publish, a React/Vite dashboard, BLAKE3 Merkle, a Postgres store backend, and a public docs
+site remain. The TypeScript SDK is written against the daemon API but not yet built in CI.
+
+[0.1.0]: https://github.com/abhay-codes07/Agent-DNA-Transfer/releases/tag/v0.1.0

@@ -16,7 +16,7 @@ from __future__ import annotations
 from helix_core.config import Config
 from helix_core.engine import Engine
 
-__version__ = "0.0.1"
+__version__ = "0.1.0"
 
 
 class Helix:

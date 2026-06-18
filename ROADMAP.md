@@ -121,8 +121,9 @@ Shared memory without giving up local-first ([ADR-010](DECISIONS.md), [ADR-022](
 
 - ☑ Encrypted team sync: `helix push` / `helix pull` move the **encrypted** `.dna` to a shared
   location; pull reuses the Phase 4 merge (conflict-aware dedup). Backend sees only ciphertext.
-- ☑ `SyncBackend` interface + `LocalDirBackend` (bring-your-own folder / synced drive)
-- ☐ `S3Backend`/R2 + thin relay (interface stubbed; wired later)
+- ☑ `SyncBackend` interface + backends: `LocalDirBackend` (folder/synced drive),
+  **`HttpBackend`** (any REST/presigned object store), **`S3Backend`** (S3/R2 via boto3)
+- ☐ Thin hosted relay (presence/NAT) — later
 - ☐ Store interface → optional Postgres+pgvector backend (for very large team strands)
 - ☐ Scoped sharing, org policy/audit, "review memory like code" PR flow (commercial layer)
 - ☐ Decentralized/verifiable backend (Walrus-style) as a pluggable option
