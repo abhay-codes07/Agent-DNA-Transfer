@@ -123,15 +123,33 @@ CODING_BENCHMARK: list[EvalCase] = [
     EvalCase(
         name="project-facts",
         memories=[
-            ("We chose Postgres over MongoDB for billing because it needs ACID.", "project:billing"),
+            (
+                "We chose Postgres over MongoDB for billing because it needs ACID.",
+                "project:billing",
+            ),
             ("All API errors use the RFC-7807 problem+json format.", "project:billing"),
-            ("The billing service is built with FastAPI and deployed on Fly.io.", "project:billing"),
+            (
+                "The billing service is built with FastAPI and deployed on Fly.io.",
+                "project:billing",
+            ),
             ("Events flow through NATS, not Kafka.", "project:billing"),
         ],
         queries=[
-            EvalQuery("which database did we choose for billing", ["We chose Postgres over MongoDB for billing because it needs ACID."], "project:billing"),
-            EvalQuery("how should API errors be formatted", ["All API errors use the RFC-7807 problem+json format."], "project:billing"),
-            EvalQuery("what message bus do we use", ["Events flow through NATS, not Kafka."], "project:billing"),
+            EvalQuery(
+                "which database did we choose for billing",
+                ["We chose Postgres over MongoDB for billing because it needs ACID."],
+                "project:billing",
+            ),
+            EvalQuery(
+                "how should API errors be formatted",
+                ["All API errors use the RFC-7807 problem+json format."],
+                "project:billing",
+            ),
+            EvalQuery(
+                "what message bus do we use",
+                ["Events flow through NATS, not Kafka."],
+                "project:billing",
+            ),
         ],
     ),
     EvalCase(
@@ -142,8 +160,14 @@ CODING_BENCHMARK: list[EvalCase] = [
             ("Always write type hints in core modules.", "global"),
         ],
         queries=[
-            EvalQuery("what testing framework do I prefer", ["I prefer pytest over unittest."], "global"),
-            EvalQuery("which linter and formatter should be used", ["Use ruff and black for Python formatting and linting."], "global"),
+            EvalQuery(
+                "what testing framework do I prefer", ["I prefer pytest over unittest."], "global"
+            ),
+            EvalQuery(
+                "which linter and formatter should be used",
+                ["Use ruff and black for Python formatting and linting."],
+                "global",
+            ),
         ],
     ),
     EvalCase(
@@ -153,7 +177,11 @@ CODING_BENCHMARK: list[EvalCase] = [
             ("This service uses Memcached for caching.", "project:beta"),
         ],
         queries=[
-            EvalQuery("what cache does this service use", ["This service uses Redis for caching."], "project:alpha"),
+            EvalQuery(
+                "what cache does this service use",
+                ["This service uses Redis for caching."],
+                "project:alpha",
+            ),
         ],
     ),
 ]

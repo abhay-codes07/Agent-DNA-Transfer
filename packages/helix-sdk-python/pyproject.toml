@@ -5,7 +5,7 @@ description = "Programmatic Python SDK for embedding Helix memory in custom agen
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "Apache-2.0" }
-dependencies = ["helix-core"]
+dependencies = ["helix-core[all]"]  # SDK exposes transfer (.dna) -> needs crypto + embeddings
 
 [build-system]
 requires = ["hatchling"]

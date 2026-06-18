@@ -19,7 +19,13 @@ def test_perfect_recall_case(tmp_path):
     case = EvalCase(
         name="t",
         memories=[("We use Postgres for the billing service.", "project:b")],
-        queries=[EvalQuery("postgres billing database", ["We use Postgres for the billing service."], "project:b")],
+        queries=[
+            EvalQuery(
+                "postgres billing database",
+                ["We use Postgres for the billing service."],
+                "project:b",
+            )
+        ],
     )
     res = run_eval([case], k=5, home=tmp_path)
     assert res.recall_at_k == 1.0

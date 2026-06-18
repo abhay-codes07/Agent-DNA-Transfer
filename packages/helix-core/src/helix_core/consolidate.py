@@ -8,6 +8,7 @@ re-stated fact is a NOOP that simply reinforces.
 
 from __future__ import annotations
 
+import json
 import re
 from dataclasses import dataclass
 
@@ -18,10 +19,12 @@ from .models import CandidateFact, Edge, Memory, Provenance, Status, utcnow
 # Cosine thresholds (vectors are normalized; cosine in [-1, 1]).
 DUP_THRESHOLD = 0.97  # essentially the same statement -> NOOP
 UPDATE_THRESHOLD = 0.82  # same subject, refine/supersede
+GRAY_LOW = 0.65  # below DUP and around UPDATE: ambiguous -> ask the LLM if available (ADR-034)
 
 _NEGATION = re.compile(r"\b(no longer|not|instead|now use|switched to|deprecated|don'?t)\b", re.I)
 # Types that hold at most one current value per scope -> a near-match is a supersession.
 _SINGLETON = {"identity"}
+_VERDICTS = {"duplicate", "update", "contradict", "distinct"}
 
 
 @dataclass(slots=True)
@@ -35,47 +38,100 @@ def consolidate(
     candidate: CandidateFact,
     embedding: list[float],
     provenance: Provenance,
+    *,
+    router=None,  # optional LLMRouter for gray-band adjudication
 ) -> ConsolidationResult:
     now = utcnow()
     hits = store.vector_search(embedding, k=5, scope=candidate.scope)
     best_id, best_sim = hits[0] if hits else (None, 0.0)
     best = store.get_memory(best_id) if best_id else None
+    same_type = best is not None and best.type == candidate.type
 
-    # NOOP — we already know this; reinforce it.
-    if best and best_sim >= DUP_THRESHOLD and best.type == candidate.type:
-        reinforce(best, now)
-        best.confidence = min(best.confidence + 0.05, 1.0)
-        best.provenance.append(provenance)
-        best.updated_at = now
-        store.upsert_memory(best)
-        store.add_history("noop", best.id, {"sim": round(best_sim, 3)})
-        return ConsolidationResult("NOOP", best.id)
+    # NOOP — clearly the same; reinforce (deterministic, never spends an LLM call).
+    if best and same_type and best_sim >= DUP_THRESHOLD:
+        return _noop(store, best, provenance, now, best_sim)
 
-    # UPDATE / SUPERSEDE — same subject area.
-    if best and best_sim >= UPDATE_THRESHOLD and best.type == candidate.type:
+    # Gray band — ambiguous. If an LLM is configured, let it adjudicate (ADR-034).
+    if (
+        best
+        and same_type
+        and GRAY_LOW <= best_sim < DUP_THRESHOLD
+        and router
+        and router.available()
+    ):
+        verdict = _llm_adjudicate(router, best, candidate)
+        if verdict == "duplicate":
+            return _noop(store, best, provenance, now, best_sim, op="noop-llm")
+        if verdict == "contradict":
+            return _supersede(store, best, candidate, embedding, provenance, now, best_sim)
+        if verdict == "update":
+            return _update(store, best, candidate, embedding, provenance, now, best_sim)
+        if verdict == "distinct":
+            return _add(store, candidate, embedding, provenance, now)
+        # None / unavailable -> fall through to the deterministic decision below.
+
+    # Deterministic UPDATE / SUPERSEDE — same subject area.
+    if best and same_type and best_sim >= UPDATE_THRESHOLD:
         contradicts = (
             bool(_NEGATION.search(candidate.content)) or candidate.type.value in _SINGLETON
         )
         if contradicts:
             return _supersede(store, best, candidate, embedding, provenance, now, best_sim)
-        # Refine in place: prefer the richer statement, merge metadata, reinforce.
-        if len(candidate.content) > len(best.content):
-            best.content = candidate.content
-        best.importance = max(best.importance, candidate.importance)
-        best.confidence = min(best.confidence + 0.05, 1.0)
-        best.attributes.update(candidate.attributes)
-        best.provenance.append(provenance)
-        reinforce(best, now)
-        best.updated_at = now
-        store.upsert_memory(best, embedding)
-        store.add_history("update", best.id, {"sim": round(best_sim, 3)})
-        return ConsolidationResult("UPDATE", best.id)
+        return _update(store, best, candidate, embedding, provenance, now, best_sim)
 
-    # ADD — novel.
+    return _add(store, candidate, embedding, provenance, now)
+
+
+def _noop(store, best, provenance, now, sim, op: str = "noop") -> ConsolidationResult:
+    reinforce(best, now)
+    best.confidence = min(best.confidence + 0.05, 1.0)
+    best.provenance.append(provenance)
+    best.updated_at = now
+    store.upsert_memory(best)
+    store.add_history(op, best.id, {"sim": round(sim, 3)})
+    return ConsolidationResult("NOOP", best.id)
+
+
+def _update(store, best, candidate, embedding, provenance, now, sim) -> ConsolidationResult:
+    if len(candidate.content) > len(best.content):
+        best.content = candidate.content
+    best.importance = max(best.importance, candidate.importance)
+    best.confidence = min(best.confidence + 0.05, 1.0)
+    best.attributes.update(candidate.attributes)
+    best.provenance.append(provenance)
+    reinforce(best, now)
+    best.updated_at = now
+    store.upsert_memory(best, embedding)
+    store.add_history("update", best.id, {"sim": round(sim, 3)})
+    return ConsolidationResult("UPDATE", best.id)
+
+
+def _add(store, candidate, embedding, provenance, now) -> ConsolidationResult:
     mem = _new_memory(candidate, provenance, now)
     store.upsert_memory(mem, embedding)
     store.add_history("add", mem.id, {"type": mem.type.value})
     return ConsolidationResult("ADD", mem.id)
+
+
+def _llm_adjudicate(router, existing: Memory, candidate: CandidateFact) -> str | None:
+    """Ask the LLM how the new statement relates to an existing memory. None on any failure."""
+    prompt = (
+        f"Existing memory: {existing.content}\n"
+        f"New statement: {candidate.content}\n"
+        'Respond JSON {"relation": "<r>"} where <r> is one of: '
+        "duplicate (same fact), update (refines/extends the same subject), "
+        "contradict (new replaces or negates the old), distinct (a different fact)."
+    )
+    try:
+        result = router.complete(
+            prompt,
+            system="You classify how a new statement relates to an existing memory.",
+            json_mode=True,
+        )
+        relation = str(json.loads(result.text).get("relation", "")).lower().strip()
+        return relation if relation in _VERDICTS else None
+    except Exception:
+        return None
 
 
 def _supersede(

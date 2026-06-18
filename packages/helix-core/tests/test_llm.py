@@ -9,6 +9,7 @@ from __future__ import annotations
 import pytest
 
 from helix_core.config import Config
+from helix_core.engine import Engine
 from helix_core.extract.llm import LLMExtractor
 from helix_core.llm.cache import LLMCache
 from helix_core.llm.providers import FakeProvider
@@ -103,3 +104,31 @@ def test_llm_extractor_gate_skips_chatter_without_calling_model():
     ex = LLMExtractor(LLMRouter(Config(), providers=[fake]), cutoff=0.75)
     assert ex.extract("ok thanks!", scope="g", force=False) == []
     assert fake.calls == 0  # the heuristic gate prevented a paid call (cost lever)
+
+
+# --- gray-band consolidation adjudication (ADR-034) ---
+
+
+def _engine_with_verdict(tmp_path, relation: str) -> Engine:
+    eng = Engine(Config(home=tmp_path))
+    eng.remember("We use MongoDB for the billing service.", scope="project:b")
+    eng.router = LLMRouter(Config(), providers=[FakeProvider('{"relation": "%s"}' % relation)])
+    return eng
+
+
+def test_consolidation_llm_adjudicates_contradiction_as_supersede(tmp_path):
+    eng = _engine_with_verdict(tmp_path, "contradict")
+    r = eng.remember("We use Postgres for the billing service.", scope="project:b")
+    assert r[0].op == "SUPERSEDE"  # LLM said the new fact replaces the old one
+    actives = [m for m in eng.list_memories() if "billing service" in m.content.lower()]
+    assert len(actives) == 1 and "postgres" in actives[0].content.lower()
+    eng.close()
+
+
+def test_consolidation_llm_distinct_keeps_both(tmp_path):
+    eng = _engine_with_verdict(tmp_path, "distinct")
+    r = eng.remember("We use Postgres for the billing service.", scope="project:b")
+    assert r[0].op == "ADD"  # LLM said it's a different fact -> keep both
+    actives = [m for m in eng.list_memories() if "billing service" in m.content.lower()]
+    assert len(actives) == 2
+    eng.close()

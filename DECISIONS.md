@@ -569,6 +569,34 @@ serialized. Curation depth (inline edit, history timeline, graph viz) grows iter
 
 ---
 
+## ADR-034 — LLM-assisted gray-band consolidation (refines ADR-007, Phase 3 tail)
+**Status:** Accepted · **Date:** 2026-06-18
+
+**Context.** Pure cosine thresholds decide ADD/UPDATE/NOOP/SUPERSEDE well at the extremes, but
+the middle ("gray band", ~0.65–0.97) is genuinely ambiguous: is the new statement a duplicate,
+a refinement, a contradiction that should supersede, or a distinct fact?
+
+**Decision.** When similarity falls in the gray band, the candidate and nearest memory share a
+type, **and an LLM router is configured**, ask the model to classify the relationship
+(`duplicate | update | contradict | distinct`) and act on the verdict (NOOP / UPDATE /
+SUPERSEDE / ADD). It is **gated to the gray band only** (clear DUP matches still NOOP for free),
+and **falls back to the deterministic decision** on any failure/unavailability — so the $0
+default is unchanged. Wired into both the write path and `.dna` merge. Spec:
+[`docs/CONSOLIDATION.md`](docs/CONSOLIDATION.md).
+
+**Consequences.** Smarter conflict handling (e.g. "we use Mongo" → "we use Postgres" correctly
+supersedes when the LLM says so) without extra cost on the common path; fully tested offline via
+a fake provider.
+
+## Packaging note (ADR-004 follow-up)
+The `helix-core` package has **zero required runtime dependencies** (pure stdlib); semantic
+embeddings (`fastembed`) and the `.dna` crypto (`pynacl`) are **optional extras**
+(`helix-core[embeddings]`, `helix-core[crypto]`, `helix-core[all]`), imported lazily. The CLI
+and SDK pull `helix-core[all]`. Verified: all four packages build (sdist + wheel) and the core
+installs + runs standalone in a fresh venv with no third-party deps.
+
+---
+
 ## How to add a decision
 
 1. Copy the ADR skeleton below, bump the number, set Status/Date.

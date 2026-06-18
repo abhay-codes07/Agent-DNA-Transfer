@@ -88,7 +88,7 @@ class Engine:
             for cand in candidates:
                 emb = self.embedder.embed([cand.content])[0]
                 prov = Provenance(agent=source, extractor=self.extractor.name, origin=origin)
-                res = consolidate(self.store, cand, emb, prov)
+                res = consolidate(self.store, cand, emb, prov, router=self.router)
                 self._link_to_scope(res.memory_id, scope)
                 results.append(res)
         return results
@@ -389,7 +389,7 @@ class Engine:
                             mem.provenance[0].origin if mem.provenance else Origin.USER_ASSERTED
                         )
                         prov = Provenance(agent="merge", extractor="merge", origin=origin)
-                        res = consolidate(self.store, cand, emb, prov)
+                        res = consolidate(self.store, cand, emb, prov, router=self.router)
                         self._link_to_scope(res.memory_id, mem.scope)
                         ops[res.op] += 1
             finally:

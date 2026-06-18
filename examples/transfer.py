@@ -20,7 +20,9 @@ def main() -> None:
 
         # --- machine A: remember some facts, export a signed+encrypted .dna ---
         a = Helix(Config(home=root / "machine-a"))
-        a.remember("We chose Postgres over Mongo for billing — needs ACID.", scope="project:billing")
+        a.remember(
+            "We chose Postgres over Mongo for billing — needs ACID.", scope="project:billing"
+        )
         a.remember("All API errors use RFC-7807.", scope="project:billing")
         dna = root / "my-brain.dna"
         manifest = a.export(str(dna), passphrase=PASSPHRASE, label="laptop")

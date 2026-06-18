@@ -6,22 +6,17 @@ readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "Apache-2.0" }
 
-# NOTE: pinned at integration time. Listed here to document intent (see CLAUDE.md / TSD).
-dependencies = [
-  # storage
-  "sqlite-vec",            # embedded vector store; the strand *is* a SQLite file
-  "networkx",             # in-memory graph projections
-  # embeddings (local default — no API, no cost)
-  "fastembed",            # BAAI/bge-small-en-v1.5 on CPU
-  # llm router (optional path)
-  "litellm",              # provider-agnostic; Gemini free tier -> gpt-4o-mini
-  # crypto for the .dna strand (lazily imported; only needed for export/import)
-  "pynacl",               # XChaCha20-Poly1305 + Ed25519 + Argon2id (libsodium)
-  # BLAKE2b (stdlib) is used for the Merkle tree; blake3 is an optional future upgrade.
-  # misc
-  "pydantic>=2",
-  "platformdirs",
-]
+# The $0/offline core has NO required runtime dependencies — it is pure stdlib (sqlite3,
+# hashlib, urllib, …). Opt-in features live behind extras and are imported lazily:
+dependencies = []
+
+[project.optional-dependencies]
+# Semantic embeddings (bge-small via fastembed ONNX); without it, a dependency-free hashing
+# embedder is used. The LLM router (Gemini/OpenAI/Ollama) uses stdlib urllib — no extra needed.
+embeddings = ["fastembed>=0.3"]
+# The portable .dna strand: XChaCha20-Poly1305 + Ed25519 + Argon2id (libsodium).
+crypto = ["pynacl>=1.5"]
+all = ["fastembed>=0.3", "pynacl>=1.5"]
 
 [build-system]
 requires = ["hatchling"]
