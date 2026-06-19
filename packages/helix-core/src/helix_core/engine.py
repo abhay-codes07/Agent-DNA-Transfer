@@ -249,16 +249,29 @@ class Engine:
         k: int = 8,
         touch: bool = False,
         rerank: bool | None = None,
+        deep: bool | None = None,
         now: datetime | None = None,
     ) -> list[Hit]:
         """Hybrid retrieval + ranking. With touch=True, reinforce the surfaced memories.
 
         If `rerank` (or `config.rerank`) is set, an optional reranker re-scores the top
         candidates (v2 plan §2.1) — a wider candidate set is fetched, then trimmed to `k`.
+
+        If `deep` (or auto-detected for a multi-hop query) is set, graph expansion goes two hops
+        instead of one (v2 plan §2.5) — bridging facts that a single hop wouldn't reach.
         """
         use_rerank = self.config.rerank if rerank is None else rerank
+        use_deep = _is_multi_hop(query) if deep is None else deep
         fetch_k = max(k, 30) if use_rerank else k
-        hits = recall(self.store, self.embedder, query, scope=scope, k=fetch_k, now=now)
+        hits = recall(
+            self.store,
+            self.embedder,
+            query,
+            scope=scope,
+            k=fetch_k,
+            expand_depth=2 if use_deep else 1,
+            now=now,
+        )
         if use_rerank and hits:
             from .rerank import apply_rerank
 
@@ -746,6 +759,28 @@ class Engine:
                     self.store.add_history("archive", mem.id, {"age_days": round(age_days, 1)})
                     archived += 1
         return {"scanned": scanned, "archived": archived}
+
+    def purge(self, *, retention_days: float = 365.0, now: datetime | None = None) -> dict:
+        """Hard-delete (and tombstone) memories archived/forgotten longer than the retention
+        window — wiring decay into actual erasure (GDPR storage limitation, Art. 5(1)(e)).
+
+        Unlike `maintain` (which only archives), this irreversibly removes; it is audited and
+        tombstoned so a later merge can't resurrect a fact you chose to age out.
+        """
+        now = now or utcnow()
+        purged = 0
+        with self.store.tx():
+            for status in (Status.ARCHIVED, Status.FORGOTTEN):
+                for m in self.store.all_memories(statuses=(status.value,), limit=100000):
+                    age_days = (now - m.updated_at).total_seconds() / 86400.0
+                    if age_days >= retention_days:
+                        self.store.delete_memory(m.id, tombstone=True)
+                        self.store.add_history("purge", m.id, {"age_days": round(age_days, 1)})
+                        self.store.add_audit(
+                            "system", "purge", m.id, {"age_days": round(age_days, 1)}
+                        )
+                        purged += 1
+        return {"purged": purged}
 
     def consolidate_sleep(self, *, min_reinforced: int = 2, reflect: bool = True) -> dict:
         """Offline 'sleep-time' consolidation (v2 plan §1.2), run off the hot path.
@@ -1332,6 +1367,19 @@ def _has(module: str) -> bool:
     import importlib.util
 
     return importlib.util.find_spec(module) is not None
+
+
+_MULTIHOP = re.compile(
+    r"\b(and|both|between|relate[ds]?|relationship|connection|across|versus|vs|compare|together)\b",
+    re.I,
+)
+
+
+def _is_multi_hop(query: str) -> bool:
+    """Heuristic: a query that spans two subjects benefits from a second graph hop (§2.5)."""
+    from .staleness import key_entities
+
+    return bool(_MULTIHOP.search(query)) or len(key_entities(query)) >= 2
 
 
 _BULLET = re.compile(r"^([-*+]|\d+[.)])\s+")

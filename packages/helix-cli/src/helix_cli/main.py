@@ -186,6 +186,19 @@ def maintain(
 
 
 @app.command()
+def purge(
+    retention_days: float = typer.Option(
+        365.0, help="delete archived/forgotten facts older than this"
+    ),
+) -> None:
+    """Permanently delete (and tombstone) memories aged out past the retention window."""
+    eng = _engine()
+    res = eng.purge(retention_days=retention_days)
+    console.print(f"[magenta]purged[/] {res['purged']} memories past retention")
+    eng.close()
+
+
+@app.command()
 def reflect(
     scope: str = typer.Option(None, help="restrict to a scope"),
     min_cluster: int = typer.Option(3, help="minimum related memories to reflect on"),

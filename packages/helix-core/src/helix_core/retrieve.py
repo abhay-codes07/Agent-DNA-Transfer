@@ -44,6 +44,7 @@ def recall(
     k: int = 8,
     candidate_n: int = 50,
     expand: bool = True,
+    expand_depth: int = 1,
     now: datetime | None = None,
 ) -> list[Hit]:
     now = now or utcnow()
@@ -75,7 +76,7 @@ def recall(
     if expand and base:
         seeds = sorted(base.items(), key=lambda kv: kv[1][2], reverse=True)[:5]
         for sid, (_smem, _sim, srrf) in seeds:
-            for nb in store.neighbors(sid, depth=1):
+            for nb in store.neighbors(sid, depth=expand_depth):
                 graph_score[nb.id] = graph_score.get(nb.id, 0.0) + srrf
                 if nb.id not in base and _in_scope(nb, scope):
                     base[nb.id] = (nb, 0.0, 0.0)
