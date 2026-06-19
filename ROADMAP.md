@@ -1,6 +1,10 @@
 # Helix — Roadmap
 
-**Last updated:** 2026-06-18 · **Related:** [PRD](docs/PRD.md) · [TSD](docs/TSD.md) · [Decisions](DECISIONS.md)
+**Last updated:** 2026-06-19 · **Related:** [PRD](docs/PRD.md) · [TSD](docs/TSD.md) · [Decisions](DECISIONS.md)
+
+> **v2 / Phase 2 is now scoped in detail** → see [`docs/V2_PLAN.md`](docs/V2_PLAN.md), the
+> research-backed plan that drives the next major version ("Git for your AI's memory" + the
+> portable-memory open standard). This file remains the high-level phase ledger.
 
 Phased plan from a working wedge to a platform. Each phase is shippable on its own and
 preserves the invariants: **local-first, user-owns-memory, $0 default, MCP interface.**

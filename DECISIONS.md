@@ -599,6 +599,33 @@ installs + runs standalone in a fresh venv with no third-party deps.
 
 ---
 
+## ADR-035 — v2 direction: "Git for your AI's memory" + the portable-memory open standard
+**Status:** Proposed · **Date:** 2026-06-19
+**Context.** v1 shipped a SOTA-aligned engine. Eight parallel deep-research sweeps (memory frontier,
+competitive landscape, ecosystem, collaboration, retrieval, trust/compliance, business, product/UX)
+converged on a clear finding: every funded competitor (Mem0, Zep, Letta) is cloud-locked, and every
+aligned OSS project (Basic Memory, Cognee) is general-purpose — leaving {local-first ∩ coding-native ∩
+portable-signed-encrypted ∩ OSS-$0} occupied by **no one**. The git-like memory verbs
+(diff/merge/branch/rollback on a portable strand) are unclaimed white-space.
+**Decision.** v2 is **additive, not a rewrite.** Reposition Helix as **"Git for your AI's memory"**
+(headline: diff/merge/branch/rollback on the signed `.dna`) and pursue, as the moonshot, an **open
+standard for portable agent memory** ("USB for AI memory"). Full plan, pillars, effort/priority, and a
+three-wave roadmap live in [`docs/V2_PLAN.md`](docs/V2_PLAN.md). Invariants from ADR-001/006/007/028 are
+unchanged: $0/local-first default, no core cloud dependency, no charging to read your own memory,
+encryption never paywalled. Notable refinements it schedules: procedural/skill memory (new type),
+offline sleep-time consolidation (executes ADR-015), staleness detection, local cross-encoder reranker +
+embedding upgrade (executes ADR-017), per-fact signed provenance + quarantine (extends ADR-029),
+erasure-cascade engine (executes ADR-026), envelope encryption (executes ADR-020), framework adapters +
+MCP-registry distribution, and the open-core Sync/Team tiers (extends ADR-028).
+**Consequences.** Gives the project a sharp, defensible thesis and a sequenced backlog; commits us to
+building a coding-memory eval (ADR-027) rather than chasing conversational benchmarks; defers a graph-DB
+dependency permanently (the field is converging back to built-in entity linking — vindicates ADR-005).
+**Alternatives considered.** (a) Rewrite the engine around an external graph/temporal DB — rejected
+(cost, violates single-file portability). (b) Pivot general-purpose to chase Mem0 — rejected (abandons
+the only white-space we own). (c) Lead with a hosted cloud product — rejected (violates local-first).
+
+---
+
 ## How to add a decision
 
 1. Copy the ADR skeleton below, bump the number, set Status/Date.
