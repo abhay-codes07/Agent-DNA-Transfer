@@ -467,6 +467,18 @@ class SqliteStore:
             prev = h
         return True
 
+    def incr_meta(self, key: str, by: int = 1) -> int:
+        """Atomically bump an integer meta counter (e.g. the Lamport clock). No commit, so it
+        composes inside an open `tx()`."""
+        row = self.conn.execute("SELECT value FROM meta WHERE key=?", (key,)).fetchone()
+        cur = (int(row["value"]) if row else 0) + by
+        self.conn.execute(
+            "INSERT INTO meta(key,value) VALUES(?,?) "
+            "ON CONFLICT(key) DO UPDATE SET value=excluded.value",
+            (key, str(cur)),
+        )
+        return cur
+
     def get_version(self) -> int:
         return int(self.get_meta("version") or 0)
 

@@ -668,9 +668,43 @@ class Engine:
         mem.updated_at = utcnow()
         emb = self.embedder.embed([mem.content])[0] if content_changed else None
         with self.store.tx():
+            from .crdt import stamp
+
+            stamp(mem, self.store.incr_meta("lamport"), self.config.strand)
             self.store.upsert_memory(mem, emb)
             self.store.add_history("edit", mem.id, {"content_changed": content_changed})
         return mem
+
+    def merge_replica(self, other_path) -> dict:
+        """CRDT-merge another *replica* of this strand by id (v2 plan §3.3).
+
+        Where `merge_strand` dedups different facts semantically, this converges concurrent edits
+        of the *same* fact: existence is add-wins, and scalar fields resolve last-writer-wins by
+        Lamport clock — so two diverged replicas reach the same state regardless of merge order.
+        Tombstoned (erased) facts are never resurrected.
+        """
+        from .crdt import merge_memories
+        from .stores.sqlite_store import content_fingerprint
+
+        other = SqliteStore(Path(other_path))
+        added = merged = 0
+        try:
+            with self.store.tx():
+                for m in other.all_memories(limit=1_000_000):
+                    if m.attributes.get("_hub") or self.store.is_tombstoned(content_fingerprint(m)):
+                        continue
+                    local = self.store.get_memory(m.id)
+                    if local is None:
+                        self.store.upsert_memory(m, self.embedder.embed([m.content])[0])
+                        added += 1
+                    else:
+                        winner, changed = merge_memories(local, m)
+                        emb = self.embedder.embed([winner.content])[0] if changed else None
+                        self.store.upsert_memory(winner, emb)
+                        merged += 1
+        finally:
+            other.close()
+        return {"added": added, "merged": merged}
 
     def get_memory(self, memory_id: str) -> Memory | None:
         return self.store.get_memory(memory_id)
