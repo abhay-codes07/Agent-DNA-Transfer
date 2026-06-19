@@ -399,6 +399,7 @@ class Engine:
                     self.store.upsert_memory(dm)
             self.store.delete_memory(mem.id, tombstone=True)
             self.store.add_history("erase", mem.id, {"dependents": len(dependents)})
+            self.store.add_audit("user", "erase", mem.id, {"dependents": len(dependents)})
         return {"erased": 1, "id": mem.id, "dependents_flagged": len(dependents)}
 
     def export_subject(self, subject: str, *, k: int = 200) -> dict:
@@ -549,12 +550,14 @@ class Engine:
         mem = self.store.get_memory(memory_id)
         if mem is None or mem.status != Status.QUARANTINED:
             return None
+        who = mem.attributes.get("_contributor", "?")
         with self.store.tx():
             mem.status = Status.ACTIVE
             mem.attributes.pop("_contributor", None)
             mem.updated_at = utcnow()
             self.store.upsert_memory(mem)
             self.store.add_history("approve-incoming", mem.id, {})
+            self.store.add_audit("user", "approve", mem.id, {"from": who})
         return mem
 
     def reject_incoming(self, memory_id: str) -> bool:
@@ -563,7 +566,79 @@ class Engine:
             ok = self.store.delete_memory(memory_id, tombstone=True)
             if ok:
                 self.store.add_history("reject-incoming", memory_id, {})
+                self.store.add_audit("user", "reject", memory_id, {})
         return ok
+
+    # --- governance: propose / review / handoff / audit (v2 plan §3.4 / §3.5) ---
+    def propose(self, content: str, *, scope: Scope = GLOBAL, contributor: str = "proposer") -> str:
+        """Stage a fact as a reviewable proposal (a "memory PR") instead of writing it directly.
+
+        It lands quarantined (not retrievable) and recorded in the audit log; a maintainer then
+        `approve_incoming`/`reject_incoming`. Use for facts that need sign-off before they count.
+        """
+        clean = redact(content, pii=self.config.redact_pii)
+        now = utcnow()
+        mem = Memory(
+            id=new_id("fact", clean),
+            type=MemoryType.FACT,
+            content=clean,
+            scope=scope,
+            status=Status.QUARANTINED,
+            attributes={"_contributor": contributor, "_proposed": True},
+            provenance=[
+                Provenance(agent=contributor, extractor="propose", origin=Origin.AGENT_INGESTED)
+            ],
+            valid_from=now,
+            recorded_at=now,
+            created_at=now,
+            updated_at=now,
+            last_seen_at=now,
+        )
+        with self.store.tx():
+            self.store.upsert_memory(mem, self.embedder.embed([clean])[0])
+            self.store.add_history("propose", mem.id, {"by": contributor})
+            self.store.add_audit(contributor, "propose", mem.id, {"scope": scope})
+        return mem.id
+
+    def handoff(self, memory_ids: list[str], to_scope: Scope, *, agent: str = "agent") -> dict:
+        """Copy a vetted subset of facts into another scope/agent namespace (v2 §3.5).
+
+        Enables write-scoped multi-agent memory: an agent promotes only the facts it chooses to
+        a shared scope, rather than contaminating it wholesale. Tombstoned facts are skipped.
+        """
+        from .stores.sqlite_store import content_fingerprint
+
+        copied = 0
+        with self.store.tx():
+            for mid in memory_ids:
+                src = self.store.get_memory(mid)
+                if src is None or src.attributes.get("_hub"):
+                    continue
+                cand = CandidateFact(
+                    type=src.type,
+                    content=src.content,
+                    scope=to_scope,
+                    cognitive=src.cognitive,
+                    importance=src.importance,
+                    confidence=src.confidence,
+                )
+                if self.store.is_tombstoned(content_fingerprint(src)):
+                    continue
+                emb = self.embedder.embed([src.content])[0]
+                prov = Provenance(agent=agent, extractor="handoff", origin=Origin.AGENT_INGESTED)
+                res = consolidate(self.store, cand, emb, prov, router=self.router)
+                self._link_to_scope(res.memory_id, to_scope)
+                self.store.add_audit(agent, "handoff", res.memory_id, {"from": mid, "to": to_scope})
+                copied += 1
+        return {"handed_off": copied, "to_scope": to_scope}
+
+    def audit_log(self, limit: int = 100) -> list[dict]:
+        """The tamper-evident governance log (who did what, hash-chained)."""
+        return self.store.audit_log(limit)
+
+    def verify_audit(self) -> bool:
+        """True if the audit chain is intact (no entry edited or removed)."""
+        return self.store.verify_audit()
 
     def edit_memory(
         self,

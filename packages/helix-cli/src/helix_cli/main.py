@@ -611,6 +611,52 @@ def import_share_cmd(
     eng.close()
 
 
+@app.command()
+def propose(
+    text: str,
+    scope: str = typer.Option(GLOBAL, help="global or project:<id>"),
+    contributor: str = typer.Option("proposer", help="who is proposing"),
+) -> None:
+    """Stage a fact as a reviewable proposal (a 'memory PR') instead of writing it directly."""
+    eng = _engine()
+    pid = eng.propose(text, scope=scope, contributor=contributor)
+    console.print(f"[yellow]proposed[/] [cyan]{pid}[/] — review with `helix review-incoming`")
+    eng.close()
+
+
+@app.command()
+def handoff(
+    ids: list[str] = typer.Argument(..., help="memory ids to hand off"),
+    to_scope: str = typer.Option(..., "--to", help="destination scope"),
+) -> None:
+    """Copy vetted facts into another scope/agent namespace (multi-agent handoff)."""
+    eng = _engine()
+    res = eng.handoff(list(ids), to_scope)
+    console.print(f"[green]handed off[/] {res['handed_off']} facts -> {res['to_scope']}")
+    eng.close()
+
+
+@app.command()
+def audit(
+    limit: int = typer.Option(50),
+    as_json: bool = typer.Option(False, "--json"),
+) -> None:
+    """Show the tamper-evident governance log and verify its integrity."""
+    eng = _engine()
+    rows = eng.audit_log(limit)
+    intact = eng.verify_audit()
+    if as_json:
+        print(json.dumps({"intact": intact, "entries": rows}, indent=2))
+    else:
+        status = "[green]intact[/]" if intact else "[red]TAMPERED[/]"
+        console.print(f"audit chain: {status}  ({len(rows)} shown)")
+        for r in rows:
+            console.print(
+                f"  [dim]{r['ts'][:19]}[/] [cyan]{r['actor']}[/] {r['action']} {r['target']}"
+            )
+    eng.close()
+
+
 @app.command(name="review-incoming")
 def review_incoming_cmd(as_json: bool = typer.Option(False, "--json")) -> None:
     """List quarantined facts from share imports awaiting your approval."""

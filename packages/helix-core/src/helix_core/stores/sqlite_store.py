@@ -9,6 +9,7 @@ partial strand.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import sqlite3
 from contextlib import contextmanager
@@ -81,6 +82,17 @@ CREATE TABLE IF NOT EXISTS history (
 CREATE TABLE IF NOT EXISTS tombstones (
     fp        TEXT PRIMARY KEY,   -- content fingerprint of an erased fact
     erased_at TEXT
+);
+
+CREATE TABLE IF NOT EXISTS audit (
+    seq       INTEGER PRIMARY KEY AUTOINCREMENT,
+    ts        TEXT,
+    actor     TEXT,
+    action    TEXT,
+    target    TEXT,
+    detail    TEXT,
+    prev_hash TEXT,
+    hash      TEXT          -- BLAKE2b(prev_hash | ts | actor | action | target | detail)
 );
 """
 
@@ -404,6 +416,56 @@ class SqliteStore:
 
     def history_count(self) -> int:
         return int(self.conn.execute("SELECT COUNT(*) FROM history").fetchone()[0])
+
+    # --- tamper-evident audit log (v2 plan §3.4) ---
+    @staticmethod
+    def _audit_hash(prev: str, ts: str, actor: str, action: str, target: str, detail: str) -> str:
+        payload = f"{prev}|{ts}|{actor}|{action}|{target}|{detail}"
+        return hashlib.blake2b(payload.encode("utf-8"), digest_size=16).hexdigest()
+
+    def add_audit(self, actor: str, action: str, target: str, detail: dict | None = None) -> str:
+        """Append a hash-chained audit entry. Each hash commits to the previous, so any later
+        edit/removal breaks the chain (detectable via `verify_audit`)."""
+        row = self.conn.execute("SELECT hash FROM audit ORDER BY seq DESC LIMIT 1").fetchone()
+        prev = row["hash"] if row else ""
+        ts = _iso(utcnow()) or ""
+        dj = json.dumps(detail or {}, sort_keys=True)
+        h = self._audit_hash(prev, ts, actor, action, target, dj)
+        self.conn.execute(
+            "INSERT INTO audit(ts,actor,action,target,detail,prev_hash,hash) VALUES(?,?,?,?,?,?,?)",
+            (ts, actor, action, target, dj, prev, h),
+        )
+        return h
+
+    def audit_log(self, limit: int = 100) -> list[dict]:
+        rows = self.conn.execute(
+            "SELECT seq,ts,actor,action,target,detail,hash FROM audit ORDER BY seq DESC LIMIT ?",
+            (limit,),
+        ).fetchall()
+        return [
+            {
+                "seq": r["seq"],
+                "ts": r["ts"],
+                "actor": r["actor"],
+                "action": r["action"],
+                "target": r["target"],
+                "detail": json.loads(r["detail"] or "{}"),
+                "hash": r["hash"],
+            }
+            for r in rows
+        ]
+
+    def verify_audit(self) -> bool:
+        """Recompute the whole chain; return False if any entry was tampered with or removed."""
+        prev = ""
+        for r in self.conn.execute(
+            "SELECT ts,actor,action,target,detail,prev_hash,hash FROM audit ORDER BY seq"
+        ):
+            h = self._audit_hash(prev, r["ts"], r["actor"], r["action"], r["target"], r["detail"])
+            if r["prev_hash"] != prev or r["hash"] != h:
+                return False
+            prev = h
+        return True
 
     def get_version(self) -> int:
         return int(self.get_meta("version") or 0)
