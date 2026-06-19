@@ -78,6 +78,11 @@ class Config:
     )
     # If set, use a sentence-transformers cross-encoder; else the dependency-free lexical reranker.
     rerank_model: str = field(default_factory=_env("HELIX_RERANK_MODEL", ""))
+    # Auto-link new memories to nearest neighbors with a `related_to` edge (A-MEM, v2 §1.6).
+    # Off by default — it densifies the graph; enable for richer graph-expansion recall.
+    auto_link: bool = field(
+        default_factory=lambda: os.environ.get("HELIX_AUTO_LINK", "0") in ("1", "true", "yes")
+    )
 
     # --- llm router (optional; used only for extraction/consolidation) ---
     llm_provider: str = field(default_factory=_env("HELIX_LLM_PROVIDER", "none"))

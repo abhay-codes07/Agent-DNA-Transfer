@@ -102,8 +102,40 @@ class Engine:
                 prov = Provenance(agent=source, extractor=self.extractor.name, origin=origin)
                 res = consolidate(self.store, cand, emb, prov, router=self.router)
                 self._link_to_scope(res.memory_id, scope)
+                if self.config.auto_link and res.op == "ADD":
+                    self._auto_link(res.memory_id, emb, scope)
                 results.append(res)
         return results
+
+    def _auto_link(
+        self,
+        mem_id: str,
+        embedding: list[float],
+        scope: Scope,
+        *,
+        max_links: int = 3,
+        floor: float = 0.5,
+    ) -> None:
+        """A-MEM (v2 §1.6): link a new memory to its nearest neighbors with a `related_to` edge.
+
+        Upgrades graph expansion from purely structural to semantically justified, while capping
+        out-degree and requiring a similarity floor so the graph doesn't explode.
+        """
+        for nid, sim in self.store.vector_search(embedding, max_links + 1, scope=scope):
+            if nid == mem_id or sim < floor:
+                continue
+            nb = self.store.get_memory(nid)
+            if nb is None or nb.attributes.get("_hub"):
+                continue
+            self.store.add_edge(
+                Edge(
+                    id=edge_id(mem_id, "related_to", nid),
+                    from_id=mem_id,
+                    to_id=nid,
+                    relation="related_to",
+                    weight=round(sim, 3),
+                )
+            )
 
     def _link_to_scope(self, memory_id: str, scope: Scope) -> None:
         """Attach a memory to its project hub node so graph expansion can bridge facts."""
@@ -167,6 +199,8 @@ class Engine:
                     prov = Provenance(agent=source, extractor=self.extractor.name, origin=origin)
                     res = consolidate(self.store, cand, emb, prov, router=self.router)
                     self._link_to_scope(res.memory_id, cand.scope)
+                    if self.config.auto_link and res.op == "ADD":
+                        self._auto_link(res.memory_id, emb, cand.scope)
                     results.append(res)
         return results
 
@@ -774,6 +808,32 @@ class Engine:
             "est_usd_saved": round(est, 4),
             "note": "estimate vs a hosted memory API; Helix runs these locally at $0",
         }
+
+    def changes(self, *, scope: Scope | None = None, limit: int = 50) -> list[dict]:
+        """Answer "when/why did X change?" — the timeline of supersessions (v2 plan §1.4).
+
+        Each supersession is a first-class transition (from → to at a time), not a silent
+        overwrite, so the history of a decision is queryable. Most recent first.
+        """
+        out: list[dict] = []
+        for e in self.store.edges_by_relation("supersedes"):
+            new = self.store.get_memory(e.from_id)
+            old = self.store.get_memory(e.to_id)
+            if new is None or old is None:
+                continue
+            if scope and new.scope != scope:
+                continue
+            when = old.valid_to or new.valid_from
+            out.append(
+                {
+                    "from": old.content,
+                    "to": new.content,
+                    "changed_at": when.isoformat(),
+                    "scope": new.scope,
+                }
+            )
+        out.sort(key=lambda d: d["changed_at"], reverse=True)
+        return out[:limit]
 
     # --- procedural / skill memory (v2 plan §1.1) ----------------------------
     def learn_procedure(

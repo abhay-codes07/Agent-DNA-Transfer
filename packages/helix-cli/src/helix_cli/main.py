@@ -679,6 +679,26 @@ def learn(
 
 
 @app.command()
+def changes(
+    scope: str = typer.Option(None, help="restrict to a scope"),
+    as_json: bool = typer.Option(False, "--json"),
+) -> None:
+    """Show when/why facts changed (the timeline of supersessions)."""
+    eng = _engine()
+    rows = eng.changes(scope=scope)
+    if as_json:
+        print(json.dumps(rows, indent=2))
+    elif not rows:
+        console.print("[dim]no recorded changes yet[/]")
+    else:
+        for r in rows:
+            console.print(
+                f"[dim]{r['changed_at'][:10]}[/]  [red]{r['from']}[/] -> [green]{r['to']}[/]"
+            )
+    eng.close()
+
+
+@app.command()
 def how(
     situation: str,
     k: int = typer.Option(5),
