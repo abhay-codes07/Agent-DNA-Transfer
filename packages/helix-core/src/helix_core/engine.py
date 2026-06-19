@@ -45,7 +45,15 @@ class Engine:
         self.store = SqliteStore(self.config.strand_path)
         self.store.ensure_embedding_space(self.embedder.model, self.embedder.dim)
         self.router = None
+        self._reranker_obj = None
         self.extractor = self._build_extractor()
+
+    def _reranker(self):
+        if self._reranker_obj is None:
+            from .rerank import get_reranker
+
+            self._reranker_obj = get_reranker(self.config)
+        return self._reranker_obj
 
     def _build_extractor(self):
         """Deterministic by default ($0); LLM-backed when a provider is configured (Phase 3)."""
@@ -206,10 +214,23 @@ class Engine:
         scope: Scope | None = None,
         k: int = 8,
         touch: bool = False,
+        rerank: bool | None = None,
         now: datetime | None = None,
     ) -> list[Hit]:
-        """Hybrid retrieval + ranking. With touch=True, reinforce the surfaced memories."""
-        hits = recall(self.store, self.embedder, query, scope=scope, k=k, now=now)
+        """Hybrid retrieval + ranking. With touch=True, reinforce the surfaced memories.
+
+        If `rerank` (or `config.rerank`) is set, an optional reranker re-scores the top
+        candidates (v2 plan §2.1) — a wider candidate set is fetched, then trimmed to `k`.
+        """
+        use_rerank = self.config.rerank if rerank is None else rerank
+        fetch_k = max(k, 30) if use_rerank else k
+        hits = recall(self.store, self.embedder, query, scope=scope, k=fetch_k, now=now)
+        if use_rerank and hits:
+            from .rerank import apply_rerank
+
+            hits = apply_rerank(self._reranker(), query, hits, k)
+        else:
+            hits = hits[:k]
         if touch and hits:
             with self.store.tx():
                 for h in hits:
@@ -452,6 +473,36 @@ class Engine:
                     archived += 1
         return {"scanned": scanned, "archived": archived}
 
+    def consolidate_sleep(self, *, min_reinforced: int = 2, reflect: bool = True) -> dict:
+        """Offline 'sleep-time' consolidation (v2 plan §1.2), run off the hot path.
+
+        Two stages, both keeping the $0 default:
+          1. **Episodic → semantic** (deterministic): an episode recalled/reinforced enough times
+             is promoted to a durable semantic fact — repetition-driven semanticization (CLS).
+          2. **Insight synthesis** (LLM, optional): clusters of facts are distilled into
+             higher-level insights that cite their sources (reuses `reflect`, ≥2 sources).
+        """
+        promoted = 0
+        now = utcnow()
+        with self.store.tx():
+            for mem in self.store.all_memories(limit=100000):
+                if mem.attributes.get("_hub") or mem.attributes.get("_consolidated"):
+                    continue
+                if mem.cognitive == Cognitive.EPISODIC and (
+                    float(mem.attributes.get("_reinforced", 0)) >= min_reinforced
+                ):
+                    mem.cognitive = Cognitive.SEMANTIC
+                    if mem.type == MemoryType.EPISODE:
+                        mem.type = MemoryType.FACT
+                    mem.confidence = min(mem.confidence + 0.1, 1.0)
+                    mem.attributes["_consolidated"] = True
+                    mem.updated_at = now
+                    self.store.upsert_memory(mem)
+                    self.store.add_history("consolidate-promote", mem.id, {})
+                    promoted += 1
+        insights = self.reflect()["insights"] if reflect else 0
+        return {"promoted": promoted, "insights": insights}
+
     def reflect(self, *, scope: Scope | None = None, min_cluster: int = 3) -> dict:
         """Synthesize higher-level insights from clusters of related memories (ADR-015).
 
@@ -533,6 +584,8 @@ class Engine:
             "archived_memories": self.store.count((Status.ARCHIVED.value,)),
             "tombstones": self.store.tombstone_count(),
             "extractor": getattr(self.extractor, "name", "deterministic"),
+            "rerank": self.config.rerank,
+            "reranker": self._reranker().name if self.config.rerank else "off",
             "llm_provider": self.config.llm_provider,
             "llm_enabled": self.router is not None and self.router.available(),
             "fastembed": _has("fastembed"),

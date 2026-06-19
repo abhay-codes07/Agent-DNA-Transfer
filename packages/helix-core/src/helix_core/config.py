@@ -71,6 +71,14 @@ class Config:
         default_factory=_env("HELIX_LOCAL_EMBED_MODEL", "BAAI/bge-small-en-v1.5")
     )
 
+    # --- retrieval ---
+    # Optional reranking after hybrid recall (v2 plan §2.1). Off by default ($0, no model load).
+    rerank: bool = field(
+        default_factory=lambda: os.environ.get("HELIX_RERANK", "0") in ("1", "true", "yes")
+    )
+    # If set, use a sentence-transformers cross-encoder; else the dependency-free lexical reranker.
+    rerank_model: str = field(default_factory=_env("HELIX_RERANK_MODEL", ""))
+
     # --- llm router (optional; used only for extraction/consolidation) ---
     llm_provider: str = field(default_factory=_env("HELIX_LLM_PROVIDER", "none"))
     gemini_model: str = field(default_factory=_env("HELIX_GEMINI_MODEL", "gemini-2.0-flash"))
