@@ -645,6 +645,65 @@ class Engine:
                 copied += 1
         return {"handed_off": copied, "to_scope": to_scope}
 
+    # --- per-fact signing (v2 plan §4.4) -------------------------------------
+    def _identity_seed(self) -> bytes:
+        from .strand.crypto import load_or_create_identity
+
+        return load_or_create_identity(self._identity_path)
+
+    def sign_facts(self) -> dict:
+        """Sign every active fact individually so a recipient can verify it after a merge.
+
+        Uses Ed25519 when the crypto extra is installed, else a stdlib keyed-MAC fallback.
+        Already-signed facts are skipped. Returns counts + the signer id.
+        """
+        from . import factsign
+
+        seed = self._identity_seed()
+        scheme, signer = factsign.signer_id(seed)
+        signed = 0
+        with self.store.tx():
+            for m in self.store.all_memories(limit=1_000_000):
+                if m.attributes.get("_hub") or m.attributes.get("_sig"):
+                    continue
+                _, sig = factsign.sign(seed, factsign.fact_payload(m.type.value, m.content))
+                m.attributes["_sig"] = sig
+                m.attributes["_signer"] = signer
+                m.attributes["_sigscheme"] = scheme
+                m.updated_at = utcnow()
+                self.store.upsert_memory(m)
+                signed += 1
+            self.store.add_audit(signer, "sign-facts", "*", {"signed": signed, "scheme": scheme})
+        return {"signed": signed, "signer": signer, "scheme": scheme}
+
+    def verify_facts(self) -> dict:
+        """Verify every signed fact. Returns counts and the ids of any tampered/unverifiable facts."""
+        from . import factsign
+
+        seed = self._identity_seed()
+        verified = 0
+        tampered: list[str] = []
+        unsigned = 0
+        for m in self.store.all_memories(limit=1_000_000):
+            if m.attributes.get("_hub"):
+                continue
+            sig = m.attributes.get("_sig")
+            if not sig:
+                unsigned += 1
+                continue
+            ok = factsign.verify(
+                str(m.attributes.get("_sigscheme", "")),
+                str(m.attributes.get("_signer", "")),
+                factsign.fact_payload(m.type.value, m.content),
+                str(sig),
+                seed=seed,
+            )
+            if ok:
+                verified += 1
+            else:
+                tampered.append(m.id)
+        return {"verified": verified, "tampered": tampered, "unsigned": unsigned}
+
     def audit_log(self, limit: int = 100) -> list[dict]:
         """The tamper-evident governance log (who did what, hash-chained)."""
         return self.store.audit_log(limit)
@@ -1156,6 +1215,7 @@ class Engine:
             "extractor": getattr(self.extractor, "name", "deterministic"),
             "rerank": self.config.rerank,
             "reranker": self._reranker().name if self.config.rerank else "off",
+            "crypto": _has("nacl"),
             "llm_provider": self.config.llm_provider,
             "llm_enabled": self.router is not None and self.router.available(),
             "fastembed": _has("fastembed"),

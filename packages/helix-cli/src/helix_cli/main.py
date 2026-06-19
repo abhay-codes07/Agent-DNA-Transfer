@@ -649,6 +649,35 @@ def handoff(
     eng.close()
 
 
+@app.command(name="sign")
+def sign_cmd() -> None:
+    """Sign each fact individually (Ed25519 if available, else a local MAC) for merge anti-tamper."""
+    eng = _engine()
+    res = eng.sign_facts()
+    console.print(
+        f"[green]signed[/] {res['signed']} facts as [dim]{res['signer'][:16]}…[/] ({res['scheme']})"
+    )
+    eng.close()
+
+
+@app.command(name="verify-facts")
+def verify_facts_cmd(as_json: bool = typer.Option(False, "--json")) -> None:
+    """Verify per-fact signatures and report any tampered facts."""
+    eng = _engine()
+    res = eng.verify_facts()
+    if as_json:
+        print(json.dumps(res, indent=2))
+    else:
+        tag = "[green]" if not res["tampered"] else "[red]"
+        console.print(
+            f"{tag}verified {res['verified']}[/], tampered {len(res['tampered'])}, "
+            f"unsigned {res['unsigned']}"
+        )
+        for tid in res["tampered"]:
+            console.print(f"  [red]TAMPERED[/] {tid}")
+    eng.close()
+
+
 @app.command()
 def audit(
     limit: int = typer.Option(50),
