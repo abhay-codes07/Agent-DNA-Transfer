@@ -876,6 +876,56 @@ class Engine:
                     related.append({"id": nb.id, "content": nb.content})
         return {"subject": subject, "facts": facts, "related": related, "count": len(facts)}
 
+    def proactive(
+        self,
+        hint: str,
+        *,
+        scope: Scope | None = None,
+        k: int = 3,
+        min_confidence: float = 0.6,
+    ) -> list[dict]:
+        """Surface the few most relevant high-confidence memories for the current file/task,
+        *before* the agent asks (v2 plan §2.4).
+
+        Behind a hard confidence gate and skipping possibly-stale facts: it returns nothing
+        rather than something marginal, because a single irrelevant memory measurably degrades
+        the model ("context rot"). `hint` is the current file path + recent edits / task text.
+        """
+        out: list[dict] = []
+        for h in self.recall(hint, scope=scope, k=k * 4):
+            m = h.memory
+            if m.confidence < min_confidence or m.attributes.get("_stale_suspected"):
+                continue
+            out.append(
+                {
+                    "id": m.id,
+                    "content": m.content,
+                    "type": m.type.value,
+                    "confidence": round(m.confidence, 2),
+                    "score": round(h.score, 3),
+                }
+            )
+            if len(out) >= k:
+                break
+        return out
+
+    def themes(self, *, scope: Scope | None = None, top: int = 8) -> list[dict]:
+        """A lazy 'global' view (v2 plan §2.6): the dominant subjects across memory, computed on
+        demand — no batch community summaries (which don't pay off at single-user scale)."""
+        from collections import Counter
+
+        from .staleness import key_entities
+
+        counts: Counter = Counter()
+        example: dict[str, str] = {}
+        for m in self.list_memories(scope=scope, limit=1_000_000):
+            for e in key_entities(m.content):
+                counts[e] += 1
+                example.setdefault(e, m.content)
+        return [
+            {"topic": e, "mentions": c, "example": example[e]} for e, c in counts.most_common(top)
+        ]
+
     def analytics(self) -> dict:
         """A snapshot of the memory's health for the observability dashboard."""
         from collections import Counter

@@ -725,6 +725,45 @@ def learn(
 
 
 @app.command()
+def proactive(
+    hint: str,
+    scope: str = typer.Option(None, help="restrict to a scope"),
+    k: int = typer.Option(3, help="max facts to surface"),
+    as_json: bool = typer.Option(False, "--json"),
+) -> None:
+    """Surface high-confidence memories relevant to the current file/task (anticipatory recall)."""
+    eng = _engine()
+    facts = eng.proactive(hint, scope=scope, k=k)
+    if as_json:
+        print(json.dumps(facts, indent=2))
+    elif not facts:
+        console.print("[dim]nothing confident enough to surface[/]")
+    else:
+        for f in facts:
+            console.print(f"  • {f['content']} [dim]({f['type']}, conf {f['confidence']})[/]")
+    eng.close()
+
+
+@app.command()
+def themes(
+    scope: str = typer.Option(None, help="restrict to a scope"),
+    top: int = typer.Option(8),
+    as_json: bool = typer.Option(False, "--json"),
+) -> None:
+    """Show the dominant subjects across your memory (a lazy 'global' view)."""
+    eng = _engine()
+    rows = eng.themes(scope=scope, top=top)
+    if as_json:
+        print(json.dumps(rows, indent=2))
+    elif not rows:
+        console.print("[dim]no themes yet[/]")
+    else:
+        for r in rows:
+            console.print(f"  [cyan]{r['topic']}[/] [dim]×{r['mentions']}[/]  {r['example']}")
+    eng.close()
+
+
+@app.command()
 def changes(
     scope: str = typer.Option(None, help="restrict to a scope"),
     as_json: bool = typer.Option(False, "--json"),
