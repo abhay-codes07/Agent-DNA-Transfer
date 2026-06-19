@@ -42,6 +42,41 @@ def test_tampering_breaks_signature(tmp_path):
     eng.close()
 
 
+def test_share_bundle_carries_signatures(tmp_path):
+    eng = _eng(tmp_path)
+    import json
+
+    eng.export_share(tmp_path / "s.json", scope="project:billing", contributor="alice")
+    bundle = json.loads((tmp_path / "s.json").read_text())
+    for f in bundle["facts"]:
+        assert {"sig", "signer", "scheme"} <= set(f)
+        assert f["scheme"] in ("ed25519", "local-mac")
+    eng.close()
+
+
+def test_import_drops_facts_with_a_forged_signature(tmp_path):
+    src = _eng(tmp_path / "src")
+    import json
+
+    src.export_share(tmp_path / "s.json", contributor="alice")
+    src.close()
+    bundle = json.loads((tmp_path / "s.json").read_text())
+    # Corrupt a signature WITHOUT touching content (so the fingerprint still passes).
+    sig = bundle["facts"][0]["sig"]
+    bundle["facts"][0]["sig"] = ("0" if sig[0] != "0" else "1") + sig[1:]
+
+    dst = Engine(Config(home=tmp_path / "dst", strand="bob"))
+    res = dst.import_share(bundle, trust=True)
+    if factsign.have_crypto():
+        # Ed25519 is cross-party verifiable -> the forged signature is caught and dropped.
+        assert res["forged"] == 1
+        assert res["added"] == len(bundle["facts"]) - 1
+    else:
+        # local-MAC isn't cross-party verifiable -> not rejected here (fingerprint still guards).
+        assert res["forged"] == 0
+    dst.close()
+
+
 def test_factsign_roundtrip_either_scheme():
     seed = b"\x01" * 32
     scheme, signer = factsign.signer_id(seed)

@@ -472,7 +472,11 @@ class Engine:
 
         who = contributor or self.config.strand
         bundle = build_bundle(
-            self.list_memories(limit=1_000_000), contributor=who, scope=scope, pii=pii
+            self.list_memories(limit=1_000_000),
+            contributor=who,
+            scope=scope,
+            pii=pii,
+            seed=self._identity_seed(),
         )
         Path(out_path).write_text(json.dumps(bundle, indent=2), encoding="utf-8")
         return {"facts": len(bundle["facts"]), "scope": scope, "path": str(out_path)}
@@ -482,13 +486,16 @@ class Engine:
 
         Tampered facts (failed fingerprint) and tombstoned (previously erased) facts are dropped.
         """
-        from .sharing import verify_bundle
+        from .sharing import verify_bundle, verify_signatures
 
         if isinstance(path_or_bundle, dict):
             bundle = path_or_bundle
         else:
             bundle = json.loads(Path(path_or_bundle).read_text(encoding="utf-8"))
         valid, tampered = verify_bundle(bundle)
+        # Authenticity: drop facts whose Ed25519 signature fails (content integrity is already
+        # covered by the fingerprint check above).
+        valid, forged = verify_signatures(valid)
         contributor = bundle.get("contributor", "unknown")
         trusted = trust or contributor in self._trusted_contributors()
         added = quarantined = skipped = 0
@@ -546,6 +553,7 @@ class Engine:
             "added": added,
             "quarantined": quarantined,
             "tampered": len(tampered),
+            "forged": len(forged),
             "skipped_tombstoned": skipped,
             "contributor": contributor,
         }
@@ -759,11 +767,14 @@ class Engine:
         from .stores.sqlite_store import content_fingerprint
 
         other = SqliteStore(Path(other_path))
-        added = merged = 0
+        added = merged = forged = 0
         try:
             with self.store.tx():
                 for m in other.all_memories(limit=1_000_000):
                     if m.attributes.get("_hub") or self.store.is_tombstoned(content_fingerprint(m)):
+                        continue
+                    if not self._fact_signature_ok(m):
+                        forged += 1  # signed fact whose Ed25519 signature doesn't verify
                         continue
                     local = self.store.get_memory(m.id)
                     if local is None:
@@ -776,7 +787,26 @@ class Engine:
                         merged += 1
         finally:
             other.close()
-        return {"added": added, "merged": merged}
+        return {"added": added, "merged": merged, "forged": forged}
+
+    def _fact_signature_ok(self, m: Memory) -> bool:
+        """True unless a fact carries an Ed25519 signature that fails to verify (anti-tamper).
+
+        Unsigned facts and local-MAC signatures (not cross-party verifiable) pass through here —
+        their integrity is still covered by tombstones / fingerprints elsewhere.
+        """
+        from . import factsign
+
+        scheme = m.attributes.get("_sigscheme")
+        sig = m.attributes.get("_sig")
+        if scheme == "ed25519" and sig:
+            return factsign.verify(
+                str(scheme),
+                str(m.attributes.get("_signer", "")),
+                factsign.fact_payload(m.type.value, m.content),
+                str(sig),
+            )
+        return True
 
     def get_memory(self, memory_id: str) -> Memory | None:
         return self.store.get_memory(memory_id)
