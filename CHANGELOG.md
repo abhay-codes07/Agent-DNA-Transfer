@@ -3,6 +3,35 @@
 All notable changes to Helix are documented here. Format: [Keep a Changelog](https://keepachangelog.com);
 this project aims for [Semantic Versioning](https://semver.org).
 
+## [0.1.1] — 2026-06-20
+
+The v2 wave: **"Git for your AI's memory."** 162 tests; ruff + black + mypy clean; CI green. Still
+$0/offline by default, core dependency-free. PyPI distribution names: the **`helix-dna-*`** family
+(`pipx install helix-dna`).
+
+### Added — memory intelligence
+- **Procedural / skill memory** (`helix learn` / `how`) — verified how-to recipes keyed by triggers,
+  with SM-2 reliability.
+- **Sleep-time consolidation** (`helix sleep`), **staleness detection** + review queue,
+  **conflict surfacing**, **change-as-event timeline**, opt-in **A-MEM auto-linking**.
+
+### Added — trust, collaboration, retrieval
+- **Erasure cascade + tombstones + DSAR**, **scoped redacted sharing + quarantine** (TOFU),
+  **per-fact Ed25519 signing** wired into share/merge verification, a **tamper-evident audit log**,
+  **CRDT merge** (`merge_replica`), governance (`propose`/`review`), multi-agent **handoff**.
+- **Optional reranker**, **complexity-gated deep recall**, **proactive surfacing**, **themes**,
+  retention **purge**, **bitemporal `as_of`**.
+
+### Added — surfaces & the standard
+- Redesigned **local dashboard** (copilot, canvas knowledge graph, review queue, $0-meter + heatmap,
+  time-travel slider, audit, cmd-K, "graph assembles itself" onboarding); Host/Origin hardening.
+- **GitHub/repo connector** (`helix repo`), **LangGraph + AutoGen** adapters, **VS Code** + **browser**
+  extensions.
+- **Portable Agent Memory** open standard (`helix export-portable` / `conform`) — the "USB for AI memory".
+
+### Fixed
+- Relay drains the request body before rejecting a PUT (removes an intermittently-flaky test).
+
 ## [0.1.0] — 2026-06-18
 
 First working alpha. A local-first, portable, git-like memory layer for AI coding agents that

@@ -22,8 +22,8 @@ One memory. Every agent. Owned by you.
 ![license](https://img.shields.io/badge/license-Apache--2.0-blue)
 ![local-first](https://img.shields.io/badge/local--first-yes-brightgreen)
 ![cost](https://img.shields.io/badge/default%20cost-%240%2Fmo-brightgreen)
-![tests](https://img.shields.io/badge/tests-110%20passing-brightgreen)
-![version](https://img.shields.io/badge/version-0.1.0--alpha-blue)
+![tests](https://img.shields.io/badge/tests-162%20passing-brightgreen)
+![version](https://img.shields.io/badge/version-0.1.1--alpha-blue)
 
 </div>
 

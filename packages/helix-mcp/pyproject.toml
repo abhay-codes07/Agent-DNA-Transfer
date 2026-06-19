@@ -1,10 +1,18 @@
 [project]
 name = "helix-dna-mcp"
-version = "0.1.0"
+version = "0.1.1"
 description = "Helix MCP server — exposes the memory tool/resource surface to any MCP agent."
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "Apache-2.0" }
+keywords = ["ai", "memory", "mcp", "agents", "local-first", "portable"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: Apache Software License",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+]
 dependencies = ["helix-dna-core", "mcp>=1.0"]
 
 [project.scripts]
@@ -16,3 +24,7 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/helix_mcp"]
+
+[project.urls]
+Homepage = "https://github.com/abhay-codes07/Agent-DNA-Transfer"
+Repository = "https://github.com/abhay-codes07/Agent-DNA-Transfer"

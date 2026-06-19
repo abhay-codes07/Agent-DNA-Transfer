@@ -4,13 +4,22 @@
 
 [project]
 name = "helix-dna"
-version = "0.1.0"
+version = "0.1.1"
 description = "Take your AI's memory anywhere — a local-first, portable, git-like memory layer for AI coding agents."
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "Apache-2.0" }
 authors = [{ name = "The Helix Authors" }]
 keywords = ["ai", "memory", "mcp", "agents", "llm", "local-first", "portable", "knowledge-graph"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: Apache Software License",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Software Development :: Libraries",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
 
 # Meta-package: installing `helix-dna` pulls the user-facing pieces.
 # (PyPI distribution names use the `helix-dna-*` family; the product is "Helix" and the CLI
