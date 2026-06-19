@@ -1,0 +1,2044 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Take your AI's memory anywhere — a local-first, portable, git-like memory layer for AI coding agents.">
+      
+      
+      
+      
+        <link rel="prev" href="../DNA_FORMAT/">
+      
+      
+        <link rel="next" href="../COST_OPTIMIZATION/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Sync & Merge - Helix</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#helix-sync-merge-optional-end-to-end-encrypted" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Helix" class="md-header__button md-logo" aria-label="Helix" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Helix
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Sync & Merge
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/abhay-codes07/Agent-DNA-Transfer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Helix" class="md-nav__button md-logo" aria-label="Helix" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Helix
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/abhay-codes07/Agent-DNA-Transfer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Product & strategy
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Product & strategy
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PRD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PRD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../COMPETITIVE_ANALYSIS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Competitive Analysis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BUSINESS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Business & GTM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RESEARCH/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research Survey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Engineering
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Engineering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TSD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Technical Spec
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SYSTEM_ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    System Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MEMORY_MODEL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Memory Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CONSOLIDATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Consolidation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RETRIEVAL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DNA_FORMAT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    .dna Format
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sync & Merge
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sync & Merge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Principles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-storage-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Storage model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-key-model-for-sync-two-secret-derivation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Key model for sync — two-secret derivation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-prior-art" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Prior art
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-the-merge-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. The merge model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. The merge model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-why-not-last-write-wins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Why NOT last-write-wins
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-two-layer-merge-mechanical-convergence-semantic-resolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Two-layer merge: mechanical convergence + semantic resolution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-bi-temporal-modeling-adr-013" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Bi-temporal modeling (ADR-013)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-content-addressed-prolly-merkle-store" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Content-addressed Prolly / Merkle store
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-review-team-memory-like-code-pr-style-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. "Review team memory like code" — PR-style flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-conflict-ux" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Conflict UX
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-opinionated-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Opinionated decisions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-failure-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Failure modes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sources
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../COST_OPTIMIZATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cost Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../API_REFERENCE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MCP_INTEGRATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PLUGINS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../OBSERVABILITY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trust, quality & process
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Trust, quality & process
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SECURITY_MODEL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PRIVACY_COMPLIANCE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Privacy & Compliance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../EVALUATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GOVERNANCE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Governance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GLOSSARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Principles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-storage-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Storage model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-key-model-for-sync-two-secret-derivation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Key model for sync — two-secret derivation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-prior-art" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Prior art
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-the-merge-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. The merge model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. The merge model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-why-not-last-write-wins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Why NOT last-write-wins
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-two-layer-merge-mechanical-convergence-semantic-resolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Two-layer merge: mechanical convergence + semantic resolution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-bi-temporal-modeling-adr-013" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Bi-temporal modeling (ADR-013)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-content-addressed-prolly-merkle-store" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Content-addressed Prolly / Merkle store
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-review-team-memory-like-code-pr-style-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. "Review team memory like code" — PR-style flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-conflict-ux" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Conflict UX
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-opinionated-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Opinionated decisions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-failure-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Failure modes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sources
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="helix-sync-merge-optional-end-to-end-encrypted">Helix — Sync &amp; Merge (optional, end-to-end encrypted)<a class="headerlink" href="#helix-sync-merge-optional-end-to-end-encrypted" title="Permanent link">&para;</a></h1>
+<p><strong>Status:</strong> Draft v1 · <strong>Last updated:</strong> 2026-06-18 · <strong>Related:</strong> <a href="../DNA_FORMAT/">.dna Format</a> · <a href="../SECURITY_MODEL/">Security</a> · <a href="../MEMORY_MODEL/">Memory Model</a> · <a href="../DECISIONS.md">Decisions</a></p>
+<hr />
+<p>Helix is a <strong>local-first, coding-agent-first, portable, $0-default</strong> AI memory layer. The unit of portability is a single signed + encrypted <strong><code>.dna</code></strong> artifact (see <a href="../DNA_FORMAT/">.dna Format</a>). This document specifies the <em>optional</em> layer on top: <strong>end-to-end-encrypted sync</strong> across devices/teams, and the <strong>git-like merge semantics</strong> that keep concurrent memory consistent.</p>
+<blockquote>
+<p><strong>Sync is always optional.</strong> Local-first never requires it. A single user on a single machine with one <code>.dna</code> file is the supported baseline; everything below is additive and degrades to "copy a file around" when disabled.</p>
+</blockquote>
+<p>Governing ADRs: <strong>ADR-021</strong> (merge strategy: CRDT + 3-way semantic + bi-temporal), <strong>ADR-022</strong> (optional E2E sync, BYO storage, two-secret derivation), <strong>ADR-013</strong> (bi-temporal fact model).</p>
+<hr />
+<h2 id="1-principles">1. Principles<a class="headerlink" href="#1-principles" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Principle</th>
+<th>Consequence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P1</td>
+<td><strong>Sync is optional, never load-bearing.</strong></td>
+<td>All correctness guarantees hold offline. Disabling sync loses <em>convenience</em>, never <em>data</em>.</td>
+</tr>
+<tr>
+<td>P2</td>
+<td><strong>E2E encrypted by default.</strong></td>
+<td>Plaintext memory and keys never leave the device. The remote is an untrusted blob store.</td>
+</tr>
+<tr>
+<td>P3</td>
+<td><strong>Server sees only ciphertext.</strong></td>
+<td>Storage/relay handles content-addressed, encrypted chunks. No plaintext, no searchable index, no metadata it can read.</td>
+</tr>
+<tr>
+<td>P4</td>
+<td><strong>Bring-your-own-bucket first.</strong></td>
+<td>Default backend is <em>your</em> S3/R2/Drive. Helix ships no mandatory server → preserves the <code>$0-default</code>.</td>
+</tr>
+<tr>
+<td>P5</td>
+<td><strong>Convergence is mechanical; contradiction is semantic.</strong></td>
+<td>CRDTs guarantee replicas converge byte-for-byte; <em>contradictory facts</em> are resolved by business logic via 3-way merge.</td>
+</tr>
+<tr>
+<td>P6</td>
+<td><strong>History is the product.</strong></td>
+<td>We keep full op history and bi-temporal records. Provenance, audit, rollback, and anti-poisoning all derive from never throwing data away.</td>
+</tr>
+<tr>
+<td>P7</td>
+<td><strong>Review team memory like code.</strong></td>
+<td>Incoming memory lands as a reviewable diff (PR-style), which doubles as the primary defense against memory poisoning.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Threat boundary.</strong> The remote (bucket or relay) is <em>honest-but-curious and possibly malicious about availability</em>. It can drop, reorder, or withhold chunks; it can serve stale data. It <strong>cannot</strong> read plaintext, forge a signed Merkle root, or silently mutate a chunk (content-addressing + Ed25519 detect both). See <a href="../SECURITY_MODEL/">Security</a>.</p>
+<hr />
+<h2 id="2-storage-model">2. Storage model<a class="headerlink" href="#2-storage-model" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>                        ┌────────────────────────────────────────────┐
+   device A             │   BYO bucket (S3 / R2 / Google Drive)       │
+  ┌────────────┐        │   ── stores opaque, content-addressed,      │
+  │ local .dna │◀──────▶│      encrypted chunks (blob = ciphertext)   │
+  │  (Prolly)  │        │   ── no plaintext, no readable metadata     │
+  └────────────┘        └────────────────────────────────────────────┘
+        │                          ▲                    ▲
+        │ encrypted chunks         │ push/pull          │ push/pull
+        ▼                          │                    │
+  ┌────────────┐         ┌─────────┴──────────┐   ┌─────┴──────┐
+  │ optional   │◀───────▶│  device B          │   │  device C  │
+  │ THIN RELAY │ presence│  (CRDT replica)    │   │ (CI agent) │
+  │ NAT/notify │ + chunks└────────────────────┘   └────────────┘
+  └────────────┘
+   moves only content-addressed *encrypted* chunks; never plaintext
+</code></pre></div>
+<p><strong>Two interchangeable transports:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Transport</th>
+<th>Role</th>
+<th>Default?</th>
+<th>What it sees</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>BYO bucket</strong> (S3 / R2 / Drive)</td>
+<td>Durable store of encrypted, content-addressed chunks.</td>
+<td>✅ default</td>
+<td>Opaque ciphertext blobs keyed by hash. Nothing else.</td>
+</tr>
+<tr>
+<td><strong>Thin relay</strong></td>
+<td>Optional dumb pipe for <strong>NAT traversal</strong> + <strong>presence/notify</strong> when devices can't reach a shared bucket or want low-latency push.</td>
+<td>❌ opt-in</td>
+<td>Only <strong>content-addressed encrypted chunks</strong> in transit. No accounts of plaintext, no key material.</td>
+</tr>
+</tbody>
+</table>
+<p>Design choices, mirroring Tarsnap (client-side crypto + dedup on S3) and litestream/dolt (BYO object storage):</p>
+<ul>
+<li><strong>Content-addressed chunks.</strong> Each chunk's key = hash of its <em>ciphertext</em>. → dedup across versions/devices, cheap incremental upload, and tamper-evidence (a wrong byte → wrong address).</li>
+<li><strong>Wrap, don't re-encrypt.</strong> A random per-archive/per-chunk data key is wrapped by the account key (see §3). The relay/bucket never touches an unwrapped key — same pattern Tarsnap uses with per-archive keys wrapped by an RSA key (https://www.tarsnap.com/crypto.html).</li>
+<li><strong>The relay is a dumb pipe.</strong> It moves chunks and fans out presence pings. It performs <strong>no merge, no decryption, no validation of contents</strong>. All merge logic is client-side. Killing the relay degrades to bucket-only sync; killing the bucket degrades to local-only.</li>
+</ul>
+<hr />
+<h2 id="3-key-model-for-sync-two-secret-derivation">3. Key model for sync — two-secret derivation<a class="headerlink" href="#3-key-model-for-sync-two-secret-derivation" title="Permanent link">&para;</a></h2>
+<p>We adopt <strong>1Password-style two-secret key derivation</strong> (https://agilebits.github.io/security-design/deepKeys.html). The account encryption key is derived from <strong>two</strong> independent inputs:</p>
+<div class="highlight"><pre><span></span><code>  account passphrase  ──┐
+   (human-memorable,    │
+    low entropy)        ├──▶  KDF (Argon2id, m=19–64MiB, t=1–3, p=1)
+                        │           │
+  Secret Key           ──┘           ▼
+   (128-bit+, machine-     Account Key ──▶ wraps ──▶ random Data Keys
+    generated, never                                      │
+    typed/transmitted)                                    ▼
+                                              XChaCha20-Poly1305 over chunks
+</code></pre></div>
+<p><strong>Why two secrets.</strong> The passphrase alone is low-entropy and crackable offline if the server is breached. Mixing in a <strong>high-entropy Secret Key</strong> (generated on-device, never sent to the server, stored in the local keychain / written to the recovery sheet) means server-held blobs are <strong>useless for offline brute force</strong> — an attacker must compromise a <em>device</em>, not just the server. This is precisely 1Password's rationale, and it is why Helix's encrypted blobs resist offline cracking even with a weak passphrase.</p>
+<p><strong>Crypto primitives</strong> (shared with the <code>.dna</code> format — see <a href="../DNA_FORMAT/">.dna Format</a> and <a href="../SECURITY_MODEL/">Security</a>):</p>
+<table>
+<thead>
+<tr>
+<th>Concern</th>
+<th>Choice</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AEAD</td>
+<td><strong>XChaCha20-Poly1305</strong> (libsodium <code>secretstream</code>)</td>
+<td>192-bit nonce → random nonces are collision-safe without a counter; portable, no AES-NI dependency (https://doc.libsodium.org/secret-key_cryptography/aead, https://en.wikipedia.org/wiki/ChaCha20-Poly1305).</td>
+</tr>
+<tr>
+<td>Streaming framing</td>
+<td><strong>age STREAM</strong>: ChaCha20-Poly1305 over <strong>64 KiB</strong> chunks</td>
+<td>Bounded memory, chunk-level integrity, standard framing (https://github.com/C2SP/C2SP/blob/main/age.md).</td>
+</tr>
+<tr>
+<td>KDF</td>
+<td><strong>Argon2id</strong>, m=19–64 MiB, t=1–3, p=1</td>
+<td>OWASP-recommended memory-hard params (https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html).</td>
+</tr>
+<tr>
+<td>Key handling</td>
+<td><strong>Wrap-don't-encrypt</strong></td>
+<td>Random data key wrapped by passphrase / OS keychain / recovery code / hardware token. Rotate the wrapper without re-encrypting data.</td>
+</tr>
+<tr>
+<td>Integrity + authenticity</td>
+<td><strong>detached Ed25519 over a BLAKE3 Merkle root</strong></td>
+<td>Offline-verifiable tamper-evidence without any blockchain (https://github.com/sigstore/sigstore/issues/122).</td>
+</tr>
+</tbody>
+</table>
+<p><strong>No chain.</strong> Systems like Walrus add on-chain availability certificates + RedStuff erasure coding for <em>decentralized availability</em> (https://arxiv.org/abs/2505.05370). Helix needs <strong>integrity + authenticity of a file you already hold</strong>, not decentralized availability — so we <strong>drop the chain</strong> and keep only the signed Merkle root. Smaller, cheaper, $0-default.</p>
+<hr />
+<h2 id="4-prior-art">4. Prior art<a class="headerlink" href="#4-prior-art" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>System</th>
+<th>E2E model</th>
+<th>Key derivation</th>
+<th>Storage</th>
+<th>What we borrow</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Obsidian Sync</strong></td>
+<td>E2E by default; user holds password, server stores opaque blobs (https://help.obsidian.md/Obsidian+Sync/Security+and+privacy)</td>
+<td>passphrase</td>
+<td>vendor relay</td>
+<td>"server stores opaque blobs"; E2E as default</td>
+</tr>
+<tr>
+<td><strong>Standard Notes (004)</strong></td>
+<td>XChaCha20-Poly1305 items + Argon2 password; versioned protocol (https://standardnotes.com/help/security/encryption)</td>
+<td>Argon2</td>
+<td>vendor</td>
+<td>exact AEAD + KDF combo; <strong>versioned</strong> protocol</td>
+</tr>
+<tr>
+<td><strong>1Password</strong></td>
+<td>two-secret: account password + high-entropy Secret Key; all keys client-side (https://agilebits.github.io/security-design/deepKeys.html)</td>
+<td>passphrase + Secret Key</td>
+<td>vendor</td>
+<td><strong>two-secret derivation</strong> (§3)</td>
+</tr>
+<tr>
+<td><strong>Tarsnap</strong></td>
+<td>client-side AES-256 per-archive keys wrapped by RSA key; client-side dedup (https://www.tarsnap.com/crypto.html)</td>
+<td>key file</td>
+<td>on S3</td>
+<td>wrap-don't-encrypt; client-side dedup; <strong>on S3</strong></td>
+</tr>
+<tr>
+<td><strong>litestream / dolt</strong></td>
+<td>—</td>
+<td>—</td>
+<td>BYO object storage</td>
+<td><strong>BYO bucket</strong> as the default backend</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="5-the-merge-model">5. The merge model<a class="headerlink" href="#5-the-merge-model" title="Permanent link">&para;</a></h2>
+<h3 id="51-why-not-last-write-wins">5.1 Why NOT last-write-wins<a class="headerlink" href="#51-why-not-last-write-wins" title="Permanent link">&para;</a></h3>
+<p>LWW picks a winner by timestamp and <strong>silently discards the loser</strong>. For a memory layer that is catastrophic: two agents concurrently learning two <em>different true facts</em> (e.g., "prefers tabs" on device A, "deploys via Fly.io" on device B) is not a conflict — it's two facts. LWW destroys one. <strong>We reject LWW as the default.</strong> LWW is permitted only for genuinely single-valued, last-observation-wins fields (e.g., a UI cursor position), never for facts.</p>
+<h3 id="52-two-layer-merge-mechanical-convergence-semantic-resolution">5.2 Two-layer merge: mechanical convergence + semantic resolution<a class="headerlink" href="#52-two-layer-merge-mechanical-convergence-semantic-resolution" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>  ┌──────────────────────────────────────────────────────────────────┐
+  │ LAYER 1 — CRDT (mechanical)                                        │
+  │   op-based CRDT → all replicas converge byte-for-byte.             │
+  │   Handles: sets, registers, sequences, structural concurrency.     │
+  │   Guarantee: no lost ops, deterministic convergence.               │
+  └───────────────────────────────┬──────────────────────────────────┘
+                                   │ surfaces contradictions
+                                   ▼
+  ┌──────────────────────────────────────────────────────────────────┐
+  │ LAYER 2 — 3-way SEMANTIC merge (business logic)                    │
+  │   git-style 3-way at the FACT / FIELD level using the commit-DAG   │
+  │   merge-base (lowest common ancestor).                             │
+  │   Handles: contradictory facts that need domain rules.             │
+  │   Output: keep-both / supersede / flag-for-review.                 │
+  └──────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<p><strong>Layer 1 — CRDT.</strong> CRDTs come in state-based (CvRDT) and op-based (CmRDT) flavors, plus delta-CRDTs, coordinated by vector clocks / dotted version vectors (https://mattweidner.com/2023/09/26/crdt-survey-3.html). Helix uses an <strong>op-based CRDT</strong> so replicas converge mechanically with full operation history.</p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Size</th>
+<th>History</th>
+<th>Trade-off</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Yjs</strong></td>
+<td>~18 kB</td>
+<td>aggressive GC</td>
+<td>Leaner, dominates at scale, but limited GC story and <strong>can lose data on conflicting structural edits</strong> (https://www.pkgpulse.com/guides/yjs-vs-automerge-vs-loro-crdt-libraries-2026).</td>
+</tr>
+<tr>
+<td><strong>Automerge</strong></td>
+<td>Rust/WASM ~320 kB</td>
+<td><strong>keeps FULL history</strong>, ~30% overhead (&lt;1 byte/char)</td>
+<td>Heavier, but provenance is preserved (https://automerge.org/blog/automerge-2/).</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Decision: Automerge (op-based).</strong> When <strong>provenance is the product</strong> — and for a memory/audit layer it is — keeping full history at ~30% overhead (sub-byte per character) is the right trade. Yjs's structural-edit data loss is disqualifying for facts.</p>
+<p><strong>Layer 2 — 3-way semantic merge.</strong> CRDTs can assume a <em>git-like versioned store</em> that supplies the <strong>lowest common ancestor</strong> for a 3-way merge (https://mattweidner.com/2023/09/26/crdt-survey-2.html, MRDTs). Helix's commit-DAG provides exactly this merge-base. For <strong>contradictory facts</strong> that mechanical convergence can't adjudicate, we run a git-style 3-way merge <strong>at the fact/field granularity</strong> against the merge-base, then apply domain rules: keep-both (concurrent independent facts), supersede (one strictly refines the other), or flag-for-review (genuine contradiction → §8).</p>
+<h3 id="53-bi-temporal-modeling-adr-013">5.3 Bi-temporal modeling (ADR-013)<a class="headerlink" href="#53-bi-temporal-modeling-adr-013" title="Permanent link">&para;</a></h3>
+<p>Every fact carries <strong>two</strong> time axes (XTDB model, https://v1-docs.xtdb.com/concepts/bitemporality/):</p>
+<table>
+<thead>
+<tr>
+<th>Axis</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>valid-time</strong></td>
+<td>When the fact is/was true <em>in the world</em>.</td>
+</tr>
+<tr>
+<td><strong>transaction-time</strong></td>
+<td>When Helix <em>learned/recorded</em> it.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>"John lived in X" — <strong>valid</strong> 1990–1995, <strong>recorded</strong> 2026.</p>
+</blockquote>
+<p><strong>Invalidation is append-only — never delete.</strong> Superseding a fact appends an invalidation record; the old row stays. This yields audit, point-in-time rollback ("what did we believe on date D?"), and invalidation <strong>without destroying data</strong>. It also means merge never deletes — it only appends — which keeps Layers 1 and 2 monotonic and convergent.</p>
+<h3 id="54-content-addressed-prolly-merkle-store">5.4 Content-addressed Prolly / Merkle store<a class="headerlink" href="#54-content-addressed-prolly-merkle-store" title="Permanent link">&para;</a></h3>
+<p>The <code>.dna</code> store is a <strong>content-addressed Prolly (probabilistic B-) tree over a Merkle structure</strong>, the Dolt "git for data" model: version tables cell-wise, store <strong>only deltas</strong>, diff/merge structurally (https://docs.dolthub.com/introduction/getting-started/git-for-data). Cousins: TerminusDB's git-like graph DB (https://thenewstack.io/terminusdb-takes-on-data-collaboration-with-a-git-like-approach/) and Git's own objects/packfiles/3-way-against-merge-base.</p>
+<p>Mapping to Helix:</p>
+<table>
+<thead>
+<tr>
+<th>Git / Dolt</th>
+<th>Helix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>commit</td>
+<td>a <strong>signed Merkle root</strong> of the <code>.dna</code> store</td>
+</tr>
+<tr>
+<td>checkout earlier commit</td>
+<td><strong>rollback</strong> = check out an earlier signed root</td>
+</tr>
+<tr>
+<td>merge-base</td>
+<td>lowest common ancestor in the commit-DAG for <strong>3-way</strong> merge</td>
+</tr>
+<tr>
+<td>packfile delta</td>
+<td><strong>structural sharing</strong> → cheap incremental <code>.dna</code> exports</td>
+</tr>
+</tbody>
+</table>
+<p>Structural sharing is what makes the whole system cheap: unchanged subtrees share hashes, so incremental exports, diffs, and merges touch only what changed — fast diff/merge and small sync deltas.</p>
+<hr />
+<h2 id="6-review-team-memory-like-code-pr-style-flow">6. "Review team memory like code" — PR-style flow<a class="headerlink" href="#6-review-team-memory-like-code-pr-style-flow" title="Permanent link">&para;</a></h2>
+<p>Team sync does <strong>not</strong> auto-trust incoming memory. It lands as a reviewable change set:</p>
+<div class="highlight"><pre><span></span><code>  teammate / agent push ─▶ encrypted chunks ─▶ your device decrypts
+        │
+        ▼
+  ┌─────────────────────────────────────────────┐
+  │  Pending change set (a PR over memory)        │
+  │   diff:  + 3 facts   ~ 1 superseded   - 0     │
+  │   [ approve ]   [ revert ]   [ inspect ]      │
+  └─────────────────────────────────────────────┘
+        │ approve            │ revert
+        ▼                    ▼
+   merged into HEAD     dropped (append-only; nothing lost)
+</code></pre></div>
+<ul>
+<li><strong>Diff / approve / revert</strong> at the fact level, against the merge-base.</li>
+<li><strong>Anti-poisoning by construction.</strong> Because untrusted memory is <em>proposed</em>, not <em>applied</em>, the review gate is the primary defense against memory-poisoning: a malicious or hallucinated fact is a diff line you can reject before it touches HEAD. Revert is cheap and lossless (append-only bi-temporal model, §5.3). See <a href="../SECURITY_MODEL/">Security</a>.</li>
+</ul>
+<hr />
+<h2 id="7-conflict-ux">7. Conflict UX<a class="headerlink" href="#7-conflict-ux" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>Mechanical (Layer 1)</th>
+<th>Semantic (Layer 2)</th>
+<th>User sees</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Concurrent edits, independent fields</td>
+<td>auto-merge</td>
+<td>—</td>
+<td>nothing (silent convergence)</td>
+</tr>
+<tr>
+<td>Two concurrent <em>different</em> facts</td>
+<td>both retained</td>
+<td>keep-both</td>
+<td>both facts, badged "concurrent"</td>
+</tr>
+<tr>
+<td>One fact refines another</td>
+<td>both retained</td>
+<td>supersede (append invalidation)</td>
+<td>newest, with "history" affordance</td>
+</tr>
+<tr>
+<td>Direct contradiction</td>
+<td>both retained</td>
+<td><strong>flag-for-review</strong></td>
+<td>conflict card: base ⟂ ours ⟂ theirs, pick/keep-both/edit</td>
+</tr>
+<tr>
+<td>Structural concurrency</td>
+<td>CRDT resolves</td>
+<td>—</td>
+<td>nothing</td>
+</tr>
+</tbody>
+</table>
+<p>Conflicts are <strong>never destructive</strong> — both sides are always recoverable from history. The 3-way conflict card shows <strong>base / ours / theirs</strong> drawn from the merge-base, exactly like a git merge conflict.</p>
+<hr />
+<h2 id="8-opinionated-decisions">8. Opinionated decisions<a class="headerlink" href="#8-opinionated-decisions" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Decision</th>
+<th>Rationale</th>
+<th>ADR</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D1</td>
+<td><strong>Sync is optional, off by default.</strong></td>
+<td>Protects local-first + <code>$0-default</code>.</td>
+<td>ADR-022</td>
+</tr>
+<tr>
+<td>D2</td>
+<td><strong>E2E by default; server sees only ciphertext.</strong></td>
+<td>Untrusted-remote threat model.</td>
+<td>ADR-022</td>
+</tr>
+<tr>
+<td>D3</td>
+<td><strong>BYO bucket (S3/R2/Drive) is the default backend.</strong></td>
+<td>No mandatory server → $0.</td>
+<td>ADR-022</td>
+</tr>
+<tr>
+<td>D4</td>
+<td><strong>Thin relay is opt-in, dumb-pipe only.</strong></td>
+<td>NAT/presence without trusting it.</td>
+<td>ADR-022</td>
+</tr>
+<tr>
+<td>D5</td>
+<td><strong>Two-secret key derivation (passphrase + Secret Key).</strong></td>
+<td>Server blobs resist offline cracking.</td>
+<td>ADR-022</td>
+</tr>
+<tr>
+<td>D6</td>
+<td><strong>XChaCha20-Poly1305 + Argon2id + age-STREAM (64 KiB).</strong></td>
+<td>Portable, nonce-safe, memory-hard, standard.</td>
+<td>ADR-022</td>
+</tr>
+<tr>
+<td>D7</td>
+<td><strong>Reject LWW for facts.</strong></td>
+<td>LWW destroys concurrent facts.</td>
+<td>ADR-021</td>
+</tr>
+<tr>
+<td>D8</td>
+<td><strong>Automerge op-based CRDT (full history).</strong></td>
+<td>Provenance is the product; Yjs loses structural edits.</td>
+<td>ADR-021</td>
+</tr>
+<tr>
+<td>D9</td>
+<td><strong>Git-style 3-way semantic merge via commit-DAG merge-base.</strong></td>
+<td>Business logic for contradictions.</td>
+<td>ADR-021</td>
+</tr>
+<tr>
+<td>D10</td>
+<td><strong>Bi-temporal, append-only; invalidation never deletes.</strong></td>
+<td>Audit + rollback + lossless revert.</td>
+<td>ADR-013</td>
+</tr>
+<tr>
+<td>D11</td>
+<td><strong>Signed BLAKE3 Merkle root; no blockchain.</strong></td>
+<td>Integrity/authenticity of a held file, not decentralized availability.</td>
+<td>ADR-022</td>
+</tr>
+<tr>
+<td>D12</td>
+<td><strong>PR-style review of incoming team memory.</strong></td>
+<td>Anti-poisoning control.</td>
+<td>ADR-021</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="9-failure-modes">9. Failure modes<a class="headerlink" href="#9-failure-modes" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Failure</th>
+<th>Behavior</th>
+<th>Recovery</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Relay down</td>
+<td>Degrade to bucket-only sync.</td>
+<td>Automatic; no data impact.</td>
+</tr>
+<tr>
+<td>Bucket down/unreachable</td>
+<td>Degrade to local-only; queue chunks.</td>
+<td>Resume on reconnect; content-addressing dedups the backlog.</td>
+</tr>
+<tr>
+<td>Stale/withheld chunk</td>
+<td>Detected: address ≠ content, or signed root won't verify.</td>
+<td>Refetch; refuse to advance HEAD to an unverifiable root.</td>
+</tr>
+<tr>
+<td>Malicious chunk mutation</td>
+<td>Hash mismatch → rejected.</td>
+<td>Refetch from another replica/bucket.</td>
+</tr>
+<tr>
+<td>Forged commit</td>
+<td>Ed25519 signature over Merkle root fails.</td>
+<td>Reject; never merged.</td>
+</tr>
+<tr>
+<td>Lost passphrase</td>
+<td>Account Key underivable.</td>
+<td><strong>Recovery code</strong> (wrapped data key) restores access; without it, data is unrecoverable by design.</td>
+</tr>
+<tr>
+<td>Lost Secret Key</td>
+<td>Cannot complete two-secret derivation.</td>
+<td>Restore from recovery sheet / another enrolled device.</td>
+</tr>
+<tr>
+<td>Memory poisoning attempt</td>
+<td>Lands as a <em>pending</em> diff, not applied.</td>
+<td>Reject in PR review (§6); HEAD untouched.</td>
+</tr>
+<tr>
+<td>Concurrent contradictory facts</td>
+<td>Both retained; flagged.</td>
+<td>Resolve via conflict card (§7); nothing lost.</td>
+</tr>
+<tr>
+<td>Clock skew across devices</td>
+<td>Bi-temporal transaction-time + DAG causality, not wall-clock, orders merges.</td>
+<td>No LWW dependence → skew can't silently drop facts.</td>
+</tr>
+<tr>
+<td>Partial upload / crash mid-sync</td>
+<td>Content-addressed chunks are idempotent; commit (root) is atomic.</td>
+<td>Re-push; only missing chunks transfer. HEAD advances only on a complete, verified root.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="sources">Sources<a class="headerlink" href="#sources" title="Permanent link">&para;</a></h2>
+<ul>
+<li>ChaCha20-Poly1305 — https://en.wikipedia.org/wiki/ChaCha20-Poly1305</li>
+<li>libsodium AEAD / secretstream — https://doc.libsodium.org/secret-key_cryptography/aead</li>
+<li>age spec (STREAM, 64 KiB chunks) — https://github.com/C2SP/C2SP/blob/main/age.md</li>
+<li>OWASP Password Storage (Argon2id params) — https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html</li>
+<li>Sigstore: signed Merkle root discussion — https://github.com/sigstore/sigstore/issues/122</li>
+<li>Walrus (on-chain availability + RedStuff) — https://arxiv.org/abs/2505.05370</li>
+<li>Obsidian Sync security &amp; privacy — https://help.obsidian.md/Obsidian+Sync/Security+and+privacy</li>
+<li>Standard Notes encryption (004) — https://standardnotes.com/help/security/encryption</li>
+<li>1Password two-secret key derivation — https://agilebits.github.io/security-design/deepKeys.html</li>
+<li>Tarsnap crypto — https://www.tarsnap.com/crypto.html</li>
+<li>CRDT survey, part 3 (CvRDT/CmRDT, delta, version vectors) — https://mattweidner.com/2023/09/26/crdt-survey-3.html</li>
+<li>CRDT survey, part 2 (MRDTs, git-like LCA / 3-way) — https://mattweidner.com/2023/09/26/crdt-survey-2.html</li>
+<li>Automerge 2.0 (full history, ~30% overhead) — https://automerge.org/blog/automerge-2/</li>
+<li>Yjs vs Automerge vs Loro (2026) — https://www.pkgpulse.com/guides/yjs-vs-automerge-vs-loro-crdt-libraries-2026</li>
+<li>XTDB bitemporality — https://v1-docs.xtdb.com/concepts/bitemporality/</li>
+<li>Dolt "git for data" — https://docs.dolthub.com/introduction/getting-started/git-for-data</li>
+<li>TerminusDB git-like data collaboration — https://thenewstack.io/terminusdb-takes-on-data-collaboration-with-a-git-like-approach/</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.top", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,1943 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Take your AI's memory anywhere — a local-first, portable, git-like memory layer for AI coding agents.">
+      
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Helix v2 — Phase 2 Plan ("Git for your AI's memory") - Helix</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#helix-v2-phase-2-plan-git-for-your-ais-memory" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Helix" class="md-header__button md-logo" aria-label="Helix" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Helix
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Helix v2 — Phase 2 Plan ("Git for your AI's memory")
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/abhay-codes07/Agent-DNA-Transfer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Helix" class="md-nav__button md-logo" aria-label="Helix" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Helix
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/abhay-codes07/Agent-DNA-Transfer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Product & strategy
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Product & strategy
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PRD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PRD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../COMPETITIVE_ANALYSIS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Competitive Analysis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BUSINESS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Business & GTM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RESEARCH/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research Survey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Engineering
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Engineering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TSD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Technical Spec
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SYSTEM_ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    System Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MEMORY_MODEL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Memory Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CONSOLIDATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Consolidation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RETRIEVAL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DNA_FORMAT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    .dna Format
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SYNC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sync & Merge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../COST_OPTIMIZATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cost Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../API_REFERENCE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MCP_INTEGRATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PLUGINS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../OBSERVABILITY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trust, quality & process
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Trust, quality & process
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SECURITY_MODEL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PRIVACY_COMPLIANCE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Privacy & Compliance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../EVALUATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GOVERNANCE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Governance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GLOSSARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0-tldr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0. TL;DR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-where-helix-sits-positioning-map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Where Helix sits (positioning map)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-the-eight-v2-pillars" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. The eight v2 pillars
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. The eight v2 pillars">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pillar-1-memory-intelligence-the-engine-gets-smarter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pillar 1 — Memory Intelligence (the engine gets smarter)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pillar-2-retrieval-reasoning-20" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pillar 2 — Retrieval &amp; Reasoning 2.0
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pillar-3-collaboration-multi-agent-memory-for-teams-swarms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pillar 3 — Collaboration &amp; Multi-Agent (memory for teams &amp; swarms)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pillar-4-trust-privacy-compliance-earn-the-you-own-it-claim" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pillar 4 — Trust, Privacy &amp; Compliance (earn the "you own it" claim)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pillar-5-ecosystem-distribution-be-everywhere" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pillar 5 — Ecosystem &amp; Distribution (be everywhere)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pillar-6-product-ux-the-magic-moment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pillar 6 — Product, UX &amp; the Magic Moment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pillar-7-business-model-gtm-open-core-that-respects-the-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pillar 7 — Business Model &amp; GTM (open-core that respects the rules)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pillar-8-the-standard-the-moonshot-worth-a-real-bet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pillar 8 — The Standard (the moonshot worth a real bet)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-roadmap-three-waves" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Roadmap — three waves
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Roadmap — three waves">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#wave-a-git-for-your-memory-v20-the-headline-release" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wave A — "Git for your memory" (v2.0) — the headline release
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wave-b-memory-for-teams-agents-v21" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wave B — "Memory for teams &amp; agents" (v2.1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wave-c-the-standard-the-ecosystem-v22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wave C — "The standard &amp; the ecosystem" (v2.2+)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-success-metrics-what-v2-worked-means" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Success metrics (what "v2 worked" means)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-non-goals-guardrails-unchanged-golden-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Non-goals / guardrails (unchanged golden rules)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-top-risks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Top risks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-research-sources-grouped" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix — research sources (grouped)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="helix-v2-phase-2-plan-git-for-your-ais-memory">Helix v2 — Phase 2 Plan ("Git for your AI's memory")<a class="headerlink" href="#helix-v2-phase-2-plan-git-for-your-ais-memory" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>Status: <strong>Proposed</strong> · Authored 2026-06-19 · Supersedes the v2 sections of <a href="../ROADMAP.md"><code>ROADMAP.md</code></a>
+Research backing: eight parallel deep-research sweeps (memory frontier, competitive landscape,
+ecosystem/distribution, collaboration, retrieval, trust/compliance, business model, product/UX).
+Source appendix at the end. This doc is the contract for what v2 is and the order we build it.</p>
+</blockquote>
+<hr />
+<h2 id="0-tldr">0. TL;DR<a class="headerlink" href="#0-tldr" title="Permanent link">&para;</a></h2>
+<p>Helix v1 shipped a genuinely strong, SOTA-aligned memory engine: extract → consolidate
+(bi-temporal) → one SQLite <code>.dna</code> file → hybrid + graph retrieval → decay/reflection, served over
+MCP, packaged as a signed + encrypted portable strand. The research is clear that this architecture
+is <em>where the field landed in 2026</em> — so <strong>v2 is additive, not a rewrite.</strong></p>
+<p>The strategic move for v2 is a <strong>positioning shift backed by features no competitor has</strong>:</p>
+<ol>
+<li><strong>"Git for your AI's memory."</strong> Make <code>diff / merge / branch / rollback</code> on a portable, signed,
+   encrypted <code>.dna</code> strand the headline. <em>No competitor offers this</em> — it's pure white-space and the
+   natural extension of v1's team-sync.</li>
+<li><strong>Coding-native, cross-tool, ownable.</strong> One memory that follows a developer across Cursor →
+   Claude Code → Windsurf, with per-fact provenance, that survives any vendor switch. The incumbents'
+   cloud economics structurally <em>prevent</em> them from copying this.</li>
+<li><strong>$0/offline stays the uncompromised default.</strong> Every paid competitor degrades or paywalls
+   offline (Mem0 gates graph memory at $249/mo; Cursor disables memory offline; Pieces caps
+   retention at 9 months). Helix makes "$0 = the default, not a degraded mode" the contrast.</li>
+<li><strong>The moonshot: become the open standard</strong> — the "USB for AI memory." A 2026 research blueprint
+   (<em>Portable Agent Memory</em>, arXiv 2605.11032) is nearly a 1:1 match for <code>.dna</code>, and MCP (now under
+   the Linux Foundation) explicitly does <strong>not</strong> standardize a portable memory artifact. That gap is
+   ours to own.</li>
+</ol>
+<p><strong>The differentiation thesis in one line:</strong> <em>Every well-funded competitor builds memory-as-a-service;
+every aligned OSS project builds general-purpose memory. Helix v2 is the only coding-agent-native,
+local-first memory you cryptographically own and can version, merge, and carry as a single signed
+file.</em> That structural gap — not a feature list — is the moat.</p>
+<hr />
+<h2 id="1-where-helix-sits-positioning-map">1. Where Helix sits (positioning map)<a class="headerlink" href="#1-where-helix-sits-positioning-map" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>                         LOCAL-FIRST
+                              │
+      Basic Memory ●          │          ● Cognee
+      Pieces ●(closed)        │          ● Supermemory
+      Windsurf ◐              │     ★ HELIX          ● Memobase
+ ──── CODING ─────────────────┼────────────────────────── GENERAL ────
+      Cursor ○                │
+      Continue ◐ (frozen)     │          ● Mem0 / OpenMemory ◐
+      ChatGPT/Claude/         │          ● Letta ◐
+      Gemini ○ ───────────────┤          ● Zep / Graphiti ○
+                            CLOUD          ● Memara ○
+      (● OSS   ◐ open-core/partial   ○ proprietary)
+</code></pre></div>
+<p>Helix is the <strong>sole occupant</strong> of {local-first ∩ coding-native ∩ portable-signed-encrypted ∩ OSS-$0}.
+The other axis no 2-D map shows — <em>portable / cryptographically ownable</em> — is occupied by <strong>nobody</strong>:
+Claude offers raw export, Context Pack offers plaintext, Cloudflare offers exportable blobs; none are
+signed, encrypted, offline, and mergeable. That is the axis v2 makes its home.</p>
+<p><strong>Threats to defend against</strong> (from the competitive sweep):
+- <strong>Native incumbents bundling "good enough" free memory</strong> (Claude/Cursor/ChatGPT) — the existential
+  risk. <em>Defense:</em> be the <strong>vendor-neutral cross-tool layer</strong>; only Helix's <code>.dna</code> survives a tool
+  switch. Lean on Claude's own memory-export feature as third-party validation of the portability thesis.
+- <strong>Mem0's capital + distribution</strong> ($24M Series A) commoditizing "memory MCP." <em>Defense:</em> don't
+  compete on generic API memory — win on ownership + portability + coding-nativeness they can't
+  retrofit without abandoning cloud-first economics.
+- <strong>Aligned OSS (Basic Memory, Cognee) adding crypto/coding features.</strong> <em>Defense:</em> ship
+  signing + encryption + git-ops + coding-typed-graph <strong>now</strong>, as the integrated default they'd have
+  to bolt on against their general-purpose grain.</p>
+<hr />
+<h2 id="2-the-eight-v2-pillars">2. The eight v2 pillars<a class="headerlink" href="#2-the-eight-v2-pillars" title="Permanent link">&para;</a></h2>
+<p>Each capability carries an effort tag (S/M/L) and a priority (P0 = v2.0 headline, P1 = v2.x, P2 = later/moonshot).
+Everything marked "local-first: yes" runs at $0 with no network. Cloud is always opt-in.</p>
+<h3 id="pillar-1-memory-intelligence-the-engine-gets-smarter">Pillar 1 — Memory Intelligence (the engine gets smarter)<a class="headerlink" href="#pillar-1-memory-intelligence-the-engine-gets-smarter" title="Permanent link">&para;</a></h3>
+<p>The frontier has moved <em>past</em> v1's loop; these close the gap and are disproportionately valuable for a
+<em>coding</em> product.</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Capability</th>
+<th>What it adds</th>
+<th>Effort</th>
+<th>Pri</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1.1</td>
+<td><strong>Procedural / skill memory</strong> (Voyager-style)</td>
+<td>A new <code>procedure</code> type: verified, reusable how-to recipes (build/fix/codemod/review) keyed by trigger conditions — distinct from declarative facts. The single biggest gap for a <em>coding</em> agent: v1 stores facts about code, not <em>how to act</em>. Promotion is local — when an episode ends in an observed success signal (tests pass/build green), distill the trajectory into a skill; SM-2 becomes its reliability score.</td>
+<td>L</td>
+<td><strong>P0</strong></td>
+</tr>
+<tr>
+<td>1.2</td>
+<td><strong>Offline "sleep-time" consolidation</strong></td>
+<td>Move reflection off the hot path into a scheduled <code>helix consolidate</code> job that abstracts clusters of raw episodes into durable semantic facts (CLS fast/slow split). Higher-quality memory at $0 live-latency. Guard against self-talk drift: every consolidated fact must cite ≥2 sourced episodes.</td>
+<td>M</td>
+<td><strong>P0</strong></td>
+</tr>
+<tr>
+<td>1.3</td>
+<td><strong>Staleness / implicit-invalidation detection</strong></td>
+<td>Flag facts that are likely <em>no longer true</em> (dependency upgraded, API renamed, "we migrated to Postgres" should stale every SQLite snippet) — not just low-relevance. Closes the #1 named production gap ("confidently wrong" high-relevance memories). Advisory only, never auto-delete.</td>
+<td>M</td>
+<td><strong>P0</strong></td>
+</tr>
+<tr>
+<td>1.4</td>
+<td><strong>Change-as-event temporal facts</strong></td>
+<td>Reify transitions ("switched X→Y at T") as first-class queryable edges, not silent overwrites. Answers "when/why did this change?" — where every memory benchmark collapses. Builds directly on v1's bi-temporal columns.</td>
+<td>M</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>1.5</td>
+<td><strong>Provenance + uncertainty + conflict surfacing</strong></td>
+<td>Keep conflicting facts side-by-side with a <code>conflicts_with</code> edge and surface both with sources instead of silently auto-resolving. Cheapest trust win; aligns with "the user owns the memory."</td>
+<td>S</td>
+<td><strong>P0</strong></td>
+</tr>
+<tr>
+<td>1.6</td>
+<td><strong>Self-organizing A-MEM links</strong></td>
+<td>At write time, auto-link a new memory to nearest neighbors with an LLM/heuristic rationale + tags. Upgrades graph expansion from purely structural to semantically justified. Cap out-degree + similarity floor to prevent link explosion.</td>
+<td>M</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>1.7</td>
+<td><strong>Auto-tuned write policy</strong> (Memory-R1-lite)</td>
+<td>Replace static ADD/UPDATE/NOOP thresholds with offline local calibration from outcome logs (was the memory later retrieved and led to a passing edit?). <strong>Not</strong> default RL — ship as threshold auto-tuning; full RL stays opt-in cloud.</td>
+<td>L</td>
+<td>P2</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Skeptic's flag carried from research: most 2025–26 "memory SOTA" wins are reported on <em>conversational</em>
+benchmarks (LoCoMo/LongMemEval). A coding product must build its own eval (skill-reuse rate,
+stale-fact catch rate, build-green-after-recall) rather than chase chat scores. See Pillar 1 → Eval.</p>
+</blockquote>
+<h3 id="pillar-2-retrieval-reasoning-20">Pillar 2 — Retrieval &amp; Reasoning 2.0<a class="headerlink" href="#pillar-2-retrieval-reasoning-20" title="Permanent link">&para;</a></h3>
+<p>v1's pipeline is already well-aligned ("selective, distilled, ranked beats context-stuffing"). These
+are gated, additive upgrades — default the expensive ones to <em>off</em> and trigger on detected complexity.</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Capability</th>
+<th>What it adds</th>
+<th>Effort</th>
+<th>Pri</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2.1</td>
+<td><strong>Local cross-encoder reranker</strong></td>
+<td>Optional <code>bge-reranker-v2-m3</code> / <code>mxbai-rerank-base-v2</code> over the top ~25 post-RRF candidates. ~+17% recall@5 for ~150ms CPU — the best effort/quality ratio in the whole retrieval sweep. Config-gated, off for tiny strands.</td>
+<td>S–M</td>
+<td><strong>P0</strong></td>
+</tr>
+<tr>
+<td>2.2</td>
+<td><strong>Embedding upgrade + compact storage</strong></td>
+<td>Swap <code>bge-small</code> → <strong>EmbeddingGemma-300M</strong> or <strong>nomic-embed-text-v2-moe</strong>; add <strong><code>jina-embeddings-v2-base-code</code></strong> for code. Store with <strong>int8 quantization + Matryoshka</strong> (768 stored, search at 256) — ~4× smaller strands, near-lossless. Touches every query and every strand size.</td>
+<td>S–M</td>
+<td><strong>P0</strong></td>
+</tr>
+<tr>
+<td>2.3</td>
+<td><strong>Tighter context packing</strong></td>
+<td>Position-aware ordering (highest-salience first/last, never the middle), a relevance <em>threshold</em> instead of fixed top-k, and aggressive near-neighbor dedup before packing (semantically-related distractors are the harmful ones). Cheap, deterministic, high-impact.</td>
+<td>S–M</td>
+<td><strong>P0</strong></td>
+</tr>
+<tr>
+<td>2.4</td>
+<td><strong>Proactive "current-file" surfacing</strong></td>
+<td>Surface the top 1–3 highest-confidence, type-scoped memories for the open file / recent edits — behind a <strong>hard confidence gate</strong> (surface nothing rather than something marginal). Highest new-capability upside; net-negative if the gate is loose ("context rot": one distractor measurably lowers accuracy).</td>
+<td>M</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>2.5</td>
+<td><strong>Memory-search-as-a-tool + complexity-gated 2nd hop</strong></td>
+<td>Keep memory search idempotent and re-callable by the agent (don't force internal loops); add a cheap heuristic complexity gate that only triggers a second graph-expansion hop on multi-hop queries.</td>
+<td>S–M</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>2.6</td>
+<td><strong>Lazy global/thematic query mode</strong></td>
+<td>A broader cross-project "what are the themes" mode with summaries computed <em>on demand</em>, never as a batch indexing step. <strong>Explicitly skip</strong> Microsoft-GraphRAG community detection (3–5× indexing cost, pays off only above ~100k tokens — not the single-user case).</td>
+<td>M</td>
+<td>P2</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Hard rules from the packing research, baked into 2.3: accuracy peaks around ~3 docs then plateaus;
+effective context is often &lt;50% of advertised; inject <em>atomic delimited facts, not prose</em>.
+<strong>Skip ColBERT/late-interaction</strong> (≈250× index bloat — fights the single-SQLite-file model).
+<strong>Don't pick embeddings by MTEB</strong> (negatively correlated with memory retrieval) — build a tiny
+real-strand eval.</p>
+</blockquote>
+<h3 id="pillar-3-collaboration-multi-agent-memory-for-teams-swarms">Pillar 3 — Collaboration &amp; Multi-Agent (memory for teams &amp; swarms)<a class="headerlink" href="#pillar-3-collaboration-multi-agent-memory-for-teams-swarms" title="Permanent link">&para;</a></h3>
+<p>Makes memory work across many agents and many people while staying local-first and privacy-preserving.</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Capability</th>
+<th>What it adds</th>
+<th>Effort</th>
+<th>Pri</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>3.1</td>
+<td><strong>Scoped / namespaced memory + redaction-on-share</strong></td>
+<td>A <code>scope</code> + <code>visibility</code> (personal/team/public) tag per fact; a share manifest that selects a scope subtree; a redaction pass (Presidio + allowlist) before export; <strong>Merkle selective disclosure</strong> so a shared strand reveals only the chosen facts with inclusion proofs against the signed root. Hard rule: <em>personal identity facts never auto-share.</em> Unblocks both multi-agent and multi-person sharing.</td>
+<td>M</td>
+<td><strong>P0</strong></td>
+</tr>
+<tr>
+<td>3.2</td>
+<td><strong>Per-contributor signed provenance + TOFU quarantine</strong></td>
+<td>Every imported fact carries an Ed25519-signed attestation (who distilled it, from what). Trust-on-first-use key-pinning; untrusted-key facts land in a <strong>quarantine</strong> zone, never auto-merged; retrieval down-weights low-trust facts. The biggest <em>trust</em> unlock — directly counters documented poisoning attacks (PoisonedRAG ~90% with ~5 docs; MINJA 95%+ query-only).</td>
+<td>M</td>
+<td><strong>P0</strong></td>
+</tr>
+<tr>
+<td>3.3</td>
+<td><strong>CRDT-semantics merge layer</strong></td>
+<td>Add-wins OR-Sets for fact/edge existence + LWW-registers-over-Lamport-clocks for scalar fields, making the conflict-free 80% automatic, while keeping v1's semantic 3-way merge as the authoritative path for genuine contradictions. Compact tombstones at signed checkpoints to keep the portable file small.</td>
+<td>L</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>3.4</td>
+<td><strong><code>helix propose</code> / <code>review</code> governance</strong></td>
+<td>Incoming facts from other contributors arrive as a reviewable "memory PR"; a maintainer approves/vetoes before merge to a shared scope. Authority-weighted supersession (owner &gt; contributor) with a required <code>supersede_reason</code>. Hash-chained Merkle audit log of every accept/reject/supersede (aligns with the chosen BLAKE3 Merkle design).</td>
+<td>M</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>3.5</td>
+<td><strong>MCP memory namespaces + handoff</strong></td>
+<td>Per-agent <code>agent_scope</code> on the MCP surface; default <strong>read-shared, write-scoped</strong> (blackboard pattern) so sub-agents see team memory but write to their own namespace until promoted; <code>memory.handoff(facts, to_scope)</code> to pass a vetted subset between agents. Prevents cross-agent contamination.</td>
+<td>M</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>3.6</td>
+<td><strong>Optional p2p sync adapter</strong></td>
+<td>An <code>automerge-repo</code>-style op-log sync over WebSocket/WebRTC/local-dir while the SQLite <code>.dna</code> stays the materialized signed artifact. Strengthens local-first multi-device without a cloud account. Gated behind config; v1 transports already cover the basic need.</td>
+<td>L</td>
+<td>P2</td>
+</tr>
+</tbody>
+</table>
+<h3 id="pillar-4-trust-privacy-compliance-earn-the-you-own-it-claim">Pillar 4 — Trust, Privacy &amp; Compliance (earn the "you own it" claim)<a class="headerlink" href="#pillar-4-trust-privacy-compliance-earn-the-you-own-it-claim" title="Permanent link">&para;</a></h3>
+<p>Helix's architecture is a compliance <em>asset</em>: it stores discrete, addressable, deletable fact-embeddings
+(not model weights) and already encrypts client-side. Almost everything below is defense-in-depth on a
+boundary we already own.</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Capability</th>
+<th>What it adds</th>
+<th>Effort</th>
+<th>Pri</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>4.1</td>
+<td><strong>Erasure cascade + tombstones + DSAR/rectification</strong></td>
+<td>Delete fact → delete embeddings → recompute edges → re-derive any consolidated facts that cited it, transactionally; tombstones that survive sync/merge (no resurrection); subject-scoped audit/provenance export; edit→re-embed→supersede. Satisfies GDPR Art. 16/17 + CCPA. <strong>Differentiator:</strong> "we delete vectors, not weights — no machine-unlearning needed."</td>
+<td>L</td>
+<td><strong>P0</strong></td>
+</tr>
+<tr>
+<td>4.2</td>
+<td><strong>Envelope encryption (DEK/KEK) + pluggable unlock</strong></td>
+<td>One random data key encrypts the strand; wrap it with N key-encryption-keys (passphrase, <strong>OS keychain</strong> TPM/Secure-Enclave, <strong>YubiKey FIDO2-PRF</strong>, <strong>SLIP-0039 Shamir social recovery</strong>). Rotation re-wraps a small DEK, not the whole DB. Kills single-passphrase fragility. <em>Invariant:</em> never sync/hardware-wrap the live <strong>signing</strong> key — its portability stays an explicit user export.</td>
+<td>M (per provider)</td>
+<td><strong>P0</strong></td>
+</tr>
+<tr>
+<td>4.3</td>
+<td><strong>Quarantined dual-LLM extraction + injection hardening</strong></td>
+<td>The LLM that reads untrusted docs has <strong>no tool access</strong> and emits only structured output; spotlight/datamark untrusted input; strip the <em>lethal trifecta</em> at ingest (auto-render markdown images, invisible-Unicode, raw URLs) so a stored fact can't become an exfil payload; pin/hash Helix's own MCP tool descriptions (anti-rug-pull). Defends the product's actual attack surface.</td>
+<td>M–L</td>
+<td><strong>P0</strong></td>
+</tr>
+<tr>
+<td>4.4</td>
+<td><strong>Per-fact in-toto/DSSE signatures + in-strand transparency log</strong></td>
+<td>Sign each fact (not just the whole strand) so a recipient can verify/accept/reject on merge and detect mutation; embed tlog-tiles consistency-proof math in the <code>.dna</code> for serverless append-only history. Hosted Rekor stapling stays opt-in for a future "publish a strand" feature.</td>
+<td>M</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>4.5</td>
+<td><strong>Ingest secret-scanning + PII redaction</strong></td>
+<td>Local gitleaks-rules + entropy as a <em>hard gate</em> so an API key never becomes a "fact"; Presidio analyzer+anonymizer (NER + checksums) before write. Highest-ROI, fully local, on-brand.</td>
+<td>S–M</td>
+<td><strong>P0</strong></td>
+</tr>
+<tr>
+<td>4.6</td>
+<td><strong>Opt-in E2EE cloud sync + region pinning</strong></td>
+<td>If/when cloud sync ships, client-held keys + region pinning keep the relay holding only ciphertext (radically lowers GDPR transfer exposure). TEE (AWS Nitro) only as honestly-caveated defense-in-depth — <em>not</em> the real boundary (TEE.fail, Oct 2025, broke physical attestation; client-side encryption stays the boundary).</td>
+<td>M–L</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>4.7</td>
+<td><strong>AI-Act defensive docs</strong></td>
+<td>An AI-component disclosure proving every LLM path has a deterministic local fallback ("deployer, not provider"), a downstream-customer doc pack, and an "AI-generated" label on LLM-derived facts. Mostly documentation.</td>
+<td>S–M</td>
+<td>P1</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Explicitly <strong>research-only / theater to avoid as load-bearing:</strong> general FHE over the graph,
+general-purpose zkVMs for per-fact proofs, leakage-free searchable encryption (doesn't exist at speed),
+Intel SGX (deprecated), federated learning, mandatory transparency logs, central-DP telemetry, and
+any prompt-filter/classifier used as the <em>sole</em> injection defense.</p>
+</blockquote>
+<h3 id="pillar-5-ecosystem-distribution-be-everywhere">Pillar 5 — Ecosystem &amp; Distribution (be everywhere)<a class="headerlink" href="#pillar-5-ecosystem-distribution-be-everywhere" title="Permanent link">&para;</a></h3>
+<p>MCP already makes Helix "supported everywhere" nearly for free. v2's job is native memory <em>adapters</em>,
+<em>discovery</em>, and new <em>capture surfaces</em>.</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Capability</th>
+<th>What it adds</th>
+<th>Effort</th>
+<th>Pri</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>5.1</td>
+<td><strong>MCP Registry listing + <code>.mcpb</code> bundle</strong></td>
+<td><code>server.json</code> + GitHub-OAuth namespace + <code>mcp-publisher</code>; one publish propagates to PulseMCP/Glama/mcp.so. Add an <code>.mcpb</code> for one-click Claude Desktop install. Pure reach, nearly free. <em>(Note: the official registry is still preview, not GA — list anyway, it's cheap insurance.)</em></td>
+<td>S</td>
+<td><strong>P0</strong></td>
+</tr>
+<tr>
+<td>5.2</td>
+<td><strong>CLI-as-a-tool hardening</strong></td>
+<td><code>--json</code> output, stable flags, POSIX exit codes, a 3–4 command "tool card." The many frameworks that shell out but don't speak MCP can then use Helix via an allowlisted <code>Bash(helix recall *)</code>. Best ROI of any surface.</td>
+<td>S</td>
+<td><strong>P0</strong></td>
+</tr>
+<tr>
+<td>5.3</td>
+<td><strong>Framework memory adapters</strong></td>
+<td><code>HelixStore(BaseStore)</code> for <strong>LangGraph</strong> (flagship; also captures the competing <code>langmem</code> ecosystem), <code>HelixMemory(Memory)</code> for <strong>AutoGen/AG2</strong> (cleanest interface, lowest effort — do first), <code>HelixSession</code> for <strong>OpenAI Agents SDK</strong>, <code>HelixStorage</code> for <strong>CrewAI</strong>, in-process MCP for the <strong>Claude Agent SDK</strong>.</td>
+<td>M each</td>
+<td><strong>P0</strong> (LangGraph, AutoGen) / P1 (rest)</td>
+</tr>
+<tr>
+<td>5.4</td>
+<td><strong>VS Code extension</strong></td>
+<td>Native tool registration (<code>vscode.lm.registerTool</code>) so memory surfaces in Copilot agent mode, a graph TreeView sidebar, capture commands, auto-install via <code>.vscode/mcp.json</code>. Largest agent-coding userbase.</td>
+<td>M</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>5.5</td>
+<td><strong>Browser extension</strong></td>
+<td>MV3 content scripts on chatgpt.com / claude.ai with a "Save to Helix" that distills the visible conversation to localhost. Captures memory where users actually converse — a surface MCP can't reach.</td>
+<td>M</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>5.6</td>
+<td><strong>GitHub ingestion connector</strong></td>
+<td>A GitHub App (fine-grained per-repo) distilling conventions (CONTRIBUTING/lint configs), decisions (merged-PR threads), ownership (CODEOWNERS) into the user's <em>own</em> strand. Highest-value durable facts for coding agents. Strictly opt-in, thin relay, nothing stored server-side.</td>
+<td>M</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>5.7</td>
+<td><strong>Helix Hub (memory packs)</strong></td>
+<td>Distribute signed <code>.dna</code> packs via <strong>OCI/ORAS</strong> (push/pull from GHCR, no bespoke server — Ollama validates this model) with a HuggingFace-style "memory card" + Sigstore provenance. <strong>Team-scoped onboarding primitive, not a public bazaar</strong> (privacy + poisoning risk). Killer use case: senior exports repo-conventions <code>.dna</code>; new hire's agent imports instantly.</td>
+<td>M → L</td>
+<td>P2</td>
+</tr>
+<tr>
+<td>5.8</td>
+<td><strong>Streamable-HTTP self-host transport + outbound relay</strong></td>
+<td>An <em>alternate</em> MCP transport so the <strong>user</strong> can self-host a remote endpoint; the privacy-preserving "remote" answer is an outbound-only relay that sees only ciphertext — never host a copy of the strand. (Cautionary: Asana hosted-MCP cross-org leak; CVE-2025-6514 RCE in <code>mcp-remote</code>.) Needs an ADR.</td>
+<td>M</td>
+<td>P2</td>
+</tr>
+</tbody>
+</table>
+<h3 id="pillar-6-product-ux-the-magic-moment">Pillar 6 — Product, UX &amp; the Magic Moment<a class="headerlink" href="#pillar-6-product-ux-the-magic-moment" title="Permanent link">&para;</a></h3>
+<p>v1 made memory portable and inspectable; v2 makes it <strong>delightful to curate, observable, and trusted.</strong></p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Capability</th>
+<th>What it adds</th>
+<th>Effort</th>
+<th>Pri</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>6.1</td>
+<td><strong>Memory copilot + "what do I know about X?"</strong></td>
+<td>Chat over the strand ("what do you remember about the billing service?") returning <strong>sourced, editable, local</strong> answers; a scoped-subgraph entity view as its backbone. Highest-intuition surface; anchors onboarding.</td>
+<td>M</td>
+<td><strong>P0</strong></td>
+</tr>
+<tr>
+<td>6.2</td>
+<td><strong>Observability dashboard</strong></td>
+<td>A GitHub-contribution-style "facts learned/day" heatmap, ≤3 hero numbers (<strong>facts stored · facts to review · $ saved</strong>), a decay heatmap. The <strong>$0-cost meter</strong> (queries served locally × cloud-equivalent token price) is genuine, ownable whitespace — no product ships a polished savings meter, and it dramatizes Helix's core rule.</td>
+<td>S–M</td>
+<td><strong>P0</strong></td>
+</tr>
+<tr>
+<td>6.3</td>
+<td><strong>Trust-first review queue + diff/merge UI with undo</strong></td>
+<td>Stale/conflicting facts as a finite, prioritized queue (staleness × centrality × confidence); a 3-pane "yours / incoming / merged" diff with confidence + source per row, <strong>always undoable</strong>. Directly beats the documented distrust of ChatGPT/opaque memory.</td>
+<td>M</td>
+<td><strong>P0</strong></td>
+</tr>
+<tr>
+<td>6.4</td>
+<td><strong>Menubar/tray + voice quick-capture</strong></td>
+<td>A global hotkey that distills a thought into a sourced fact via on-device Whisper — nothing leaves the machine. ~1-second capture, perfectly on-brand.</td>
+<td>S–M</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>6.5</td>
+<td><strong>Bitemporal timeline / time-travel debugging</strong></td>
+<td>Scrub "what did the agent believe on March 1?" over the existing bitemporal data; plot <em>events</em> ("learned X," "X superseded"), not raw values. The viewer for belief-level time travel.</td>
+<td>M</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>6.6</td>
+<td><strong>60-second onboarding "wow"</strong></td>
+<td><code>helix init</code> ingests one real conversation/repo, the dashboard <strong>animates a graph assembling itself</strong> with ~10 sourced facts, ending on "Ask me what I know about your billing service" → the copilot answers with provenance. The magic moment is <em>seeing your agent's brain build itself, instantly, locally, $0.</em></td>
+<td>M</td>
+<td><strong>P0</strong></td>
+</tr>
+<tr>
+<td>6.7</td>
+<td><strong>Mobile companion</strong></td>
+<td>A thin MCP/SDK client to review the daily digest, approve/forget facts, browse the graph on the go. <em>Not</em> capture-everything.</td>
+<td>L</td>
+<td>P2</td>
+</tr>
+</tbody>
+</table>
+<h3 id="pillar-7-business-model-gtm-open-core-that-respects-the-rules">Pillar 7 — Business Model &amp; GTM (open-core that respects the rules)<a class="headerlink" href="#pillar-7-business-model-gtm-open-core-that-respects-the-rules" title="Permanent link">&para;</a></h3>
+<p>The cleanest, most-proven adjacent model (Obsidian + Tailscale + Sentry-FSL) is the one that <em>respects</em>
+the $0/local-first/ownership rules: <strong>everything local is free forever and fully featured; you charge
+only for the optional networked layer, and encryption is never the paywall</strong> (it's a free trust signal).</p>
+<ul>
+<li><strong>License:</strong> Apache-2.0 for the engine; a Sentry-style FSL→Apache only for the <em>hosted relay code</em>.</li>
+<li><strong>Helix Local — $0 forever:</strong> full engine, CLI, MCP server, dashboard, all SDKs; unlimited local
+  strands; full extraction/retrieval/consolidation; signed/encrypted <code>.dna</code> export-import; p2p pack
+  sharing; bring-your-own-keys for any optional cloud LLM/embeddings. <em>No feature gated. This is the product.</em></li>
+<li><strong>Helix Sync — ~$5–8/user/mo:</strong> optional <strong>E2E-encrypted</strong> cross-device sync + hosted backup via a
+  <strong>blind relay</strong> (Helix never sees plaintext — Tailscale/Obsidian model); version history; quota tiers.</li>
+<li><strong>Helix Team — ~$12–20/user/mo:</strong> shared org memory graphs, merge governance, RBAC, audit logs,
+  SSO/SAML (<strong>not</strong> SSO-taxed). "Free for individuals, paid for teams." Unlimited free local seats.</li>
+<li><strong>Enterprise — custom:</strong> SOC 2 Type II, SCIM, data-residency, on-prem/air-gap, CMEK, DPA,
+  contractual no-training + architectural ZDR, SLA. Build only on written request.</li>
+<li><strong>GTM:</strong> one-command <code>uvx</code>/<code>npx</code> install + per-client copy-paste snippets + Add-to-Cursor/VS-Code
+  buttons + <code>llms.txt</code>/MCP manifest for <em>agent self-selection</em>; seed a shareable-<code>.dna</code>-pack loop
+  (one-command import) + an <code>awesome-helix</code> list; Discord; <strong>track downloads/active use, not stars.</strong></li>
+<li><strong>Funding read:</strong> local-first is <strong>bootstrap-or-modest-seed shaped, not a VC rocket</strong> — raise only if
+  Sync/Team conversion proves out. (MCP registries drive ~0% of installs; one-command runners do.)</li>
+</ul>
+<h3 id="pillar-8-the-standard-the-moonshot-worth-a-real-bet">Pillar 8 — The Standard (the moonshot worth a real bet)<a class="headerlink" href="#pillar-8-the-standard-the-moonshot-worth-a-real-bet" title="Permanent link">&para;</a></h3>
+<p><strong>Make <code>.dna</code> <em>the</em> open standard for portable agent memory — the "USB for AI memory."</strong> The arXiv
+<em>Portable Agent Memory</em> blueprint already mirrors <code>.dna</code> (BLAKE3 Merkle-DAG + Ed25519 + capability-scoped
+disclosure + typed framing), and Helix's <strong>encrypt-at-rest</strong> strand is <em>ahead</em> of the published spec
+(sign-only). MCP is now neutral-governed (Linux Foundation, Dec 2025) but deliberately leaves the
+memory-artifact gap open. v2 publishes the <code>.dna</code> format as an open spec with a reference implementation
+and a conformance test — distribution via the signed Helix Hub. This is category-defining, not a feature.</p>
+<hr />
+<h2 id="3-roadmap-three-waves">3. Roadmap — three waves<a class="headerlink" href="#3-roadmap-three-waves" title="Permanent link">&para;</a></h2>
+<p>Sequenced so each wave ships a coherent, demoable story. P0 items first; effort-balanced per wave.</p>
+<h3 id="wave-a-git-for-your-memory-v20-the-headline-release">Wave A — "Git for your memory" (v2.0) — the headline release<a class="headerlink" href="#wave-a-git-for-your-memory-v20-the-headline-release" title="Permanent link">&para;</a></h3>
+<p>The thesis made real + the highest-ROI engine/trust wins.
+- <strong>Collaboration:</strong> 3.1 scoped/redacted sharing, 3.2 signed provenance + quarantine.
+- <strong>Memory intelligence:</strong> 1.2 sleep-time consolidation, 1.3 staleness detection, 1.5 conflict surfacing.
+- <strong>Retrieval:</strong> 2.1 reranker, 2.2 embedding+compact storage, 2.3 tighter packing.
+- <strong>Trust:</strong> 4.1 erasure cascade, 4.2 envelope encryption (+ OS keychain), 4.5 secret/PII gates,
+  4.3 dual-LLM extraction + trifecta hardening.
+- <strong>Product:</strong> 6.1 copilot + entity view, 6.2 observability + $0 meter, 6.3 review/diff/merge UI,
+  6.6 60-second wow.
+- <strong>Distribution:</strong> 5.1 MCP registry + <code>.mcpb</code>, 5.2 CLI-as-tool, 5.3 LangGraph + AutoGen adapters.
+- <strong>Eval:</strong> ship the coding-memory benchmark (skill-reuse, stale-catch, build-green-after-recall).</p>
+<h3 id="wave-b-memory-for-teams-agents-v21">Wave B — "Memory for teams &amp; agents" (v2.1)<a class="headerlink" href="#wave-b-memory-for-teams-agents-v21" title="Permanent link">&para;</a></h3>
+<ul>
+<li>1.1 <strong>procedural/skill memory</strong> (the defining coding capability — large, lands here), 1.4 change-as-event, 1.6 A-MEM links.</li>
+<li>3.3 CRDT merge layer, 3.4 propose/review governance, 3.5 MCP namespaces + handoff.</li>
+<li>2.4 proactive surfacing, 2.5 memory-as-tool + 2nd hop.</li>
+<li>4.4 per-fact signatures + transparency log, 4.6 opt-in E2EE sync, 4.7 AI-Act docs.</li>
+<li>5.4 VS Code extension, 5.5 browser extension, 5.6 GitHub connector.</li>
+<li>6.4 quick-capture, 6.5 timeline / time-travel.</li>
+<li><strong>Business:</strong> stand up Helix Sync (blind relay) + Team tier.</li>
+</ul>
+<h3 id="wave-c-the-standard-the-ecosystem-v22">Wave C — "The standard &amp; the ecosystem" (v2.2+)<a class="headerlink" href="#wave-c-the-standard-the-ecosystem-v22" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Pillar 8 open spec + conformance suite.</li>
+<li>5.7 Helix Hub (OCI/ORAS signed packs), 5.8 self-host transport + relay.</li>
+<li>1.7 auto-tuned write policy, 2.6 lazy global query mode, 3.6 p2p sync.</li>
+<li>6.7 mobile companion. Enterprise tier hardening (SOC 2).</li>
+</ul>
+<hr />
+<h2 id="4-success-metrics-what-v2-worked-means">4. Success metrics (what "v2 worked" means)<a class="headerlink" href="#4-success-metrics-what-v2-worked-means" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Retrieval quality:</strong> ≥ target on the <em>coding-memory</em> eval (not LoCoMo) — stale-fact catch rate,
+  skill-reuse rate, build-green-after-recall, recall@k with reranker.</li>
+<li><strong>Trust:</strong> 100% of facts deletable with verified embedding-level erasure; injection red-team
+  (SpAIware/MINJA-style) blocked; per-fact signatures verify on merge.</li>
+<li><strong>Portability:</strong> a <code>.dna</code> round-trips across ≥3 agents/tools with zero loss; merge of two diverged
+  strands is conflict-free for the easy 80% and reviewable for the rest.</li>
+<li><strong>Adoption (track, don't vanity):</strong> weekly active strands, pack imports, CLI/MCP invocations,
+  framework-adapter installs — <strong>not</strong> GitHub stars.</li>
+<li><strong>$0 promise:</strong> default config provably makes zero network calls; the $0 meter shows real savings.</li>
+</ul>
+<h2 id="5-non-goals-guardrails-unchanged-golden-rules">5. Non-goals / guardrails (unchanged golden rules)<a class="headerlink" href="#5-non-goals-guardrails-unchanged-golden-rules" title="Permanent link">&para;</a></h2>
+<ul>
+<li>No core path may <em>require</em> a network call or cloud account. Cloud is opt-in and degradable.</li>
+<li>Never store raw transcripts — distilled facts only.</li>
+<li>Don't add a graph-DB dependency — the field is converging <em>back</em> to built-in entity linking, which
+  vindicates the single-SQLite-file choice.</li>
+<li>Don't chase conversational benchmarks; build the coding eval.</li>
+<li>Don't paywall any core memory feature; encryption is free and universal.</li>
+<li>Every new fact still carries <code>source · created_at · confidence · type</code>. No exceptions.</li>
+<li>Expanding beyond coding (PKM/research/support) rides the <em>same engine</em> — Helix stays agent-memory
+  infrastructure, it does <strong>not</strong> become a note app. Lifelogging (record-everything) is rejected: it
+  contradicts "distilled facts, not transcripts."</li>
+</ul>
+<h2 id="6-top-risks">6. Top risks<a class="headerlink" href="#6-top-risks" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Native-incumbent bundling</strong> (Claude/Cursor free memory) — mitigate by being the vendor-neutral
+   cross-tool layer; ride Claude's own export endorsement.</li>
+<li><strong>Scope explosion</strong> — v2 is large; the wave plan + P0/P1/P2 gating is the defense. Ship Wave A as a
+   complete story before B.</li>
+<li><strong>Injection/poisoning</strong> — the product's core loop <em>is</em> the attack surface; Pillar 4.3/3.2 are P0 for
+   that reason, and defenses are defense-in-depth, never a single filter.</li>
+<li><strong>Local-first monetization is unproven</strong> — keep burn near-zero (bootstrap), only build cloud/team
+   when conversion shows pull.</li>
+<li><strong>Tombstone/metadata bloat</strong> in a portable file — compact at signed checkpoints.</li>
+</ol>
+<hr />
+<h2 id="appendix-research-sources-grouped">Appendix — research sources (grouped)<a class="headerlink" href="#appendix-research-sources-grouped" title="Permanent link">&para;</a></h2>
+<p><strong>Memory frontier:</strong> A-MEM (arXiv 2502.12110), Mem0/Mem0g (2504.19413), <em>State of AI Agent Memory 2026</em>
+(mem0.ai), Zep/Graphiti (2501.13956), HippoRAG 2, Letta sleep-time compute, Voyager (2305.16291),
+ProcMEM/SkillClaw, Memory-R1 (2508.19828), MemoryOS (EMNLP 2025), <em>Episodic Memory is the Missing Piece</em>
+(2502.06975), STALE (2605.06527), CLS survey (2512.13564), ConflictBank (2408.12076).</p>
+<p><strong>Competitive:</strong> Mem0 Series A (mem0.ai/series-a), Zep SOTA (blog.getzep.com), Letta benchmarks/pricing
+(docs.letta.com), Cognee (€7.5M seed), Supermemory, Memobase/Memara, Pieces (pieces.app), Basic Memory
+(github.com/basicmachines-co), Cursor Memories changelog, Windsurf/Devin memories, Claude/ChatGPT/Gemini
+native memory, Context Pack, Cloudflare Agent Memory.</p>
+<p><strong>Ecosystem/distribution:</strong> LangGraph BaseStore, langmem, OpenAI Agents SDK sessions, Claude Agent SDK
+memory-tool, CrewAI memory, AutoGen/AG2 memory, Google ADK memory, LlamaIndex Memory, MCP Registry
+preview (blog.modelcontextprotocol.io), MCP Apps SEP-1865, Streamable HTTP transport, MCP OAuth
+(2025-06-18), Asana MCP leak, CVE-2025-6514, VS Code LM tools API, ORAS v1.3, Ollama OCI, Sigstore npm
+provenance, GitHub App permissions, Linear/Notion/Jira/Slack OAuth.</p>
+<p><strong>Collaboration:</strong> Ink &amp; Switch local-first, Automerge 3, Weidner CRDT survey, MRDTs (2203.14518),
+automerge-repo, ElectricSQL/PowerSync/Jazz, blackboard LLM swarms (2510.01285), CrewAI/LangGraph memory,
+Anthropic multi-agent system, ReBAC/Zanzibar/OpenFGA, Presidio, redactable signatures (scitepress 45070),
+PoisonedRAG (2402.07867), AgentPoison (2407.12784), MINJA (2503.03704), A-MemGuard (2510.02373),
+in-toto/SLSA, Sigstore Rekor, W3C PROV, TOFU, Gerrit/Wikipedia-pending-changes/Dolt/Wikidata-ranking.</p>
+<p><strong>Retrieval:</strong> GraphRAG (2404.16130) + dynamic community selection, LightRAG, nano-graphrag, HippoRAG 2
+(2502.14802), Self-RAG (2310.11511), Adaptive-RAG, FLARE, IRCoT, ReAct, <em>context rot</em> (trychroma.com),
+<em>Lost in the Middle</em>, RULER, EmbeddingGemma, nomic-embed-v2, jina-v2-code, embedding quantization (sbert),
+RTEB, effective-context (2411.07396), Anthropic context-engineering.</p>
+<p><strong>Trust/compliance:</strong> EU AI Act (artificialintelligenceact.eu) + Commission AI-system guidelines, EDPB
+Opinion 28/2024, GDPR Art. 16/17, CPRA, SpAIware/Gemini-persistence (embracethered.com), lethal trifecta
+(simonwillison.net), MCP security best practices, spotlighting (2403.14720), TEE.fail, AWS Nitro/GCP
+Confidential Space, Apple PCC/PIR/homomorphic-encryption, YubiKey PRF, SLIP-0039, age, in-toto/DSSE,
+Rekor-v2/tlog-tiles, gitleaks, Presidio, OpenDP.</p>
+<p><strong>Business:</strong> Obsidian Sync/pricing, Tailscale control-vs-data-plane, Sentry FSL, PostHog/Cal.com/GitLab
+pricing, Mem0/Zep/Letta pricing, Bessemer AI pricing playbook, ssotax.org, Superpowers pack, MCP-registry
+install data (synscribe/digitalapplied), OSS funding (Tidelift, sponsorware, Caleb Porzio).</p>
+<p><strong>Product/UX/moonshots:</strong> Obsidian/Roam graph views, ChatGPT-memory distrust (simonwillison.net),
+SlashNote quick-capture, Mem/Copilot Memory, Readwise/RescueTime digests, GitHub contribution graph,
+Anki/FSRS, <em>Portable Agent Memory</em> (2605.11032), Skilldex (2604.16911), NVIDIA NGC model signing, OWASP
+agentic risks, CrewAI agent config, TOKI/Graphiti bitemporal, generative agents (3586183.3606763),
+aha-moment onboarding.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.top", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

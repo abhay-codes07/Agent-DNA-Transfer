@@ -1,0 +1,1934 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Take your AI's memory anywhere — a local-first, portable, git-like memory layer for AI coding agents.">
+      
+      
+      
+      
+        <link rel="prev" href="../TSD/">
+      
+      
+        <link rel="next" href="../MEMORY_MODEL/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>System Architecture - Helix</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#helix-system-architecture" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Helix" class="md-header__button md-logo" aria-label="Helix" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Helix
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              System Architecture
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/abhay-codes07/Agent-DNA-Transfer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Helix" class="md-nav__button md-logo" aria-label="Helix" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Helix
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/abhay-codes07/Agent-DNA-Transfer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Product & strategy
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Product & strategy
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PRD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PRD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../COMPETITIVE_ANALYSIS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Competitive Analysis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BUSINESS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Business & GTM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RESEARCH/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research Survey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Engineering
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Engineering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TSD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Technical Spec
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    System Architecture
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    System Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-architectural-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Architectural principles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-c4-ish-view" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. C4-ish view
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. C4-ish view">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-context-level-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Context (level 1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-containers-level-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Containers (level 2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-components-inside-helix-core-level-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Components inside helix-core (level 3)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-data-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Data flow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Data flow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-write-path-learning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Write path (learning)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-read-path-recall" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Read path (recall)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-transfer-path-the-headline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Transfer path (the headline)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-trust-boundaries-security-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Trust boundaries &amp; security architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-deployment-topologies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Deployment topologies
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Deployment topologies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#t1-solo-offline-0-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        T1 — Solo, offline, $0 (default)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#t2-solo-llm-enhanced" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        T2 — Solo, LLM-enhanced
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#t3-small-team-later-adr-010" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        T3 — Small team (later, ADR-010)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#t4-power-user-fully-local-llm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        T4 — Power user, fully local LLM
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-scaling-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Scaling &amp; performance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-failure-modes-resilience" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Failure modes &amp; resilience
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-monorepo-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Monorepo layout
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-cross-cutting-concerns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Cross-cutting concerns
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-why-this-architecture-wins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Why this architecture wins
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MEMORY_MODEL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Memory Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CONSOLIDATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Consolidation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RETRIEVAL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DNA_FORMAT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    .dna Format
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SYNC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sync & Merge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../COST_OPTIMIZATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cost Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../API_REFERENCE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MCP_INTEGRATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PLUGINS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../OBSERVABILITY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trust, quality & process
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Trust, quality & process
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SECURITY_MODEL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PRIVACY_COMPLIANCE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Privacy & Compliance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../EVALUATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GOVERNANCE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Governance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GLOSSARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-architectural-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Architectural principles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-c4-ish-view" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. C4-ish view
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. C4-ish view">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-context-level-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Context (level 1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-containers-level-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Containers (level 2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-components-inside-helix-core-level-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Components inside helix-core (level 3)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-data-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Data flow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Data flow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-write-path-learning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Write path (learning)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-read-path-recall" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Read path (recall)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-transfer-path-the-headline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Transfer path (the headline)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-trust-boundaries-security-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Trust boundaries &amp; security architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-deployment-topologies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Deployment topologies
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Deployment topologies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#t1-solo-offline-0-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        T1 — Solo, offline, $0 (default)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#t2-solo-llm-enhanced" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        T2 — Solo, LLM-enhanced
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#t3-small-team-later-adr-010" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        T3 — Small team (later, ADR-010)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#t4-power-user-fully-local-llm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        T4 — Power user, fully local LLM
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-scaling-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Scaling &amp; performance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-failure-modes-resilience" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Failure modes &amp; resilience
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-monorepo-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Monorepo layout
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-cross-cutting-concerns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Cross-cutting concerns
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-why-this-architecture-wins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Why this architecture wins
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="helix-system-architecture">Helix — System Architecture<a class="headerlink" href="#helix-system-architecture" title="Permanent link">&para;</a></h1>
+<p><strong>Status:</strong> Draft v1 · <strong>Last updated:</strong> 2026-06-18
+<strong>Related:</strong> <a href="../PRD/">PRD</a> · <a href="../TSD/">TSD</a> · <a href="../DNA_FORMAT/">DNA Format</a> · <a href="../SECURITY_MODEL/">Security</a> · <a href="../DECISIONS.md">Decisions</a></p>
+<p>This document is the "how it all fits together" view: topology, data flow, trust boundaries,
+deployment, scaling, and the monorepo layout. Diagrams are ASCII so they live in the repo and
+diff cleanly.</p>
+<hr />
+<h2 id="1-architectural-principles">1. Architectural principles<a class="headerlink" href="#1-architectural-principles" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Local-first core.</strong> The whole engine runs on the user's machine; the network is optional
+   (<a href="../DECISIONS.md">ADR-001</a>).</li>
+<li><strong>One protocol to reach every agent.</strong> MCP is the front door (<a href="../DECISIONS.md">ADR-003</a>).</li>
+<li><strong>The strand is the unit of truth and portability.</strong> A single self-describing, signed,
+   encrypted SQLite file (<a href="../DECISIONS.md">ADR-005</a>, <a href="../DECISIONS.md">ADR-008</a>).</li>
+<li><strong>Pluggable everything.</strong> Embeddings, LLM, vector store, graph store sit behind interfaces
+   so we can swap local↔cloud↔decentralized without touching callers.</li>
+<li><strong>Cost is an architectural constraint, not a tuning knob.</strong> The gate→local→free-tier
+   pipeline is baked into the data flow (<a href="../DECISIONS.md">ADR-007</a>).</li>
+<li><strong>Fail safe, never corrupt.</strong> Every strand mutation is transactional and reversible.</li>
+</ol>
+<hr />
+<h2 id="2-c4-ish-view">2. C4-ish view<a class="headerlink" href="#2-c4-ish-view" title="Permanent link">&para;</a></h2>
+<h3 id="21-context-level-1">2.1 Context (level 1)<a class="headerlink" href="#21-context-level-1" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>        ┌─────────────────────────────────────────────────────────┐
+        │                        The User                         │
+        │   (developer; owns the device, keys, and the strand)    │
+        └───────────────┬───────────────────────────┬─────────────┘
+                        │ uses                       │ curates
+                        ▼                            ▼
+   ┌──────────────────────────────┐      ┌────────────────────────┐
+   │   AI coding agents           │ MCP  │   Helix Dashboard      │
+   │ Claude Code · Cursor ·       │◄────►│  (local web UI)        │
+   │ Copilot · Windsurf · ChatGPT │      └───────────┬────────────┘
+   └──────────────┬───────────────┘                  │ localhost API
+                  │                                   │
+                  ▼                                   ▼
+            ┌───────────────────────────────────────────────┐
+            │                 Helix (local)                  │
+            │   engine · MCP server · CLI · stores · codec   │
+            └───────────────────────┬───────────────────────┘
+                                    │ optional, opt-in
+            ┌───────────────────────┼───────────────────────┐
+            ▼                       ▼                        ▼
+    ┌──────────────┐      ┌──────────────────┐     ┌──────────────────┐
+    │ LLM provider │      │ cloud embeddings │     │  team/cloud sync │
+    │ Gemini/OpenAI│      │ (optional)       │     │   (optional)     │
+    └──────────────┘      └──────────────────┘     └──────────────────┘
+</code></pre></div>
+<p>Solid arrows = required/local. Bottom row = optional, off by default, behind the trust
+boundary the user explicitly opens.</p>
+<h3 id="22-containers-level-2">2.2 Containers (level 2)<a class="headerlink" href="#22-containers-level-2" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>┌───────────────────────────── User&#39;s machine ──────────────────────────────┐
+│                                                                            │
+│  ┌────────────┐   stdio/MCP   ┌──────────────┐   in-proc   ┌────────────┐  │
+│  │  Agent     │◄─────────────►│ helix-mcp    │────────────►│ helix-core │  │
+│  └────────────┘               │ (MCP server) │             │  engine    │  │
+│                               └──────────────┘             │            │  │
+│  ┌────────────┐   in-proc                                  │  ┌───────┐ │  │
+│  │ helix-cli  │─────────────────────────────────────────► │  │stores │ │  │
+│  └────────────┘                                            │  │vec+gph│ │  │
+│                                                            │  └───┬───┘ │  │
+│  ┌────────────┐  localhost HTTP/WS   ┌─────────────┐       │      │     │  │
+│  │ dashboard  │◄────────────────────►│ daemon API  │◄─────►│      ▼     │  │
+│  │ (browser)  │                      │ (FastAPI)   │       │  strand.db │  │
+│  └────────────┘                      └─────────────┘       │  (.dna)    │  │
+│                                                            └────────────┘  │
+└────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<p><code>helix-core</code> is a library; the MCP server, CLI, and daemon API are thin front-ends over it.
+The strand (<code>strand.db</code>) is the shared persistent state, opened transactionally.</p>
+<h3 id="23-components-inside-helix-core-level-3">2.3 Components inside <code>helix-core</code> (level 3)<a class="headerlink" href="#23-components-inside-helix-core-level-3" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>                       ┌──────────────────────────────────────────┐
+   routed slice  ───►  │ Ingestion ─► Redaction ─► Heuristic Gate  │
+                       └───────────────┬──────────────────────────┘
+                                       │ (passes gate)
+                                       ▼
+                  ┌───────────────────────────────────────────┐
+                  │ Extractor (deterministic | LLM-backed)    │──► Embedder
+                  └───────────────┬───────────────────────────┘        │
+                                  ▼                                     ▼
+                  ┌───────────────────────────────────────────┐   ┌─────────┐
+                  │ Consolidator (ADD/UPDATE/DELETE/NOOP)      │◄─►│ Stores  │
+                  │ + Conflict Resolver                        │   │ vec/gph │
+                  └───────────────┬───────────────────────────┘   └─────────┘
+                                  ▼
+   recall(query) ◄── Retriever (vector + graph + rank + pack)  ◄── Stores
+                                  │
+        Strand Codec (sign/encrypt/verify · diff/merge/rollback) ◄── Stores
+                                  │
+        Scheduler (decay · re-embed · compaction)
+</code></pre></div>
+<p>See <a href="../TSD/">TSD §3, §6</a> for component contracts and algorithms.</p>
+<hr />
+<h2 id="3-data-flow">3. Data flow<a class="headerlink" href="#3-data-flow" title="Permanent link">&para;</a></h2>
+<h3 id="31-write-path-learning">3.1 Write path (learning)<a class="headerlink" href="#31-write-path-learning" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Agent or CLI routes a slice via <code>memory.write</code>/<code>memory.note</code> (MCP) or SDK.</li>
+<li><strong>Redaction</strong> scrubs secrets <em>before</em> storage or any model call.</li>
+<li><strong>Heuristic gate</strong> decides if extraction is worthwhile; most slices stop here ($0).</li>
+<li><strong>Extractor</strong> (local or LLM) emits candidate facts; <strong>Embedder</strong> vectorizes them.</li>
+<li><strong>Consolidator</strong> compares to existing memory → ADD/UPDATE/DELETE/NOOP; <strong>Conflict
+   resolver</strong> handles contradictions; <strong>history</strong> logs the op.</li>
+<li>Result is committed transactionally to <code>strand.db</code>.</li>
+</ol>
+<p>The write path is <strong>asynchronous to the agent</strong> — it returns an ack fast and does extraction
+in the background so it never blocks the user (NFR-2).</p>
+<h3 id="32-read-path-recall">3.2 Read path (recall)<a class="headerlink" href="#32-read-path-recall" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Agent calls <code>memory.search</code>/<code>memory.context</code> with a query and a token budget.</li>
+<li>Retriever embeds the query, does ANN search, expands the graph, ranks, and packs under the
+   budget.</li>
+<li>Results (with source + confidence) return over MCP and are injected into the agent's
+   context. p95 &lt; 150 ms (NFR-1).</li>
+</ol>
+<h3 id="33-transfer-path-the-headline">3.3 Transfer path (the headline)<a class="headerlink" href="#33-transfer-path-the-headline" title="Permanent link">&para;</a></h3>
+<ol>
+<li><code>helix export</code> → codec snapshots <code>strand.db</code>, writes <code>manifest.json</code>, signs it, encrypts
+   the DB, packages <code>.dna</code>.</li>
+<li>Move the file anywhere.</li>
+<li><code>helix import</code> → verify signature → decrypt → check schema/embedding compatibility
+   (re-embed if needed) → open.</li>
+<li><code>helix merge other.dna</code> → union + consolidate + resolve conflicts → new version
+   (reversible). See <a href="../TSD/">TSD §7</a> and <a href="../DNA_FORMAT/">DNA Format</a>.</li>
+</ol>
+<hr />
+<h2 id="4-trust-boundaries-security-architecture">4. Trust boundaries &amp; security architecture<a class="headerlink" href="#4-trust-boundaries-security-architecture" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>   ┌────────────────────── TRUSTED (user&#39;s device) ───────────────────────┐
+   │  keys (Ed25519 sign, encryption key), plaintext strand in memory,     │
+   │  engine, stores, dashboard. Secrets read from env, never persisted.   │
+   └───────────────┬───────────────────────────────────────┬──────────────┘
+                   │ encrypted + signed                     │ redacted text only,
+                   ▼ at rest                                ▼ user-opted-in
+        ┌────────────────────┐                   ┌────────────────────────┐
+        │  .dna on disk /     │                   │  LLM / cloud provider  │
+        │  in transit         │                   │  (extraction only)     │
+        │  (UNTRUSTED medium) │                   │  (UNTRUSTED)           │
+        └────────────────────┘                   └────────────────────────┘
+</code></pre></div>
+<ul>
+<li><strong>At rest / in transit:</strong> strand encrypted (XChaCha20-Poly1305), manifest signed (Ed25519),
+  integrity verified on import. The medium (disk, USB, cloud drive) is treated as untrusted.</li>
+<li><strong>To an LLM provider:</strong> only <em>redacted</em> text is ever sent, and only when the user has
+  supplied a key and the gate decided extraction is needed. Secrets are scrubbed pre-flight.</li>
+<li><strong>Keys</strong> never leave the device unless the user explicitly exports them.</li>
+</ul>
+<p>Full model and threat analysis: <a href="../SECURITY_MODEL/">Security Model</a>.</p>
+<hr />
+<h2 id="5-deployment-topologies">5. Deployment topologies<a class="headerlink" href="#5-deployment-topologies" title="Permanent link">&para;</a></h2>
+<h3 id="t1-solo-offline-0-default">T1 — Solo, offline, $0 (default)<a class="headerlink" href="#t1-solo-offline-0-default" title="Permanent link">&para;</a></h3>
+<p>Everything local; no keys; deterministic extractor; local embeddings. This is the out-of-box
+experience and the privacy/cost baseline.</p>
+<h3 id="t2-solo-llm-enhanced">T2 — Solo, LLM-enhanced<a class="headerlink" href="#t2-solo-llm-enhanced" title="Permanent link">&para;</a></h3>
+<p>Same, plus a Gemini (free) or OpenAI key for higher-quality extraction. Still ~$0 via
+gate + free tier + cache. Cloud sees only redacted slices.</p>
+<h3 id="t3-small-team-later-adr-010">T3 — Small team (later, <a href="../DECISIONS.md">ADR-010</a>)<a class="headerlink" href="#t3-small-team-later-adr-010" title="Permanent link">&para;</a></h3>
+<p>Each member runs Helix locally; a shared <strong>team strand</strong> is synced via an optional encrypted
+backend (bring-your-own S3/Drive or a thin relay). Merges reconcile members' updates. No
+secrets ever sync. The engine and trust model are unchanged; sync is an add-on.</p>
+<h3 id="t4-power-user-fully-local-llm">T4 — Power user, fully local LLM<a class="headerlink" href="#t4-power-user-fully-local-llm" title="Permanent link">&para;</a></h3>
+<p>Ollama provides extraction locally: better-than-heuristic quality, still $0, still offline.</p>
+<p>No topology changes the core; they only flip which pluggable backend is active.</p>
+<hr />
+<h2 id="6-scaling-performance">6. Scaling &amp; performance<a class="headerlink" href="#6-scaling-performance" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Per-strand capacity:</strong> 10⁵–10⁶ memories on <code>sqlite-vec</code> with ANN; well beyond an
+  individual's lifetime of context (NFR-5).</li>
+<li><strong>Recall:</strong> p95 &lt; 150 ms via ANN + cached graph projection; ranking is O(N candidates),
+  not O(all).</li>
+<li><strong>Write:</strong> background/async; batched extraction amortizes any LLM latency.</li>
+<li><strong>Memory footprint:</strong> lazy graph projection, model cache on disk; idle RAM &lt; 200 MB (NFR-11).</li>
+<li><strong>Growth management:</strong> decay + compaction keep the working set sharp as the strand grows;
+  archived nodes drop out of the hot ANN index.</li>
+<li><strong>Big team strands:</strong> if a single SQLite strand becomes a bottleneck, the store interface
+  allows a Postgres+pgvector backend without API changes (<a href="../DECISIONS.md">ADR-010</a>).</li>
+</ul>
+<hr />
+<h2 id="7-failure-modes-resilience">7. Failure modes &amp; resilience<a class="headerlink" href="#7-failure-modes-resilience" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Failure</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>No network / no key</td>
+<td>Deterministic extractor + local embeddings; full core works</td>
+</tr>
+<tr>
+<td>LLM provider down / rate-limited</td>
+<td>Router falls back (Gemini→OpenAI→deterministic); never blocks or loses data</td>
+</tr>
+<tr>
+<td>Embedding model missing on first run</td>
+<td>Download + cache; clear progress; offline after</td>
+</tr>
+<tr>
+<td>Crash mid-write</td>
+<td>Atomic temp-write + WAL → no partial/corrupt strand</td>
+</tr>
+<tr>
+<td>Import tampered/incompatible strand</td>
+<td>Signature/schema check fails closed with guidance</td>
+</tr>
+<tr>
+<td>Conflicting facts</td>
+<td>Resolver supersedes (reversible); user can override</td>
+</tr>
+<tr>
+<td>Strand corruption (disk)</td>
+<td>Restore from history/backup; codec validates on open</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="8-monorepo-layout">8. Monorepo layout<a class="headerlink" href="#8-monorepo-layout" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>Agent-DNA-Transfer/                 # repo (umbrella: &quot;Agent DNA Transfer&quot;)
+├── README.md
+├── CLAUDE.md                       # how agents contribute here
+├── DECISIONS.md                    # ADR log
+├── ROADMAP.md
+├── LICENSE  CONTRIBUTING.md  SECURITY.md  CODE_OF_CONDUCT.md
+├── .env.example  .gitignore
+├── pyproject.toml                  # uv workspace root
+├── Makefile                        # common dev tasks
+│
+├── docs/                           # the source of truth
+│   ├── PRD.md  TSD.md  SYSTEM_ARCHITECTURE.md
+│   ├── MEMORY_MODEL.md  DNA_FORMAT.md  MCP_INTEGRATION.md
+│   ├── COST_OPTIMIZATION.md  SECURITY_MODEL.md  GLOSSARY.md
+│
+├── packages/                       # Python workspace members
+│   ├── helix-core/                 # engine: extract/store/recall/consolidate/codec
+│   │   ├── pyproject.toml
+│   │   └── src/helix_core/
+│   │       ├── __init__.py
+│   │       ├── ingestion.py  redaction.py  gate.py
+│   │       ├── extract/ (deterministic.py, llm.py, base.py)
+│   │       ├── embed/   (local.py, cloud.py, base.py)
+│   │       ├── stores/  (vector.py, graph.py, base.py)
+│   │       ├── consolidate.py  conflict.py  retrieve.py  rank.py
+│   │       ├── strand/  (codec.py, crypto.py, manifest.py, merge.py)
+│   │       ├── llm/     (router.py, cache.py)
+│   │       ├── models.py  config.py  scheduler.py
+│   ├── helix-cli/                  # `helix` command
+│   │   └── src/helix_cli/ (main.py, commands/…)
+│   ├── helix-mcp/                  # MCP server
+│   │   └── src/helix_mcp/ (server.py, tools.py, resources.py)
+│   └── helix-sdk-python/           # programmatic SDK
+│       └── src/helix_sdk/
+│
+├── sdks/
+│   └── typescript/                 # TS SDK + MCP client helpers
+│
+├── apps/
+│   └── dashboard/                  # React + Vite + Tailwind local UI
+│
+├── examples/                       # end-to-end recipes
+└── tests/                          # cross-package integration &amp; perf tests
+</code></pre></div>
+<p>Package boundaries mirror the component diagram (§2.3): <code>helix-core</code> is the only place with
+business logic; the rest are front-ends. This keeps the surface testable and the cost/privacy
+invariants enforceable in one place.</p>
+<hr />
+<h2 id="9-cross-cutting-concerns">9. Cross-cutting concerns<a class="headerlink" href="#9-cross-cutting-concerns" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Config &amp; secrets:</strong> single precedence chain (TSD §9); secrets from env only.</li>
+<li><strong>Observability:</strong> local structured logs + metrics surfaced in the dashboard; telemetry off
+  by default (TSD §10).</li>
+<li><strong>Cost:</strong> the gate→local→free-tier pipeline is part of the write-path architecture, not an
+  optional optimization (<a href="../COST_OPTIMIZATION/">Cost</a>).</li>
+<li><strong>Versioning:</strong> strand schema, MCP surface, and embedding space are independently versioned
+  (TSD §13).</li>
+</ul>
+<hr />
+<h2 id="10-why-this-architecture-wins">10. Why this architecture wins<a class="headerlink" href="#10-why-this-architecture-wins" title="Permanent link">&para;</a></h2>
+<p>It collapses five competitor gaps into structural defaults: <strong>local-first</strong> (privacy +
+offline + $0), <strong>MCP</strong> (reach every agent with one integration), <strong>single signed strand</strong>
+(portability + integrity without a chain), <strong>pluggable backends</strong> (a clean path to teams and
+decentralized storage <em>later</em> without a rewrite), and <strong>a single engine library</strong> (cost and
+privacy invariants enforced in one auditable place). The hard product promises in the
+<a href="../PRD/">PRD</a> fall out of the architecture instead of being bolted on.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.top", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

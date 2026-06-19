@@ -1,0 +1,2347 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Take your AI's memory anywhere — a local-first, portable, git-like memory layer for AI coding agents.">
+      
+      
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../COMPETITIVE_ANALYSIS/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>PRD - Helix</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#helix-product-requirements-document-prd" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Helix" class="md-header__button md-logo" aria-label="Helix" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Helix
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              PRD
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/abhay-codes07/Agent-DNA-Transfer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Helix" class="md-nav__button md-logo" aria-label="Helix" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Helix
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/abhay-codes07/Agent-DNA-Transfer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Product & strategy
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Product & strategy
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PRD
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PRD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0-tldr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0. TL;DR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-vision-mission" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Vision &amp; mission
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-the-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. The problem
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. The problem">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-now" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why now
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-competitive-landscape" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Competitive landscape
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-target-users-personas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Target users &amp; personas
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Target users &amp; personas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#primary-polyglot-dev-individual-developer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Primary — "Polyglot Dev" (individual developer)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#secondary-squad-lead-small-team" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Secondary — "Squad Lead" (small team)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tertiary-privacy-hawk-security-conscious-regulated" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tertiary — "Privacy Hawk" (security-conscious / regulated)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#expansion-everyone-non-dev-knowledge-worker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expansion — "Everyone" (non-dev knowledge worker)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anti-persona-not-for-v1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anti-persona (not for v1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-goals-non-goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Goals &amp; non-goals
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Goals &amp; non-goals">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goals-v1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goals (v1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#non-goals-v1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Non-goals (v1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-the-product" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. The product
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. The product">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-core-loop-what-users-experience" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Core loop (what users experience)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-what-helix-stores-the-memory-graph" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 What Helix stores (the memory graph)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-the-dna-strand-headline-feature" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 The .dna strand (headline feature)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-surfaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 Surfaces
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Requirements
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Requirements">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-functional-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 Functional requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-non-functional-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 Non-functional requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-ux-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. UX principles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-success-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Success metrics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-go-to-market" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Go-to-market
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-risks-mitigations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Risks &amp; mitigations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-open-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Open questions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. Glossary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../COMPETITIVE_ANALYSIS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Competitive Analysis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BUSINESS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Business & GTM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RESEARCH/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research Survey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Engineering
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Engineering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TSD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Technical Spec
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SYSTEM_ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    System Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MEMORY_MODEL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Memory Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CONSOLIDATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Consolidation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RETRIEVAL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DNA_FORMAT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    .dna Format
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SYNC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sync & Merge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../COST_OPTIMIZATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cost Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../API_REFERENCE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MCP_INTEGRATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PLUGINS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../OBSERVABILITY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trust, quality & process
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Trust, quality & process
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SECURITY_MODEL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PRIVACY_COMPLIANCE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Privacy & Compliance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../EVALUATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GOVERNANCE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Governance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GLOSSARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0-tldr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0. TL;DR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-vision-mission" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Vision &amp; mission
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-the-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. The problem
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. The problem">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-now" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why now
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-competitive-landscape" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Competitive landscape
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-target-users-personas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Target users &amp; personas
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Target users &amp; personas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#primary-polyglot-dev-individual-developer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Primary — "Polyglot Dev" (individual developer)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#secondary-squad-lead-small-team" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Secondary — "Squad Lead" (small team)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tertiary-privacy-hawk-security-conscious-regulated" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tertiary — "Privacy Hawk" (security-conscious / regulated)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#expansion-everyone-non-dev-knowledge-worker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expansion — "Everyone" (non-dev knowledge worker)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anti-persona-not-for-v1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anti-persona (not for v1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-goals-non-goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Goals &amp; non-goals
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Goals &amp; non-goals">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goals-v1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goals (v1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#non-goals-v1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Non-goals (v1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-the-product" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. The product
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. The product">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-core-loop-what-users-experience" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Core loop (what users experience)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-what-helix-stores-the-memory-graph" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 What Helix stores (the memory graph)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-the-dna-strand-headline-feature" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 The .dna strand (headline feature)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-surfaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 Surfaces
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Requirements
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Requirements">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-functional-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 Functional requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-non-functional-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 Non-functional requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-ux-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. UX principles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-success-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Success metrics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-go-to-market" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Go-to-market
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-risks-mitigations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Risks &amp; mitigations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-open-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Open questions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. Glossary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="helix-product-requirements-document-prd">Helix — Product Requirements Document (PRD)<a class="headerlink" href="#helix-product-requirements-document-prd" title="Permanent link">&para;</a></h1>
+<p><strong>Status:</strong> Draft v1 · <strong>Owner:</strong> Founding team · <strong>Last updated:</strong> 2026-06-18
+<strong>Related:</strong> <a href="../TSD/">TSD</a> · <a href="../SYSTEM_ARCHITECTURE/">System Architecture</a> · <a href="../COMPETITIVE_ANALYSIS/">Competitive Analysis</a> · <a href="../BUSINESS/">Business</a> · <a href="../EVALUATION/">Evaluation</a> · <a href="../RESEARCH/">Research Survey</a> · <a href="../DECISIONS.md">Decisions</a> · <a href="../ROADMAP.md">Roadmap</a></p>
+<hr />
+<h2 id="0-tldr">0. TL;DR<a class="headerlink" href="#0-tldr" title="Permanent link">&para;</a></h2>
+<p>Helix is a <strong>local-first, portable, git-like memory layer for AI coding agents.</strong> It learns
+who you are and how you work, stores that as a knowledge graph <em>on your machine</em>, and serves
+it to any agent over MCP — so Claude Code, Cursor, Copilot, Windsurf, and ChatGPT all wake
+up already knowing you. Your memory lives in one portable, signed, encrypted <strong><code>.dna</code>
+strand</strong> you can move, version, merge, and roll back like code. It runs at <strong>$0 by default.</strong></p>
+<blockquote>
+<p>One memory. Every agent. Owned by you.</p>
+</blockquote>
+<hr />
+<h2 id="1-vision-mission">1. Vision &amp; mission<a class="headerlink" href="#1-vision-mission" title="Permanent link">&para;</a></h2>
+<p><strong>Mission.</strong> Give every developer a memory that belongs to <em>them</em>, not to a vendor — one
+that travels with them across every AI tool they'll ever use.</p>
+<p><strong>Vision.</strong> Today, switching AI tools means amnesia. In five years, your AI memory should be
+as portable as a git repo and as private as a password manager. Helix is the layer that
+makes "your AI knows you, everywhere" the default — starting with the people who switch
+tools most and feel the pain hardest: <strong>developers.</strong></p>
+<p><strong>The 10-year bet.</strong> Models are commoditizing; <em>context</em> is the moat, and that moat should
+belong to the user. Whoever owns the portable, user-controlled context layer owns the most
+durable real estate in AI. We intend that layer to be open, local-first, and Helix-shaped.</p>
+<hr />
+<h2 id="2-the-problem">2. The problem<a class="headerlink" href="#2-the-problem" title="Permanent link">&para;</a></h2>
+<p>Every AI agent is slowly learning you — your stack, your conventions, the architecture
+you've re-explained five times, your taste in libraries. Then you switch tools, hit a
+context-window limit, or end a session, and it's <strong>gone.</strong></p>
+<p>Four structural failures:</p>
+<ol>
+<li><strong>Memory is trapped per-vendor.</strong> ChatGPT memory ≠ Claude memory ≠ Cursor memory. There
+   is no export-and-import-elsewhere.</li>
+<li><strong>Memory is opaque.</strong> You can't see what an agent "knows" about you, fix a wrong fact,
+   or delete something sensitive at the granularity of a single belief.</li>
+<li><strong>Memory isn't yours.</strong> It lives on a vendor's servers under a vendor's terms, minable
+   and revocable by someone who isn't you.</li>
+<li><strong>Memory isn't coding-aware.</strong> Generic "assistant memory" stores "the user likes concise
+   answers." It does <strong>not</strong> model <em>this repo's architecture</em>, <em>why we chose Postgres over
+   Mongo</em>, or <em>the team's naming conventions</em> — the context that actually makes a coding
+   agent good.</li>
+</ol>
+<p>The cost is real: repeated re-explaining, inconsistent agent behavior across tools, lock-in,
+and a privacy posture no security-conscious developer is comfortable with.</p>
+<h3 id="why-now">Why now<a class="headerlink" href="#why-now" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>MCP won.</strong> A single open protocol now connects agents to context ("USB-C for AI"), with
+  200+ servers by Q2 2026. A memory layer can reach <em>every</em> agent through one integration.</li>
+<li><strong>Memory is a recognized architectural layer.</strong> Mem0/OpenMemory proved the
+  extraction→store→recall→consolidate loop; Walrus proved demand for portable, verifiable
+  memory. The category exists; nobody owns the <strong>local-first, coding-native, free</strong> corner.</li>
+<li><strong>Local models &amp; embeddings are good enough.</strong> CPU embeddings (bge-small) and free LLM
+  tiers make a $0 default genuinely viable.</li>
+<li><strong>Developers are the wedge.</strong> They use the most tools, switch the most, and care the most
+  about ownership and privacy. Win them and the pattern generalizes to everyone.</li>
+</ul>
+<hr />
+<h2 id="3-competitive-landscape">3. Competitive landscape<a class="headerlink" href="#3-competitive-landscape" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Product</th>
+<th>Shape</th>
+<th>Strength</th>
+<th>Gap Helix exploits</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ChatGPT / Claude memory</strong></td>
+<td>Vendor-native</td>
+<td>Zero setup</td>
+<td>Trapped, opaque, not portable, not yours</td>
+</tr>
+<tr>
+<td><strong>Mem0 (OSS + hosted)</strong></td>
+<td>Universal memory SDK/API</td>
+<td>Strong extraction engine, MCP</td>
+<td>Cloud-leaning, generic (not coding-native), not a portable single artifact</td>
+</tr>
+<tr>
+<td><strong>OpenMemory MCP</strong></td>
+<td>Local memory + dashboard</td>
+<td>Local store, MCP, dashboard</td>
+<td>Generic facts, no git-like transfer/merge, no coding model</td>
+</tr>
+<tr>
+<td><strong>Walrus Memory</strong></td>
+<td>Portable memory on decentralized storage</td>
+<td>Verifiable, portable, encrypted</td>
+<td>Heavy infra, costy, cloud/chain-dependent, not coding-native, not free/offline</td>
+</tr>
+<tr>
+<td><strong>MCP "memory" server (knowledge graph)</strong></td>
+<td>Reference KG server</td>
+<td>Simple, open</td>
+<td>No extraction intelligence, no portability story, no UI</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Helix's unique combination</strong> (no competitor has all five):
+local-first ownership · coding-native depth · git-like portable <code>.dna</code> · MCP-universal · $0 default.</p>
+<blockquote>
+<p>Positioning one-liner: <em>"Mem0's brain, OpenMemory's locality, Walrus's portability, git's
+ergonomics — built for coders and free to run."</em></p>
+</blockquote>
+<hr />
+<h2 id="4-target-users-personas">4. Target users &amp; personas<a class="headerlink" href="#4-target-users-personas" title="Permanent link">&para;</a></h2>
+<h3 id="primary-polyglot-dev-individual-developer">Primary — <strong>"Polyglot Dev" (individual developer)</strong><a class="headerlink" href="#primary-polyglot-dev-individual-developer" title="Permanent link">&para;</a></h3>
+<p>Uses 2–4 AI tools (Claude Code + Cursor + ChatGPT). Switches based on task. Hates
+re-explaining context. Privacy-conscious. Wants their AI to "just know" the project and
+their preferences everywhere. <strong>This is the wedge.</strong></p>
+<h3 id="secondary-squad-lead-small-team">Secondary — <strong>"Squad Lead" (small team)</strong><a class="headerlink" href="#secondary-squad-lead-small-team" title="Permanent link">&para;</a></h3>
+<p>Wants the <em>team's</em> shared knowledge — architecture decisions, conventions, gotchas —
+available to every member's agent. Needs to share a strand and merge updates without leaking
+secrets. Onboarding a new dev = handing them the team strand.</p>
+<h3 id="tertiary-privacy-hawk-security-conscious-regulated">Tertiary — <strong>"Privacy Hawk" (security-conscious / regulated)</strong><a class="headerlink" href="#tertiary-privacy-hawk-security-conscious-regulated" title="Permanent link">&para;</a></h3>
+<p>Will not put context in a vendor cloud. Needs local-only, encrypted, auditable memory with
+explicit control over every fact. Helix's default mode <em>is</em> their requirement.</p>
+<h3 id="expansion-everyone-non-dev-knowledge-worker">Expansion — <strong>"Everyone" (non-dev knowledge worker)</strong><a class="headerlink" href="#expansion-everyone-non-dev-knowledge-worker" title="Permanent link">&para;</a></h3>
+<p>Once the coding wedge is established, the same engine serves writers, researchers, founders,
+and analysts who want portable personal memory across general assistants. Coding-native
+types generalize into a pluggable schema (see <a href="../MEMORY_MODEL/">Memory Model</a>).</p>
+<h3 id="anti-persona-not-for-v1">Anti-persona (not for v1)<a class="headerlink" href="#anti-persona-not-for-v1" title="Permanent link">&para;</a></h3>
+<p>Enterprises needing SSO, SOC2, on-prem multi-tenant deployments, and admin consoles. We
+serve them later via the optional team/cloud layer — not at launch.</p>
+<hr />
+<h2 id="5-goals-non-goals">5. Goals &amp; non-goals<a class="headerlink" href="#5-goals-non-goals" title="Permanent link">&para;</a></h2>
+<h3 id="goals-v1">Goals (v1)<a class="headerlink" href="#goals-v1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>G1. An agent connected to Helix recalls relevant personal/project memory <strong>without the
+  user re-explaining</strong> it.</li>
+<li>G2. The user can <strong>export their entire memory to one <code>.dna</code> file</strong> and <strong>import it on
+  another machine/agent</strong> and have it work.</li>
+<li>G3. Default operation costs <strong>$0</strong> and works <strong>fully offline</strong>.</li>
+<li>G4. The user can <strong>see, edit, and delete</strong> any individual memory via a local UI/CLI.</li>
+<li>G5. Helix is <strong>coding-native</strong>: it models repos, stacks, conventions, and decisions, not
+  just generic "assistant facts."</li>
+<li>G6. Connect to <strong>Claude Code and Cursor</strong> in <strong>under 2 minutes</strong> each via MCP.</li>
+</ul>
+<h3 id="non-goals-v1">Non-goals (v1)<a class="headerlink" href="#non-goals-v1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>N1. No hosted multi-tenant SaaS, billing, or org admin console.</li>
+<li>N2. No decentralized/blockchain storage (designed-for, not built — <a href="../DECISIONS.md">ADR-010</a>).</li>
+<li>N3. No automatic, silent capture of <em>everything</em> — ingestion is user-routed and explicit.</li>
+<li>N4. No mobile app. No browser extension at launch (later).</li>
+<li>N5. Not a general RAG-over-documents product; Helix is <em>memory about the user/projects</em>,
+  not a document search engine (though it can reference docs).</li>
+</ul>
+<hr />
+<h2 id="6-the-product">6. The product<a class="headerlink" href="#6-the-product" title="Permanent link">&para;</a></h2>
+<h3 id="61-core-loop-what-users-experience">6.1 Core loop (what users experience)<a class="headerlink" href="#61-core-loop-what-users-experience" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Connect</strong> — <code>helix connect claude-code</code> writes the MCP config. Done.</li>
+<li><strong>Work normally</strong> — as the user works, Helix observes the slices they route to it and
+   <strong>extracts durable facts</strong> in the background (heuristics first, LLM only when needed).</li>
+<li><strong>Recall</strong> — when any connected agent starts/needs context, it queries Helix over MCP and
+   gets the most relevant memories injected — no re-explaining.</li>
+<li><strong>Curate</strong> — the user opens the dashboard to review, edit, confirm, or forget facts.</li>
+<li><strong>Transfer</strong> — <code>helix export brain.dna</code> → move it anywhere → <code>helix import brain.dna</code>.</li>
+<li><strong>Evolve</strong> — <code>helix log</code>/<code>diff</code>/<code>rollback</code> show how memory changed; merge teammates' strands.</li>
+</ol>
+<h3 id="62-what-helix-stores-the-memory-graph">6.2 What Helix stores (the memory graph)<a class="headerlink" href="#62-what-helix-stores-the-memory-graph" title="Permanent link">&para;</a></h3>
+<p>Typed nodes, each timestamped, sourced, confidence-scored, editable (full schema in
+<a href="../MEMORY_MODEL/">Memory Model</a>):</p>
+<ul>
+<li><strong>Identity</strong> — role, expertise, tools, working hours, communication style.</li>
+<li><strong>Preference</strong> — formatting, libraries to use/avoid, testing style, tone.</li>
+<li><strong>Project</strong> — services, architecture, dependencies, conventions, gotchas.</li>
+<li><strong>Decision</strong> — durable choices + rationale (a personal/team ADR stream).</li>
+<li><strong>Entity</strong> — people, teams, repos, services, and their relationships (graph edges).</li>
+<li><strong>Snippet/Pattern</strong> — reusable idioms the user keeps reaching for.</li>
+</ul>
+<p>Helix stores <strong>distilled facts, not raw transcripts.</strong> A chat about choosing a database
+becomes a <code>Decision</code> node ("Chose Postgres over Mongo for X; see thread"), not a 4,000-token log.</p>
+<h3 id="63-the-dna-strand-headline-feature">6.3 The <code>.dna</code> strand (headline feature)<a class="headerlink" href="#63-the-dna-strand-headline-feature" title="Permanent link">&para;</a></h3>
+<p>A single portable file = the user's whole memory: signed (Ed25519), encrypted
+(XChaCha20-Poly1305), versioned, content-hashed. Supports git-like operations:
+<code>export/import</code> (clone), <code>merge</code> (combine two memories with conflict resolution),
+<code>log/diff</code> (history), <code>rollback</code> (undo a bad learning). Full spec: <a href="../DNA_FORMAT/">DNA Format</a>.</p>
+<h3 id="64-surfaces">6.4 Surfaces<a class="headerlink" href="#64-surfaces" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>MCP server</strong> — the universal interface; how agents read/write memory.</li>
+<li><strong>CLI (<code>helix</code>)</strong> — init, connect, export/import/merge, log, edit, doctor.</li>
+<li><strong>Dashboard</strong> — local web UI to browse the graph, edit/confirm/forget, view history, see
+  cost/telemetry.</li>
+<li><strong>SDKs (Python, TypeScript)</strong> — embed Helix in custom agents/scripts.</li>
+</ul>
+<hr />
+<h2 id="7-requirements">7. Requirements<a class="headerlink" href="#7-requirements" title="Permanent link">&para;</a></h2>
+<h3 id="71-functional-requirements">7.1 Functional requirements<a class="headerlink" href="#71-functional-requirements" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Requirement</th>
+<th>Priority</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FR-1</td>
+<td>Extract durable facts from user-routed conversation/code slices</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>FR-2</td>
+<td>Heuristic pre-filter to skip the LLM when no new fact is likely</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>FR-3</td>
+<td>Store facts as a typed graph in an embedded vector+graph store</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>FR-4</td>
+<td>Semantic + graph retrieval of relevant memories for a query</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>FR-5</td>
+<td>Consolidation: ADD / UPDATE / DELETE / NOOP to keep memory clean &amp; non-redundant</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>FR-6</td>
+<td>Conflict detection (contradictory facts) with resolution + provenance</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>FR-7</td>
+<td>MCP server exposing <code>memory.search/write/forget/list/relate</code> tools</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>FR-8</td>
+<td><code>helix connect &lt;agent&gt;</code> to auto-configure MCP for Claude Code, Cursor, …</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>FR-9</td>
+<td>Export/import a signed, encrypted <code>.dna</code> strand</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>FR-10</td>
+<td>Local embeddings (default) with optional cloud embeddings</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>FR-11</td>
+<td>LLM router: free-tier-first (Gemini) → fallback (gpt-4o-mini), optional</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>FR-12</td>
+<td>Dashboard: browse, search, edit, confirm, forget memories</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>FR-13</td>
+<td><code>helix log/diff/rollback</code> history operations</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>FR-14</td>
+<td><code>helix merge</code> two strands with conflict resolution</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>FR-15</td>
+<td>Memory decay/aging (down-rank stale, unconfirmed facts)</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>FR-16</td>
+<td>Scoping: per-project vs global memory; redaction of secrets at ingest</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>FR-17</td>
+<td>Python + TypeScript SDKs</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>FR-18</td>
+<td>Optional local LLM (Ollama) extractor for $0 high-quality extraction</td>
+<td>P2</td>
+</tr>
+<tr>
+<td>FR-19</td>
+<td>Optional encrypted cloud/team sync backend</td>
+<td>P2</td>
+</tr>
+<tr>
+<td>FR-20</td>
+<td>Browser extension / web-app capture</td>
+<td>P2</td>
+</tr>
+</tbody>
+</table>
+<h3 id="72-non-functional-requirements">7.2 Non-functional requirements<a class="headerlink" href="#72-non-functional-requirements" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Requirement</th>
+<th>Target</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NFR-1</td>
+<td><strong>Recall latency</strong> (MCP search → results)</td>
+<td>p95 &lt; 150 ms local</td>
+</tr>
+<tr>
+<td>NFR-2</td>
+<td><strong>Extraction latency</strong> (background, non-blocking)</td>
+<td>does not block the agent</td>
+</tr>
+<tr>
+<td>NFR-3</td>
+<td><strong>Default cost</strong></td>
+<td>$0 (no required API spend)</td>
+</tr>
+<tr>
+<td>NFR-4</td>
+<td><strong>Offline</strong></td>
+<td>full core functionality with no network</td>
+</tr>
+<tr>
+<td>NFR-5</td>
+<td><strong>Capacity</strong></td>
+<td>10⁵–10⁶ memories per strand without degradation</td>
+</tr>
+<tr>
+<td>NFR-6</td>
+<td><strong>Encryption at rest</strong></td>
+<td>XChaCha20-Poly1305; keys via Argon2id/keychain</td>
+</tr>
+<tr>
+<td>NFR-7</td>
+<td><strong>Integrity</strong></td>
+<td>Ed25519-signed manifest; verified on import</td>
+</tr>
+<tr>
+<td>NFR-8</td>
+<td><strong>Privacy</strong></td>
+<td>telemetry off by default; secrets never persisted/logged</td>
+</tr>
+<tr>
+<td>NFR-9</td>
+<td><strong>Portability</strong></td>
+<td>strand opens on Windows/macOS/Linux identically</td>
+</tr>
+<tr>
+<td>NFR-10</td>
+<td><strong>Setup time</strong></td>
+<td>connect an agent in &lt; 2 minutes</td>
+</tr>
+<tr>
+<td>NFR-11</td>
+<td><strong>Footprint</strong></td>
+<td>install + model cache &lt; 300 MB; idle RAM &lt; 200 MB</td>
+</tr>
+<tr>
+<td>NFR-12</td>
+<td><strong>Data safety</strong></td>
+<td>no partial/corrupt strand writes (transactional)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="8-ux-principles">8. UX principles<a class="headerlink" href="#8-ux-principles" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Invisible when working, visible when curating.</strong> Extraction is silent background work;
+   inspection/editing is rich and explicit.</li>
+<li><strong>Nothing happens you didn't route.</strong> No ambient surveillance. The user chooses what
+   Helix sees.</li>
+<li><strong>Every fact is accountable.</strong> Source, date, confidence, and "why I believe this" are one
+   click away. Wrong facts are one click to fix or forget.</li>
+<li><strong>It should feel like git.</strong> Familiar verbs, history you can trust, undo that works.</li>
+<li><strong>Free should feel first-class</strong>, not crippled. The $0 path is the default, not a teaser.</li>
+</ol>
+<hr />
+<h2 id="9-success-metrics">9. Success metrics<a class="headerlink" href="#9-success-metrics" title="Permanent link">&para;</a></h2>
+<p><strong>North Star:</strong> <em>Weekly Recalled Memories that the user keeps</em> — memories Helix surfaced to
+an agent that the user did <strong>not</strong> edit/forget within 7 days (signal that recall is both
+used and correct).</p>
+<p>Supporting metrics:</p>
+<ul>
+<li><strong>Activation:</strong> % of installs that connect ≥1 agent and accumulate ≥10 confirmed memories within 7 days. Target ≥ 40%.</li>
+<li><strong>Portability proof:</strong> % of active users who export a <code>.dna</code> and import it elsewhere. Target ≥ 20% (validates the headline).</li>
+<li><strong>Recall quality:</strong> edit/forget rate on surfaced memories &lt; 10%.</li>
+<li><strong>Cost integrity:</strong> ≥ 90% of active users on the $0 path (no paid API spend).</li>
+<li><strong>Retention:</strong> week-4 retention of activated users ≥ 35%.</li>
+<li><strong>Time-to-connect:</strong> median &lt; 2 minutes.</li>
+</ul>
+<p>(Telemetry is opt-in and local-first; aggregate metrics are computed only from users who
+explicitly share. See <a href="../SECURITY_MODEL/">Security Model</a>.)</p>
+<hr />
+<h2 id="10-go-to-market">10. Go-to-market<a class="headerlink" href="#10-go-to-market" title="Permanent link">&para;</a></h2>
+<p><strong>Wedge:</strong> open-source, developer-first, MCP-native. Land where developers already are.</p>
+<ul>
+<li><strong>Distribution:</strong> PyPI (<code>pipx install helix-dna</code>), GitHub, MCP server directories,
+  "Add to Cursor/Claude Code" one-liners, Homebrew later.</li>
+<li><strong>Narrative:</strong> "Your AI forgets you every time you switch tools. Helix fixes that — locally
+  and free." Demos showing the <em>same</em> memory lighting up Claude Code <em>and</em> Cursor.</li>
+<li><strong>Community:</strong> great docs (this repo), example recipes, a public roadmap, fast issue
+  response, and a Discord. Open-core builds trust that "your memory is really yours."</li>
+<li><strong>Loops:</strong> the <code>.dna</code> <em>merge</em>/share flow is inherently viral inside teams — onboarding a
+  teammate means handing them a strand.</li>
+</ul>
+<p><strong>Business model (open-core, later — <a href="../DECISIONS.md">ADR-009</a>):</strong> the engine, CLI, MCP
+server, and SDKs stay free/Apache-2.0 forever. Revenue comes from optional layers that don't
+compromise local-first: encrypted <strong>team sync</strong>, hosted backup, org policy/audit, and
+managed cloud for non-technical users. We never charge to <em>read your own memory.</em></p>
+<hr />
+<h2 id="11-risks-mitigations">11. Risks &amp; mitigations<a class="headerlink" href="#11-risks-mitigations" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Risk</th>
+<th>Likelihood</th>
+<th>Impact</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Local extraction quality too low without an LLM</td>
+<td>Med</td>
+<td>High</td>
+<td>Tiered extractor (heuristic→free LLM→optional Ollama); ship LLM-on path that's still ~$0 via free tier; measure edit/forget rate</td>
+</tr>
+<tr>
+<td>MCP spec churn breaks integrations</td>
+<td>Med</td>
+<td>Med</td>
+<td>Pin protocol version; thin adapter layer; integration tests per agent</td>
+</tr>
+<tr>
+<td>Privacy mistrust ("is it really local?")</td>
+<td>Med</td>
+<td>High</td>
+<td>Open source, offline-verifiable, no required account, transparent telemetry, security audit before launch</td>
+</tr>
+<tr>
+<td>Merge/conflict resolution is hard &amp; error-prone</td>
+<td>High</td>
+<td>Med</td>
+<td>CRDT-style rules + provenance + LLM tie-break + always-reversible (rollback); never auto-destroy data</td>
+</tr>
+<tr>
+<td>Incumbents (OpenAI/Anthropic) ship portable memory</td>
+<td>Low–Med</td>
+<td>High</td>
+<td>They won't make it local-first/vendor-neutral by default; lean into ownership + coding depth + open ecosystem</td>
+</tr>
+<tr>
+<td>Scope explosion (this is a big project)</td>
+<td>High</td>
+<td>Med</td>
+<td>Spec-first, phased roadmap, $0/local invariants as guardrails; ship the wedge before the platform</td>
+</tr>
+<tr>
+<td>Trademark "Helix" conflict</td>
+<td>Med</td>
+<td>Low</td>
+<td>Name-check before public launch; rename is a find-replace + ADR (<a href="../DECISIONS.md">ADR-002</a>)</td>
+</tr>
+<tr>
+<td>Secret leakage into a strand</td>
+<td>Low</td>
+<td>High</td>
+<td>Secret redaction at ingest; never store raw transcripts; security model + tests</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="12-open-questions">12. Open questions<a class="headerlink" href="#12-open-questions" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Default extraction tier when <strong>no</strong> key is present: ship Ollama auto-detect, or pure
+  heuristic? (Leaning heuristic default, Ollama if detected.)</li>
+<li>Merge conflict UX: fully automatic with audit, or always prompt the user on conflicts?</li>
+<li>How much to auto-scope to the current repo vs. a global profile by default?</li>
+<li>Team sync trust model: bring-your-own-storage (S3/Drive) vs. a thin hosted relay first?</li>
+</ul>
+<p>Decisions to these will be logged in <a href="../DECISIONS.md"><code>DECISIONS.md</code></a> as they're made.</p>
+<hr />
+<h2 id="13-glossary">13. Glossary<a class="headerlink" href="#13-glossary" title="Permanent link">&para;</a></h2>
+<p>See <a href="../GLOSSARY/"><code>docs/GLOSSARY.md</code></a>. Key terms: <strong>strand</strong> (<code>.dna</code> file = a user's
+memory), <strong>memory/fact</strong> (one typed node), <strong>consolidation</strong> (ADD/UPDATE/DELETE/NOOP),
+<strong>recall</strong> (retrieval for an agent), <strong>transfer</strong> (export/import/merge of strands).</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.top", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

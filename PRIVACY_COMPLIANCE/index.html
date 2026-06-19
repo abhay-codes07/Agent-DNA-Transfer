@@ -1,0 +1,1995 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Take your AI's memory anywhere — a local-first, portable, git-like memory layer for AI coding agents.">
+      
+      
+      
+      
+        <link rel="prev" href="../SECURITY_MODEL/">
+      
+      
+        <link rel="next" href="../EVALUATION/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Privacy & Compliance - Helix</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#helix-privacy-pii-compliance" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Helix" class="md-header__button md-logo" aria-label="Helix" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Helix
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Privacy & Compliance
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/abhay-codes07/Agent-DNA-Transfer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Helix" class="md-nav__button md-logo" aria-label="Helix" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Helix
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/abhay-codes07/Agent-DNA-Transfer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Product & strategy
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Product & strategy
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PRD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PRD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../COMPETITIVE_ANALYSIS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Competitive Analysis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BUSINESS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Business & GTM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RESEARCH/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research Survey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Engineering
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Engineering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TSD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Technical Spec
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SYSTEM_ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    System Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MEMORY_MODEL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Memory Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CONSOLIDATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Consolidation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RETRIEVAL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DNA_FORMAT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    .dna Format
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SYNC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sync & Merge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../COST_OPTIMIZATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cost Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../API_REFERENCE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MCP_INTEGRATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PLUGINS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../OBSERVABILITY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trust, quality & process
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Trust, quality & process
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SECURITY_MODEL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Privacy & Compliance
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Privacy & Compliance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-threat-data-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Threat &amp; data model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-the-redaction-pipeline-adr-025" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. The redaction pipeline (ADR-025)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. The redaction pipeline (ADR-025)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-tiered-detector-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Tiered detector stack
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-why-application-layer-not-gateway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Why application-layer, not gateway
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-outbound-secrets-never-leave-your-machine-is-literally-true" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Outbound: "secrets never leave your machine" is literally true
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-why-local-first-is-the-strongest-legal-posture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Why local-first is the strongest legal posture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Why local-first is the strongest legal posture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-ccpa-cpra" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 CCPA / CPRA
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-right-to-erasure-across-derived-data-gdpr-art-17-adr-026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Right to erasure across derived data (GDPR Art. 17 / ADR-026)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Right to erasure across derived data (GDPR Art. 17 / ADR-026)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-derived-artifacts-are-still-personal-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Derived artifacts are still personal data
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-the-machine-unlearning-trap-helix-avoids" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 The machine-unlearning trap Helix avoids
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-provenance-linked-deterministic-cascade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Provenance-linked deterministic cascade
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-data-minimization-purpose-limitation-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Data minimization &amp; purpose limitation mapping
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-differential-privacy-on-device-redaction-semantics-for-llm-calls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Differential-privacy / on-device redaction semantics for LLM calls
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-memory-poisoning-persistent-prompt-injection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Memory poisoning &amp; persistent prompt injection
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Memory poisoning &amp; persistent prompt injection">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-the-attack-class-cited" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 The attack class (cited)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-mitigations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 Mitigations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-compliance-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Compliance checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-opinionated-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Opinionated decisions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sources
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../EVALUATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GOVERNANCE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Governance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GLOSSARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-threat-data-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Threat &amp; data model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-the-redaction-pipeline-adr-025" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. The redaction pipeline (ADR-025)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. The redaction pipeline (ADR-025)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-tiered-detector-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Tiered detector stack
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-why-application-layer-not-gateway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Why application-layer, not gateway
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-outbound-secrets-never-leave-your-machine-is-literally-true" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Outbound: "secrets never leave your machine" is literally true
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-why-local-first-is-the-strongest-legal-posture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Why local-first is the strongest legal posture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Why local-first is the strongest legal posture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-ccpa-cpra" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 CCPA / CPRA
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-right-to-erasure-across-derived-data-gdpr-art-17-adr-026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Right to erasure across derived data (GDPR Art. 17 / ADR-026)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Right to erasure across derived data (GDPR Art. 17 / ADR-026)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-derived-artifacts-are-still-personal-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Derived artifacts are still personal data
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-the-machine-unlearning-trap-helix-avoids" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 The machine-unlearning trap Helix avoids
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-provenance-linked-deterministic-cascade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Provenance-linked deterministic cascade
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-data-minimization-purpose-limitation-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Data minimization &amp; purpose limitation mapping
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-differential-privacy-on-device-redaction-semantics-for-llm-calls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Differential-privacy / on-device redaction semantics for LLM calls
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-memory-poisoning-persistent-prompt-injection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Memory poisoning &amp; persistent prompt injection
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Memory poisoning &amp; persistent prompt injection">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-the-attack-class-cited" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 The attack class (cited)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-mitigations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 Mitigations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-compliance-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Compliance checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-opinionated-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Opinionated decisions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sources
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="helix-privacy-pii-compliance">Helix — Privacy, PII &amp; Compliance<a class="headerlink" href="#helix-privacy-pii-compliance" title="Permanent link">&para;</a></h1>
+<p><strong>Status:</strong> Draft v1 · <strong>Last updated:</strong> 2026-06-18 · <strong>Related:</strong> <a href="../SECURITY_MODEL/">Security</a> · <a href="../MEMORY_MODEL/">Memory Model</a> · <a href="../DNA_FORMAT/">.dna Format</a> · <a href="../DECISIONS.md">Decisions</a></p>
+<p>Helix is a local-first, coding-agent-first, portable, $0-default AI memory layer (Apache-2.0). A memory layer is, by definition, an accreting store of whatever your agent reads, writes, and reasons over — which makes it the single highest-density concentration of PII and secrets in your toolchain. This document specifies how Helix keeps that store legally defensible and operationally safe: a tiered redaction pipeline, a GDPR/CCPA posture rooted in local-first architecture, deterministic right-to-erasure across <em>derived</em> data, and defenses against memory-poisoning prompt injection.</p>
+<p>Two non-negotiable design commitments anchor everything below:</p>
+<ol>
+<li><strong>Secrets never leave your machine — literally.</strong> Every outbound LLM payload is redacted on-device before transmission (ADR-025). The cloud sees redacted text or nothing.</li>
+<li><strong>Helix never fine-tunes on your memory</strong> (ADR-026). Retrieval-only architecture sidesteps the unsolved machine-unlearning problem and makes erasure a deterministic cascade-delete.</li>
+</ol>
+<hr />
+<h2 id="1-threat-data-model">1. Threat &amp; data model<a class="headerlink" href="#1-threat-data-model" title="Permanent link">&para;</a></h2>
+<p>Helix stores three classes of data, each with distinct privacy properties:</p>
+<table>
+<thead>
+<tr>
+<th>Class</th>
+<th>Examples</th>
+<th>Privacy risk</th>
+<th>Erasure difficulty</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Source records</strong></td>
+<td>Conversation turns, code snippets, user-asserted facts, ingested docs</td>
+<td>Direct PII/secrets</td>
+<td>Trivial — delete the row</td>
+</tr>
+<tr>
+<td><strong>Derived artifacts</strong></td>
+<td>Embeddings, summaries, knowledge-graph nodes/edges</td>
+<td>PII <em>reconstructable</em> from source; still in GDPR scope</td>
+<td>Hard without provenance — see §4</td>
+</tr>
+<tr>
+<td><strong>Indexes / metadata</strong></td>
+<td>Vector index, FTS index, provenance links, signatures</td>
+<td>Pointers to the above</td>
+<td>Cascade from source/derived</td>
+</tr>
+</tbody>
+</table>
+<p>The dominant risk in a <em>coding</em> memory store is <strong>secrets</strong> (API keys, tokens, private keys), not classical PII. Coding agents routinely paste <code>.env</code> contents, CI logs, and connection strings. Secret leakage is therefore treated as a first-class, highest-severity failure mode, and the redaction pipeline orders its cheapest, highest-precision secret detectors first.</p>
+<hr />
+<h2 id="2-the-redaction-pipeline-adr-025">2. The redaction pipeline (ADR-025)<a class="headerlink" href="#2-the-redaction-pipeline-adr-025" title="Permanent link">&para;</a></h2>
+<p>Redaction runs at <strong>two boundaries</strong>, both on-device:</p>
+<ul>
+<li><strong>INGEST</strong> — before any text becomes a durable memory record (write path).</li>
+<li><strong>OUTBOUND</strong> — before any payload leaves the device for a cloud LLM (network path).</li>
+</ul>
+<p>Both boundaries share the same tiered detector stack. Microsoft explicitly warns that no PII tool guarantees catching all PII (<a href="https://github.com/microsoft/presidio">microsoft/presidio</a>), so this is <strong>defense-in-depth, not a single gate</strong> — each tier is independently fallible and they are layered so that a miss in one is likely caught by another.</p>
+<h3 id="21-tiered-detector-stack">2.1 Tiered detector stack<a class="headerlink" href="#21-tiered-detector-stack" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Technique</th>
+<th>Catches</th>
+<th>Latency</th>
+<th>Tool</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1. Regex / checksum</strong></td>
+<td>Pattern + Luhn/MOD-97 validation</td>
+<td>Credit cards, SSN, IBAN, phone</td>
+<td>sub-ms</td>
+<td><a href="https://microsoft.github.io/presidio/">Presidio</a> pattern recognizers</td>
+</tr>
+<tr>
+<td><strong>2. Entropy secret-scan</strong></td>
+<td>Known-format regex <strong>+</strong> Shannon-entropy on high-randomness blobs</td>
+<td>AWS keys, GitHub tokens, private keys, generic high-entropy secrets</td>
+<td>low ms</td>
+<td><a href="https://github.com/Yelp/detect-secrets">detect-secrets</a> (Yelp) + <a href="https://github.com/gitleaks/gitleaks">gitleaks</a></td>
+</tr>
+<tr>
+<td><strong>3. NER</strong></td>
+<td>spaCy / transformer models</td>
+<td>Names, locations, orgs — <em>context-dependent</em> PII</td>
+<td>tens of ms</td>
+<td>Presidio NER recognizers</td>
+</tr>
+<tr>
+<td><strong>4. Mask</strong></td>
+<td>Replace span with typed placeholder + provenance</td>
+<td>n/a (action)</td>
+<td>sub-ms</td>
+<td>Helix masking layer</td>
+</tr>
+</tbody>
+</table>
+<p>Pipeline order is deliberate: <strong>regex/checksum → entropy secret-scan → NER → mask before write</strong>. Cheap, high-precision deterministic tiers run first and short-circuit; expensive probabilistic NER runs last only on text that survived. Tier 2 sits <em>before</em> NER because secrets are the dominant coding-memory risk and entropy scanning is both cheap and high-recall for the exact threat class NER cannot see.</p>
+<p>Detected spans are replaced with <strong>typed, reversible-on-device placeholders</strong> (e.g. <code>‹CREDIT_CARD:a1f3›</code>, <code>‹AWS_SECRET:7b20›</code>). The mapping from placeholder to original is stored only in the local, access-controlled store (see <a href="../SECURITY_MODEL/">Security</a>) and is <em>never</em> serialized into outbound payloads.</p>
+<h3 id="22-why-application-layer-not-gateway">2.2 Why application-layer, not gateway<a class="headerlink" href="#22-why-application-layer-not-gateway" title="Permanent link">&para;</a></h3>
+<p>Helix redacts in the application layer rather than via an LLM gateway. App-layer redaction is cheaper and structurally safer: the raw secret never reaches a network component at all, so there is no gateway honeypot accumulating plaintext, and no trust boundary crossed before masking (<a href="https://www.truefoundry.com/blog/pii-redaction-llm-gateway-vs-application">TrueFoundry: PII redaction — gateway vs application</a>). For a local-first tool, the gateway pattern would <em>reintroduce</em> the central-aggregation risk that local-first exists to avoid.</p>
+<h3 id="23-outbound-secrets-never-leave-your-machine-is-literally-true">2.3 Outbound: "secrets never leave your machine" is literally true<a class="headerlink" href="#23-outbound-secrets-never-leave-your-machine-is-literally-true" title="Permanent link">&para;</a></h3>
+<p>Every outbound LLM payload passes through the same stack at the OUTBOUND boundary. The client perturbs/redacts <strong>before</strong> data leaves the device, so only redacted text reaches the cloud — the on-device analogue of differential-privacy/local-redaction semantics for off-device processing (<a href="https://privacysandbox.google.com/protections/on-device-personalization/differential-privacy-semantics-for-odp">Google Privacy Sandbox: DP semantics for ODP</a>; <a href="https://www.privacyguides.org/articles/2025/09/30/differential-privacy/">Privacy Guides: differential privacy</a>). Combined with INGEST redaction (the store itself holds masked text), this makes the claim <em>secrets never leave your machine</em> an enforced property of the data path, not a policy aspiration. Placeholders are re-hydrated locally only when the model's response returns and is rendered to the user.</p>
+<hr />
+<h2 id="3-why-local-first-is-the-strongest-legal-posture">3. Why local-first is the strongest legal posture<a class="headerlink" href="#3-why-local-first-is-the-strongest-legal-posture" title="Permanent link">&para;</a></h2>
+<p>Local-first is not just a performance choice; it is the single most consequential compliance decision Helix makes. Because raw data never leaves the device:</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Local-first (Helix)</th>
+<th>Typical cloud memory SaaS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Controller/processor</strong></td>
+<td>User is <strong>sole controller</strong>; Helix vendor is <em>not a processor</em> of user data</td>
+<td>Vendor is a processor; DPA required</td>
+</tr>
+<tr>
+<td><strong>Cross-border transfer</strong></td>
+<td><strong>None</strong> — data stays on device</td>
+<td>Transfer mechanisms (SCCs/adequacy) needed</td>
+</tr>
+<tr>
+<td><strong>Breach surface</strong></td>
+<td>The <strong>device</strong> the user already controls</td>
+<td>Central honeypot aggregating many users</td>
+</tr>
+<tr>
+<td><strong>Data minimization (Art. 5(1)(c))</strong></td>
+<td>Native — nothing collected centrally</td>
+<td>Must be engineered against default collection</td>
+</tr>
+<tr>
+<td><strong>Purpose limitation (Art. 5(1)(b))</strong></td>
+<td>Native — data used only on the device for the user's own purpose</td>
+<td>Contractual + technical controls required</td>
+</tr>
+</tbody>
+</table>
+<p>There is <strong>no third-party processor relationship</strong> for stored memory and <strong>no cross-border transfer</strong>, which removes two of the most expensive and litigated compliance obligations entirely. The residual breach surface is the user's own machine — the same surface that already holds their source code, SSH keys, and browser profile — rather than a new central repository attractive to attackers. This is why Helix treats local-first as the <em>foundation</em> of its posture, and the redaction pipeline as defense-in-depth on top of it.</p>
+<h3 id="31-ccpa-cpra">3.1 CCPA / CPRA<a class="headerlink" href="#31-ccpa-cpra" title="Permanent link">&para;</a></h3>
+<p>Under CCPA/CPRA, a tool that does not collect, sell, or share personal information off-device is largely outside the statute's collection-and-sale machinery for the stored memory. Helix's $0-default, no-telemetry posture means there is no "sale" or "sharing" of personal information to disclose, and the consumer rights (access, deletion) are satisfied trivially because the consumer holds the only copy. Any outbound LLM call uses redacted payloads (§2.3), keeping personal information from being disclosed to the model provider.</p>
+<hr />
+<h2 id="4-right-to-erasure-across-derived-data-gdpr-art-17-adr-026">4. Right to erasure across derived data (GDPR Art. 17 / ADR-026)<a class="headerlink" href="#4-right-to-erasure-across-derived-data-gdpr-art-17-adr-026" title="Permanent link">&para;</a></h2>
+<p>Deleting a <em>record</em> is easy. The legal danger is <strong>derived data</strong> — embeddings, summaries, graph nodes — that may still encode the personal data of the deleted record.</p>
+<h3 id="41-derived-artifacts-are-still-personal-data">4.1 Derived artifacts are still personal data<a class="headerlink" href="#41-derived-artifacts-are-still-personal-data" title="Permanent link">&para;</a></h3>
+<p>Per <strong>EDPB Opinion 28/2024 (Dec 2024)</strong>, AI artifacts are "anonymous" only if the likelihood of (a) <em>extracting</em> personal data from the model/artifact <strong>and</strong> (b) <em>regurgitating</em> it from queries is "insignificant" — assessed case-by-case (<a href="https://www.edpb.europa.eu/news/news/2024/edpb-opinion-ai-models-gdpr-principles-support-responsible-ai_en">EDPB opinion</a>; <a href="https://iapp.org/news/a/edpb-weighs-in-on-key-questions-on-personal-data-in-ai-models">IAPP analysis</a>). An embedding from which the source text can be reconstructed therefore <strong>remains personal data and stays in GDPR scope</strong>. Helix does not assume its embeddings are anonymous; it assumes the opposite and engineers erasure accordingly.</p>
+<h3 id="42-the-machine-unlearning-trap-helix-avoids">4.2 The machine-unlearning trap Helix avoids<a class="headerlink" href="#42-the-machine-unlearning-trap-helix-avoids" title="Permanent link">&para;</a></h3>
+<p>If derived data lived in <em>model weights</em> (i.e., if Helix fine-tuned on user memory), erasure would require <strong>machine unlearning of weights — an unsolved problem that may not satisfy regulators</strong> (<a href="https://arxiv.org/pdf/2412.06966">Machine unlearning survey, arXiv:2412.06966</a>). Helix sidesteps this entirely:</p>
+<blockquote>
+<p><strong>Helix never fine-tunes on user memory (ADR-026).</strong> Memory is retrieval-only. Personal data lives in deletable records and deletable derived artifacts — never baked into weights.</p>
+</blockquote>
+<h3 id="43-provenance-linked-deterministic-cascade">4.3 Provenance-linked deterministic cascade<a class="headerlink" href="#43-provenance-linked-deterministic-cascade" title="Permanent link">&para;</a></h3>
+<p>Every derived artifact carries a <strong>provenance link</strong> to the source record(s) it was computed from. Erasure of a source record is therefore a deterministic cascade-delete:</p>
+<div class="highlight"><pre><span></span><code>erase(record R) ⇒ delete R
+              ⇒ delete every embedding derived from R
+              ⇒ delete / recompute every summary that consumed R
+              ⇒ delete every graph node/edge sourced solely from R
+              ⇒ purge R from vector + FTS indexes
+              ⇒ tombstone the provenance entry (auditable, reversible window)
+</code></pre></div>
+<p>Because the provenance graph is explicit and maintained at write time, no scan or heuristic is needed to find "what did this record touch" — the answer is a graph traversal. Summaries that mixed multiple sources are recomputed from the surviving sources rather than left to leak the erased one. This is the operational meaning of ADR-026's <em>erasure cascade</em>.</p>
+<hr />
+<h2 id="5-data-minimization-purpose-limitation-mapping">5. Data minimization &amp; purpose limitation mapping<a class="headerlink" href="#5-data-minimization-purpose-limitation-mapping" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>GDPR principle</th>
+<th>Helix mechanism</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Lawfulness/consent</strong></td>
+<td>User initiates every ingest; $0-default, opt-in capture</td>
+</tr>
+<tr>
+<td><strong>Purpose limitation (5(1)(b))</strong></td>
+<td>Memory used only locally, for the user's own agent sessions; no secondary use, no training</td>
+</tr>
+<tr>
+<td><strong>Data minimization (5(1)(c))</strong></td>
+<td>Redaction-at-ingest strips secrets/PII before storage; only what the agent needs is retained</td>
+</tr>
+<tr>
+<td><strong>Accuracy (5(1)(d))</strong></td>
+<td>Human-reviewable, reversible memory (§7); user can correct/delete</td>
+</tr>
+<tr>
+<td><strong>Storage limitation (5(1)(e))</strong></td>
+<td>Local TTL/retention policy; user-owned lifecycle</td>
+</tr>
+<tr>
+<td><strong>Integrity &amp; confidentiality (5(1)(f))</strong></td>
+<td>On-device encryption + signing (see <a href="../SECURITY_MODEL/">Security</a>)</td>
+</tr>
+<tr>
+<td><strong>Accountability (5(2))</strong></td>
+<td>Provenance graph + audit tombstones provide demonstrable erasure</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="6-differential-privacy-on-device-redaction-semantics-for-llm-calls">6. Differential-privacy / on-device redaction semantics for LLM calls<a class="headerlink" href="#6-differential-privacy-on-device-redaction-semantics-for-llm-calls" title="Permanent link">&para;</a></h2>
+<p>Helix's outbound contract mirrors the <em>local</em> model of privacy protection: transform data on the client <strong>before</strong> it leaves, so the off-device processor only ever sees protected text (<a href="https://privacysandbox.google.com/protections/on-device-personalization/differential-privacy-semantics-for-odp">Google Privacy Sandbox: DP semantics for ODP</a>; <a href="https://www.privacyguides.org/articles/2025/09/30/differential-privacy/">Privacy Guides: differential privacy</a>). Concretely:</p>
+<ul>
+<li><strong>Redaction is mandatory and pre-network.</strong> The detector stack (§2) runs against every outbound payload; unredacted spans are masked, not transmitted.</li>
+<li><strong>Placeholders are semantically typed</strong> so the model retains enough structure to reason (<code>‹EMAIL›</code>, <code>‹AWS_SECRET›</code>) without seeing values.</li>
+<li><strong>Re-hydration is local-only</strong>, applied to the response on the user's device.</li>
+<li>This is <em>not</em> a formal (ε, δ)-DP guarantee over query results; it is on-device redaction with DP-style <em>local</em> semantics — the protection is applied at the source, before the trust boundary, which is the property that matters for "nothing sensitive leaves the machine."</li>
+</ul>
+<hr />
+<h2 id="7-memory-poisoning-persistent-prompt-injection">7. Memory poisoning &amp; persistent prompt injection<a class="headerlink" href="#7-memory-poisoning-persistent-prompt-injection" title="Permanent link">&para;</a></h2>
+<p>A memory layer introduces a threat that stateless agents do not have: <strong>persistent, durable corruption</strong>. If an attacker can get malicious instructions written into long-term memory, those instructions are silently re-injected into future sessions.</p>
+<h3 id="71-the-attack-class-cited">7.1 The attack class (cited)<a class="headerlink" href="#71-the-attack-class-cited" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Unit 42 (Palo Alto)</strong> demonstrated poisoning the long-term memory of <strong>Amazon Bedrock Agents</strong> via <em>indirect</em> prompt injection: corrupting session-summarization so attacker instructions are written to persistent memory and silently re-injected later (<a href="https://unit42.paloaltonetworks.com/indirect-prompt-injection-poisons-ai-longterm-memory/">Unit 42</a>).</li>
+<li><strong>MINJA</strong> achieves <strong>&gt;95% injection success / ~70% attack success rate</strong> against memory-augmented agents.</li>
+<li><strong>MemoryGraft</strong> is an <em>"attack that waits"</em> — temporally decoupled, planting a payload that triggers in a later, unrelated session (<a href="https://christian-schneider.net/blog/persistent-memory-poisoning-in-ai-agents/">Schneider: persistent memory poisoning</a>; <a href="https://arxiv.org/abs/2601.05504">arXiv:2601.05504</a>; <a href="https://www.lakera.ai/blog/agentic-ai-threats-p1">Lakera: agentic AI threats</a>).</li>
+</ul>
+<p><strong>Local-first reduces but does not eliminate this</strong> — your own browsing history and repositories can carry injection payloads into memory just as a multi-tenant system can.</p>
+<h3 id="72-mitigations">7.2 Mitigations<a class="headerlink" href="#72-mitigations" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Mitigation</th>
+<th>Mechanism</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Untrusted-by-default ingestion</strong></td>
+<td>Externally-ingested content (web pages, docs, tool output) is treated as untrusted; <strong>never written durably without sanitization</strong></td>
+</tr>
+<tr>
+<td><strong>Provenance tags</strong></td>
+<td>Every record is tagged <strong>user-asserted</strong> vs <strong>agent-ingested</strong>; retrieval and trust decisions can weight by origin</td>
+</tr>
+<tr>
+<td><strong>Injection-scan before commit</strong></td>
+<td>Candidate writes are scanned for injection patterns/imperative-to-the-model content <em>before</em> they become durable</td>
+</tr>
+<tr>
+<td><strong>Human-reviewable + reversible</strong></td>
+<td>Memory writes are inspectable and undoable; no silent durable mutation of behavior-shaping memory</td>
+</tr>
+<tr>
+<td><strong>Integrity / signing</strong></td>
+<td>Records are signed; tampering and provenance forgery are detectable (see <a href="../SECURITY_MODEL/">Security</a>)</td>
+</tr>
+</tbody>
+</table>
+<p>The combination of provenance tagging and untrusted-by-default ingestion is the structural defense: agent-ingested external text can never be silently promoted to user-asserted trust, which is exactly the promotion the Unit 42 and MemoryGraft attacks rely on.</p>
+<hr />
+<h2 id="8-compliance-checklist">8. Compliance checklist<a class="headerlink" href="#8-compliance-checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] Redaction runs at <strong>both</strong> INGEST and OUTBOUND boundaries, on-device.</li>
+<li>[ ] Tier order enforced: regex/checksum → entropy secret-scan → NER → mask.</li>
+<li>[ ] detect-secrets + gitleaks entropy scan covers generic high-entropy blobs, not just known formats.</li>
+<li>[ ] No raw secret/PII is ever serialized into an outbound LLM payload.</li>
+<li>[ ] No fine-tuning on user memory — retrieval-only confirmed (ADR-026).</li>
+<li>[ ] Every derived artifact (embedding/summary/graph node) carries a provenance link.</li>
+<li>[ ] <code>erase(record)</code> cascades to all derived artifacts + indexes deterministically (Art. 17).</li>
+<li>[ ] Summaries mixing multiple sources are recomputed, not orphaned, on erasure.</li>
+<li>[ ] No central data store, no processor relationship, no cross-border transfer.</li>
+<li>[ ] No telemetry / silent collection by default ($0-default posture).</li>
+<li>[ ] All durable writes from external content pass injection-scan + sanitization.</li>
+<li>[ ] Records tagged user-asserted vs agent-ingested; memory is human-reviewable and reversible.</li>
+<li>[ ] Records signed; integrity/provenance verifiable.</li>
+<li>[ ] Erasures produce auditable tombstones (accountability, Art. 5(2)).</li>
+</ul>
+<hr />
+<h2 id="9-opinionated-decisions">9. Opinionated decisions<a class="headerlink" href="#9-opinionated-decisions" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Decision</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>Redact at app layer, not LLM gateway</strong></td>
+<td>Raw secret never reaches a network component; no gateway honeypot (<a href="https://www.truefoundry.com/blog/pii-redaction-llm-gateway-vs-application">TrueFoundry</a>)</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Secrets-first tier ordering</strong> (entropy scan before NER)</td>
+<td>Secrets are the dominant coding-memory risk; cheap + high-recall</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>Defense-in-depth, never a single gate</strong></td>
+<td>MS warns no PII tool catches everything (<a href="https://github.com/microsoft/presidio">Presidio</a>)</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Redact every outbound payload</strong></td>
+<td>Makes "secrets never leave your machine" literally enforced, not aspirational</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>Never fine-tune on user memory (ADR-026)</strong></td>
+<td>Avoids the unsolved machine-unlearning trap (<a href="https://arxiv.org/pdf/2412.06966">arXiv:2412.06966</a>)</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>Treat derived artifacts as personal data</strong></td>
+<td>Embeddings can reconstruct source ⇒ in scope per <a href="https://www.edpb.europa.eu/news/news/2024/edpb-opinion-ai-models-gdpr-principles-support-responsible-ai_en">EDPB 28/2024</a></td>
+</tr>
+<tr>
+<td>7</td>
+<td><strong>Provenance-link every derived artifact (ADR-025/026)</strong></td>
+<td>Makes Art. 17 erasure a deterministic cascade, not a heuristic scan</td>
+</tr>
+<tr>
+<td>8</td>
+<td><strong>Local-first as the legal foundation</strong></td>
+<td>Sole controller, no processor, no transfer, no central honeypot</td>
+</tr>
+<tr>
+<td>9</td>
+<td><strong>Untrusted-by-default external ingestion</strong></td>
+<td>Blocks the poisoning promotion path (<a href="https://unit42.paloaltonetworks.com/indirect-prompt-injection-poisons-ai-longterm-memory/">Unit 42</a>)</td>
+</tr>
+<tr>
+<td>10</td>
+<td><strong>Human-reviewable + reversible + signed memory</strong></td>
+<td>Counters temporally-decoupled "attack that waits" (<a href="https://christian-schneider.net/blog/persistent-memory-poisoning-in-ai-agents/">MemoryGraft</a>)</td>
+</tr>
+<tr>
+<td>11</td>
+<td><strong>$0-default, no telemetry</strong></td>
+<td>No "sale/sharing" under CCPA; minimization by construction</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="sources">Sources<a class="headerlink" href="#sources" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Microsoft Presidio — https://github.com/microsoft/presidio · https://microsoft.github.io/presidio/</li>
+<li>Yelp detect-secrets — https://github.com/Yelp/detect-secrets</li>
+<li>gitleaks — https://github.com/gitleaks/gitleaks</li>
+<li>TrueFoundry, <em>PII redaction: LLM gateway vs application</em> — https://www.truefoundry.com/blog/pii-redaction-llm-gateway-vs-application</li>
+<li>EDPB Opinion 28/2024 (AI models &amp; GDPR) — https://www.edpb.europa.eu/news/news/2024/edpb-opinion-ai-models-gdpr-principles-support-responsible-ai_en</li>
+<li>IAPP, <em>EDPB on personal data in AI models</em> — https://iapp.org/news/a/edpb-weighs-in-on-key-questions-on-personal-data-in-ai-models</li>
+<li><em>Machine unlearning</em> survey, arXiv:2412.06966 — https://arxiv.org/pdf/2412.06966</li>
+<li>Google Privacy Sandbox, <em>DP semantics for ODP</em> — https://privacysandbox.google.com/protections/on-device-personalization/differential-privacy-semantics-for-odp</li>
+<li>Privacy Guides, <em>Differential privacy</em> — https://www.privacyguides.org/articles/2025/09/30/differential-privacy/</li>
+<li>Unit 42 (Palo Alto), <em>Indirect prompt injection poisons AI long-term memory</em> — https://unit42.paloaltonetworks.com/indirect-prompt-injection-poisons-ai-longterm-memory/</li>
+<li>Christian Schneider, <em>Persistent memory poisoning in AI agents</em> — https://christian-schneider.net/blog/persistent-memory-poisoning-in-ai-agents/</li>
+<li>MemoryGraft, arXiv:2601.05504 — https://arxiv.org/abs/2601.05504</li>
+<li>Lakera, <em>Agentic AI threats (Part 1)</em> — https://www.lakera.ai/blog/agentic-ai-threats-p1</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.top", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

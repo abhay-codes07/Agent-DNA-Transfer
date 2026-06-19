@@ -1,0 +1,1634 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Take your AI's memory anywhere — a local-first, portable, git-like memory layer for AI coding agents.">
+      
+      
+      
+      
+        <link rel="prev" href="../PLUGINS/">
+      
+      
+        <link rel="next" href="../SECURITY_MODEL/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Observability - Helix</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#helix-observability-cost-telemetry" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Helix" class="md-header__button md-logo" aria-label="Helix" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Helix
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Observability
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/abhay-codes07/Agent-DNA-Transfer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Helix" class="md-nav__button md-logo" aria-label="Helix" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Helix
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/abhay-codes07/Agent-DNA-Transfer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Product & strategy
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Product & strategy
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PRD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PRD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../COMPETITIVE_ANALYSIS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Competitive Analysis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BUSINESS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Business & GTM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RESEARCH/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research Survey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Engineering
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Engineering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TSD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Technical Spec
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SYSTEM_ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    System Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MEMORY_MODEL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Memory Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CONSOLIDATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Consolidation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RETRIEVAL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DNA_FORMAT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    .dna Format
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SYNC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sync & Merge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../COST_OPTIMIZATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cost Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../API_REFERENCE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MCP_INTEGRATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PLUGINS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Principles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-local-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Local Metrics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-the-cost-dashboard-proving-0" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. The Cost Dashboard (proving "$0")
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-structured-logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Structured Logging
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-metrics-catalog" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Metrics Catalog
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-the-metrics-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. The /metrics Endpoint
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-opt-in-aggregate-sharing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Opt-in Aggregate Sharing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-opinionated-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Opinionated Decisions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sources
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trust, quality & process
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Trust, quality & process
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SECURITY_MODEL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PRIVACY_COMPLIANCE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Privacy & Compliance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../EVALUATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GOVERNANCE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Governance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GLOSSARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Principles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-local-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Local Metrics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-the-cost-dashboard-proving-0" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. The Cost Dashboard (proving "$0")
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-structured-logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Structured Logging
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-metrics-catalog" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Metrics Catalog
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-the-metrics-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. The /metrics Endpoint
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-opt-in-aggregate-sharing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Opt-in Aggregate Sharing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-opinionated-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Opinionated Decisions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sources
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="helix-observability-cost-telemetry">Helix — Observability &amp; Cost Telemetry<a class="headerlink" href="#helix-observability-cost-telemetry" title="Permanent link">&para;</a></h1>
+<p><strong>Status:</strong> Draft v1 · <strong>Last updated:</strong> 2026-06-18 · <strong>Related:</strong> <a href="../TSD/">TSD</a> · <a href="../MCP_INTEGRATION/">MCP Integration</a> · <a href="../DECISIONS.md">Decisions</a> · <a href="../COST_OPTIMIZATION/">Cost</a> · <a href="../SECURITY_MODEL/">Security</a></p>
+<p>Helix's observability story exists to <strong>prove two claims</strong>: that it costs <code>$0</code> by default, and that it never leaks. Telemetry is <strong>off by default</strong>, <strong>local-only when on</strong>, and <strong>secrets are never logged</strong>.</p>
+<blockquote>
+<p>Design authority: <strong>ADR-007</strong> (telemetry posture) and <strong>ADR-025</strong> (cost dashboard / budget guardrail). See <a href="../DECISIONS.md">Decisions</a>.</p>
+</blockquote>
+<hr />
+<h2 id="1-principles">1. Principles<a class="headerlink" href="#1-principles" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>OFF by default.</strong> No metrics, no logs leave the machine — and by default nothing is even collected beyond what <code>--verbose</code> prints. Telemetry is an explicit opt-in.</li>
+<li><strong>Local-only when on.</strong> When telemetry is enabled it writes to a <strong>local</strong> store and a <strong>local</strong> <code>/metrics</code> endpoint. There is <strong>no default phone-home</strong>.</li>
+<li><strong>Secrets never logged.</strong> The <code>Redactor</code> runs <em>before</em> anything is persisted or printed. API keys, tokens, and detected PII are replaced with <code>‹redacted›</code>. (See <a href="../SECURITY_MODEL/">Security Model</a>.)</li>
+<li><strong>Redacted logs everywhere.</strong> Even at <code>DEBUG</code>, memory <em>content</em> is summarized/hashed, not dumped, unless <code>--unsafe-log-content</code> is set explicitly.</li>
+<li><strong>Cost is observable, not estimated after the fact.</strong> Every LLM/embedding call is metered at call time so the dashboard is always current.</li>
+</ol>
+<hr />
+<h2 id="2-local-metrics">2. Local Metrics<a class="headerlink" href="#2-local-metrics" title="Permanent link">&para;</a></h2>
+<p>Collected in-process and exposed locally. Nothing here requires a network.</p>
+<div class="highlight"><pre><span></span><code>   ┌──────────────────────── helixd ────────────────────────┐
+   │  recall path     write path      consolidation worker  │
+   │   p50/p95 lat    gate drop-rate   op-mix (merge/super…) │
+   │   cache hits     tokens/cost      store sizes           │
+   └───────────────┬─────────────────────────────────────────┘
+                   ▼
+            local metrics registry  ──▶  GET /metrics (Prometheus text)
+                   │
+                   ▼
+            helix cost   (terminal dashboard)
+</code></pre></div>
+<p><strong>What's measured</strong></p>
+<ul>
+<li><strong>Recall latency</strong> — <code>p50</code> / <code>p95</code> of <code>memory.search</code> + <code>memory.context</code>.</li>
+<li><strong>Gate drop-rate</strong> — fraction of candidate memories dropped by the relevance/budget gate (the lever that keeps token spend near zero).</li>
+<li><strong>LLM usage</strong> — calls, prompt/completion tokens, <strong>estimated cost</strong> per provider/model.</li>
+<li><strong>Embedding</strong> — calls, tokens, and <strong>cache hit rate</strong> (a cache hit is a <code>$0</code> embed).</li>
+<li><strong>Store sizes</strong> — memory count, vector bytes, graph edges, on-disk bytes per store.</li>
+<li><strong>Consolidation op mix</strong> — counts of <code>merge</code> / <code>supersede</code> / <code>tombstone</code> / <code>noop</code> from the worker.</li>
+</ul>
+<hr />
+<h2 id="3-the-cost-dashboard-proving-0">3. The Cost Dashboard (proving "$0")<a class="headerlink" href="#3-the-cost-dashboard-proving-0" title="Permanent link">&para;</a></h2>
+<p><code>helix cost</code> renders the numbers that back the <code>$0</code>-default claim and a <strong>monthly token-budget guardrail</strong> (ADR-025, <a href="../COST_OPTIMIZATION/">Cost Optimization</a>).</p>
+<div class="highlight"><pre><span></span><code>$ helix cost --period month
+HELIX COST  ·  2026-06  ·  provider: null (local fastembed)
+────────────────────────────────────────────────────────────
+LLM calls ............ 0            tokens ........ 0
+Embedding calls ...... 1,284        tokens .. 412,909   (local, $0)
+Embedding cache hits . 71%          → 3,140 embeds avoided
+Gate drop-rate ....... 63%          → tokens kept out of context
+Estimated spend ...... $0.00        budget: $0.00 / mo   ✔ under
+────────────────────────────────────────────────────────────
+Guardrail: token budget  0 / 2,000,000 paid tokens   ▱▱▱▱▱  0%
+</code></pre></div>
+<p>When a paid provider is enabled, the same view shows real spend and trips the guardrail:</p>
+<div class="highlight"><pre><span></span><code>Estimated spend ...... $1.84        budget: $5.00 / mo   ✔ under
+Guardrail: token budget  730k / 2,000,000 paid tokens  ▰▰▱▱▱  37%
+</code></pre></div>
+<p>The <strong>gate drop-rate</strong> is the headline cost-control metric: a high drop-rate means Helix is aggressively keeping irrelevant memory out of the token budget, which is <em>why</em> <code>$0</code>/cheap is achievable. The <strong>monthly token-budget guardrail</strong> warns and can <strong>hard-stop</strong> paid calls when exceeded.</p>
+<hr />
+<h2 id="4-structured-logging">4. Structured Logging<a class="headerlink" href="#4-structured-logging" title="Permanent link">&para;</a></h2>
+<p>JSON lines, leveled, redacted.</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ERROR</code></td>
+<td>failed writes/recalls, plugin load failures, store errors</td>
+</tr>
+<tr>
+<td><code>WARN</code></td>
+<td>budget guardrail tripped, gate dropped unusually high, slow recall</td>
+</tr>
+<tr>
+<td><code>INFO</code></td>
+<td>daemon lifecycle, migrations, connector writes, consolidation summaries</td>
+</tr>
+<tr>
+<td><code>DEBUG</code></td>
+<td>per-call timings, gate decisions, cache hits (content <strong>redacted/hashed</strong>)</td>
+</tr>
+<tr>
+<td><code>TRACE</code></td>
+<td>wire-level JSON-RPC framing (loopback only; never includes secrets)</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="nt">&quot;ts&quot;</span><span class="p">:</span><span class="s2">&quot;2026-06-18T10:12:04Z&quot;</span><span class="p">,</span><span class="nt">&quot;level&quot;</span><span class="p">:</span><span class="s2">&quot;INFO&quot;</span><span class="p">,</span><span class="nt">&quot;evt&quot;</span><span class="p">:</span><span class="s2">&quot;recall&quot;</span><span class="p">,</span>
+<span class="w"> </span><span class="nt">&quot;scope&quot;</span><span class="p">:</span><span class="s2">&quot;project&quot;</span><span class="p">,</span><span class="nt">&quot;took_ms&quot;</span><span class="p">:</span><span class="mi">18</span><span class="p">,</span><span class="nt">&quot;p&quot;</span><span class="p">:</span><span class="s2">&quot;p50&quot;</span><span class="p">,</span><span class="nt">&quot;hits&quot;</span><span class="p">:</span><span class="mi">8</span><span class="p">,</span><span class="nt">&quot;dropped&quot;</span><span class="p">:</span><span class="mi">14</span><span class="p">,</span>
+<span class="w"> </span><span class="nt">&quot;tokens_used&quot;</span><span class="p">:</span><span class="mi">1180</span><span class="p">,</span><span class="nt">&quot;query&quot;</span><span class="p">:</span><span class="s2">&quot;‹redacted›&quot;</span><span class="p">}</span>
+</code></pre></div>
+<p><code>query</code> and memory content are redacted by default; set <code>--unsafe-log-content</code> only for local debugging.</p>
+<hr />
+<h2 id="5-metrics-catalog">5. Metrics Catalog<a class="headerlink" href="#5-metrics-catalog" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Type</th>
+<th>Labels</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>helix_recall_latency_seconds</code></td>
+<td>histogram</td>
+<td><code>op{search,context}</code></td>
+<td>recall p50/p95</td>
+</tr>
+<tr>
+<td><code>helix_gate_dropped_total</code></td>
+<td>counter</td>
+<td><code>scope</code></td>
+<td>memories dropped by the gate</td>
+</tr>
+<tr>
+<td><code>helix_gate_candidates_total</code></td>
+<td>counter</td>
+<td><code>scope</code></td>
+<td>candidates considered (drop-rate = dropped/candidates)</td>
+</tr>
+<tr>
+<td><code>helix_llm_calls_total</code></td>
+<td>counter</td>
+<td><code>provider</code>,<code>model</code></td>
+<td>LLM invocations</td>
+</tr>
+<tr>
+<td><code>helix_llm_tokens_total</code></td>
+<td>counter</td>
+<td><code>provider</code>,<code>model</code>,<code>dir{prompt,completion}</code></td>
+<td>LLM tokens</td>
+</tr>
+<tr>
+<td><code>helix_llm_cost_usd_total</code></td>
+<td>counter</td>
+<td><code>provider</code>,<code>model</code></td>
+<td>estimated spend</td>
+</tr>
+<tr>
+<td><code>helix_embed_calls_total</code></td>
+<td>counter</td>
+<td><code>provider</code></td>
+<td>embedding calls</td>
+</tr>
+<tr>
+<td><code>helix_embed_cache_hits_total</code></td>
+<td>counter</td>
+<td><code>provider</code></td>
+<td>cache hits (= <code>$0</code> embeds)</td>
+</tr>
+<tr>
+<td><code>helix_store_bytes</code></td>
+<td>gauge</td>
+<td><code>store</code>,<code>kind{vector,graph}</code></td>
+<td>on-disk size</td>
+</tr>
+<tr>
+<td><code>helix_memories_total</code></td>
+<td>gauge</td>
+<td><code>scope</code></td>
+<td>live memory count</td>
+</tr>
+<tr>
+<td><code>helix_consolidation_ops_total</code></td>
+<td>counter</td>
+<td><code>op{merge,supersede,tombstone,noop}</code></td>
+<td>worker op mix</td>
+</tr>
+<tr>
+<td><code>helix_budget_tokens_used</code></td>
+<td>gauge</td>
+<td><code>period</code></td>
+<td>paid tokens vs monthly guardrail</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="6-the-metrics-endpoint">6. The <code>/metrics</code> Endpoint<a class="headerlink" href="#6-the-metrics-endpoint" title="Permanent link">&para;</a></h2>
+<p>The daemon optionally serves a <strong>Prometheus-style text endpoint</strong> — <strong>local only</strong>, bound to <code>127.0.0.1</code>, subject to the same <code>Origin</code> validation as the rest of the daemon (see <a href="../API_REFERENCE/">API Reference §1</a>).</p>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-s<span class="w"> </span><span class="m">127</span>.0.0.1:7878/metrics<span class="w"> </span><span class="p">|</span><span class="w"> </span>head
+<span class="c1"># HELP helix_recall_latency_seconds Recall latency</span>
+<span class="c1"># TYPE helix_recall_latency_seconds histogram</span>
+helix_recall_latency_seconds_bucket<span class="o">{</span><span class="nv">op</span><span class="o">=</span><span class="s2">&quot;search&quot;</span>,le<span class="o">=</span><span class="s2">&quot;0.01&quot;</span><span class="o">}</span><span class="w"> </span><span class="m">402</span>
+helix_gate_dropped_total<span class="o">{</span><span class="nv">scope</span><span class="o">=</span><span class="s2">&quot;project&quot;</span><span class="o">}</span><span class="w"> </span><span class="m">9381</span>
+helix_embed_cache_hits_total<span class="o">{</span><span class="nv">provider</span><span class="o">=</span><span class="s2">&quot;fastembed&quot;</span><span class="o">}</span><span class="w"> </span><span class="m">3140</span>
+helix_llm_cost_usd_total<span class="o">{</span><span class="nv">provider</span><span class="o">=</span><span class="s2">&quot;null&quot;</span>,model<span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="o">}</span><span class="w"> </span><span class="m">0</span>
+</code></pre></div>
+<p>Disabled unless <code>telemetry.metrics = true</code>. There is no remote scrape target by default; you opt in by pointing your <em>own</em> local Prometheus at loopback.</p>
+<hr />
+<h2 id="7-opt-in-aggregate-sharing">7. Opt-in Aggregate Sharing<a class="headerlink" href="#7-opt-in-aggregate-sharing" title="Permanent link">&para;</a></h2>
+<p>Helix never exfiltrates by default. If — and only if — a user runs <code>helix telemetry share --aggregate</code>, Helix may send <strong>coarse, non-content aggregates</strong> (e.g., recall p95 bucket, gate drop-rate band, store-size class). Rules:</p>
+<ul>
+<li><strong>No memory content, no queries, no IDs, no keys</strong> ever leave the machine.</li>
+<li>Payloads are <strong>redacted and bucketed</strong> before send; reviewable via <code>helix telemetry preview</code>.</li>
+<li><strong>Revocable</strong> at any time (<code>helix telemetry share --off</code>); default remains <strong>off</strong>.</li>
+</ul>
+<hr />
+<h2 id="8-opinionated-decisions">8. Opinionated Decisions<a class="headerlink" href="#8-opinionated-decisions" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Decision</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Telemetry <strong>OFF by default</strong></td>
+<td>Local-first trust; nothing leaks unless asked (ADR-007)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Metrics &amp; logs are <strong>local-only</strong></td>
+<td>No default phone-home; you own the data</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>Redactor runs before persist &amp; log</strong></td>
+<td>Secrets/PII never reach disk or stdout (ADR-024)</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Gate drop-rate</strong> is a first-class metric</td>
+<td>It's the lever that proves <code>$0</code>/cheap</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>Cost metered at call time</strong>, not estimated later</td>
+<td>Dashboard is always current; guardrail can hard-stop</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>Monthly token-budget guardrail</strong> with hard-stop option</td>
+<td>Bounds worst-case spend for paid providers (ADR-025)</td>
+</tr>
+<tr>
+<td>7</td>
+<td><strong>Embedding cache hit rate</strong> surfaced</td>
+<td>Cache hits are <code>$0</code> embeds — the default-cost story</td>
+</tr>
+<tr>
+<td>8</td>
+<td><code>/metrics</code> is <strong>opt-in, loopback, Origin-validated</strong></td>
+<td>Observability without opening an attack surface</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="sources">Sources<a class="headerlink" href="#sources" title="Permanent link">&para;</a></h2>
+<ul>
+<li>MCP Transports — local bind <code>127.0.0.1</code> + Origin validation (DNS-rebinding defense) — https://modelcontextprotocol.io/specification/2025-06-18/basic/transports</li>
+<li>Writing tools for agents — token-budget discipline informs the cost dashboard — https://www.anthropic.com/engineering/writing-tools-for-agents</li>
+</ul>
+<p><strong>See also:</strong> <a href="../API_REFERENCE/">API Reference</a> · <a href="../PLUGINS/">Plugins</a> · <a href="../TSD/">TSD</a> · <a href="../MCP_INTEGRATION/">MCP Integration</a> · <a href="../COST_OPTIMIZATION/">Cost Optimization</a> · <a href="../SECURITY_MODEL/">Security Model</a> · <a href="../DECISIONS.md">Decisions</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.top", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
