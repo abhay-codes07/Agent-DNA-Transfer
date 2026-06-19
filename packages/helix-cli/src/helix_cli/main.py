@@ -665,6 +665,44 @@ def capeval_cmd() -> None:
 
 
 @app.command()
+def learn(
+    trigger: str,
+    step: list[str] = typer.Option(..., "--step", "-s", help="an ordered step (repeat for more)"),
+    scope: str = typer.Option(GLOBAL, help="global or project:<id>"),
+    success: str = typer.Option(None, help="how you know it worked, e.g. 'tests pass'"),
+) -> None:
+    """Teach Helix a reusable how-to recipe (procedural memory), keyed by a trigger."""
+    eng = _engine()
+    pid = eng.learn_procedure(trigger, list(step), scope=scope, success_signal=success)
+    console.print(f"[green]learned procedure[/] [cyan]{pid}[/] ({len(step)} steps)")
+    eng.close()
+
+
+@app.command()
+def how(
+    situation: str,
+    k: int = typer.Option(5),
+    as_json: bool = typer.Option(False, "--json"),
+) -> None:
+    """Recall how-to recipes (procedures) matching a situation, best-reliability first."""
+    eng = _engine()
+    procs = eng.recall_procedures(situation, k=k)
+    if as_json:
+        print(json.dumps(procs, indent=2))
+    elif not procs:
+        console.print("[dim]no procedures learned for that yet — teach one with `helix learn`[/]")
+    else:
+        for p in procs:
+            console.print(
+                f"[bold]When[/] {p['trigger']}  "
+                f"[dim](reliability {p['reliability']}, used {p['success_count']}x)[/]"
+            )
+            for i, s in enumerate(p["steps"], 1):
+                console.print(f"   {i}. {s}")
+    eng.close()
+
+
+@app.command()
 def log(limit: int = typer.Option(20)) -> None:
     """Show how your memory evolved (git-style history)."""
     eng = _engine()

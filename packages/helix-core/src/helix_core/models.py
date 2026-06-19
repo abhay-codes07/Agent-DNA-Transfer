@@ -27,6 +27,7 @@ class MemoryType(str, Enum):
     ENTITY = "entity"
     CONVENTION = "convention"
     SNIPPET = "snippet"
+    PROCEDURE = "procedure"  # a verified, reusable how-to recipe keyed by a trigger (v2 §1.1)
     EPISODE = "episode"
     FACT = "fact"
 
@@ -49,6 +50,7 @@ COGNITIVE_OF: dict[MemoryType, Cognitive] = {
     MemoryType.FACT: Cognitive.SEMANTIC,
     MemoryType.CONVENTION: Cognitive.PROCEDURAL,
     MemoryType.SNIPPET: Cognitive.PROCEDURAL,
+    MemoryType.PROCEDURE: Cognitive.PROCEDURAL,
     MemoryType.EPISODE: Cognitive.EPISODIC,
     MemoryType.ENTITY: Cognitive.ENTITY,
 }

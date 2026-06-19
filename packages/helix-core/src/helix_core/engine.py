@@ -775,6 +775,120 @@ class Engine:
             "note": "estimate vs a hosted memory API; Helix runs these locally at $0",
         }
 
+    # --- procedural / skill memory (v2 plan §1.1) ----------------------------
+    def learn_procedure(
+        self,
+        trigger: str,
+        steps: list[str],
+        *,
+        scope: Scope = GLOBAL,
+        success_signal: str | None = None,
+        source: str = "cli",
+    ) -> str:
+        """Store a reusable how-to recipe keyed by a trigger condition.
+
+        Unlike a declarative fact (what is true), a procedure captures *how to act* — the gap
+        that makes a coding-agent memory more than a knowledge base. `steps` are ordered;
+        `success_signal` is how the agent knows it worked (e.g. "tests pass"). Reliability grows
+        as the procedure is confirmed via `record_procedure_outcome`.
+        """
+        clean_steps = [redact(s, pii=self.config.redact_pii) for s in steps]
+        content = redact(f"When {trigger}: " + "; ".join(clean_steps), pii=self.config.redact_pii)
+        now = utcnow()
+        mem = Memory(
+            id=new_id("procedure", content),
+            type=MemoryType.PROCEDURE,
+            content=content,
+            scope=scope,
+            cognitive=Cognitive.PROCEDURAL,
+            attributes={
+                "trigger": trigger,
+                "steps": clean_steps,
+                "success_signal": success_signal,
+                "success_count": 0,
+                "reliability": 0.5,
+                "verified_at": None,
+            },
+            importance=0.6,
+            confidence=0.6,
+            provenance=[
+                Provenance(agent=source, extractor="procedure", origin=Origin.USER_ASSERTED)
+            ],
+            valid_from=now,
+            recorded_at=now,
+            created_at=now,
+            updated_at=now,
+            last_seen_at=now,
+        )
+        with self.store.tx():
+            self.store.upsert_memory(mem, self.embedder.embed([mem.content])[0])
+            self._link_to_scope(mem.id, scope)
+            self.store.add_history("learn-procedure", mem.id, {"steps": len(clean_steps)})
+        return mem.id
+
+    def recall_procedures(
+        self, situation: str, *, scope: Scope | None = None, k: int = 5
+    ) -> list[dict]:
+        """Find procedures whose trigger matches the situation, ranked by match × reliability.
+
+        Retrieval is gated on the trigger (how-to memory is situation→action), then blended with
+        each procedure's earned reliability so confirmed recipes float to the top.
+        """
+        from .embed.base import cosine
+
+        procs = [
+            m
+            for m in self.store.all_memories(scope=scope, limit=100000)
+            if m.type == MemoryType.PROCEDURE
+        ]
+        if not procs:
+            return []
+        qv = self.embedder.embed([situation])[0]
+        scored: list[tuple[float, Memory]] = []
+        for p in procs:
+            trig = str(p.attributes.get("trigger") or p.content)
+            sim = cosine(qv, self.embedder.embed([trig])[0])
+            reliability = float(p.attributes.get("reliability", 0.5))
+            scored.append((0.7 * sim + 0.3 * reliability, p))
+        scored.sort(key=lambda t: t[0], reverse=True)
+        return [
+            {
+                "id": p.id,
+                "trigger": p.attributes.get("trigger"),
+                "steps": p.attributes.get("steps", []),
+                "reliability": round(float(p.attributes.get("reliability", 0.5)), 2),
+                "success_count": int(p.attributes.get("success_count", 0)),
+                "score": round(s, 3),
+            }
+            for s, p in scored[:k]
+        ]
+
+    def record_procedure_outcome(self, proc_id: str, success: bool) -> dict | None:
+        """Record whether a procedure worked. Success raises reliability (SM-2-style); failure lowers it."""
+        p = self.store.get_memory(proc_id)
+        if p is None or p.type != MemoryType.PROCEDURE:
+            return None
+        now = utcnow()
+        with self.store.tx():
+            if success:
+                sc = int(p.attributes.get("success_count", 0)) + 1
+                p.attributes["success_count"] = sc
+                p.attributes["reliability"] = min(0.5 + 0.1 * sc, 1.0)
+                p.attributes["verified_at"] = now.isoformat()
+                reinforce(p, now)
+            else:
+                p.attributes["reliability"] = max(
+                    float(p.attributes.get("reliability", 0.5)) - 0.15, 0.0
+                )
+            p.updated_at = now
+            self.store.upsert_memory(p)
+            self.store.add_history("procedure-outcome", p.id, {"success": success})
+        return {
+            "id": p.id,
+            "reliability": round(float(p.attributes["reliability"]), 2),
+            "success_count": int(p.attributes.get("success_count", 0)),
+        }
+
     # --- diagnostics ----------------------------------------------------------
     def stats(self) -> dict:
         return {
