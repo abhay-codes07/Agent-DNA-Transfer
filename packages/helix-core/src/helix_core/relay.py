@@ -33,13 +33,17 @@ def _make_handler(root: Path, token: str | None):
             return name if _NAME.match(name) else None
 
         def do_PUT(self) -> None:
+            # Always drain the request body FIRST — even when we're about to reject it. Otherwise
+            # a 401/400 sent mid-upload can reset the client's connection, surfacing as a transport
+            # error instead of a clean HTTP status (a flaky-test / poor-client-experience bug).
+            length = int(self.headers.get("Content-Length", 0) or 0)
+            data = self.rfile.read(length)
             if not self._auth_ok():
                 return self._status(401)
             name = self._name()
             if name is None:
                 return self._status(400)
-            length = int(self.headers.get("Content-Length", 0) or 0)
-            (root / name).write_bytes(self.rfile.read(length))
+            (root / name).write_bytes(data)
             self._status(200)
 
         def do_GET(self) -> None:
