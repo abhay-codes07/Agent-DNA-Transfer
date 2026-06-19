@@ -86,6 +86,11 @@ class Config:
 
     # --- privacy ---
     telemetry: str = field(default_factory=_env("HELIX_TELEMETRY", "off"))
+    # Redact PII (emails, phones, card numbers, IPs, SSNs) from facts before storage.
+    # On by default — privacy is the foundation (CLAUDE.md rule 4). Secrets are ALWAYS redacted.
+    redact_pii: bool = field(
+        default_factory=lambda: os.environ.get("HELIX_REDACT_PII", "1") not in ("0", "false", "no")
+    )
 
     @property
     def strand_path(self) -> Path:

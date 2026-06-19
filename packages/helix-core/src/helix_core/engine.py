@@ -83,11 +83,13 @@ class Engine:
         if the heuristic gate is unsure. Passive agent slices should pass force=False so the
         gate can drop most turns at $0.
         """
-        clean = redact(content)
+        clean = redact(content, pii=self.config.redact_pii)
         candidates = self.extractor.extract(clean, scope=scope, force=force)
         results: list[ConsolidationResult] = []
         with self.store.tx():
             for cand in candidates:
+                # Defensive re-scrub: an LLM extractor may rephrase; a secret must never persist.
+                cand.content = redact(cand.content, pii=self.config.redact_pii)
                 emb = self.embedder.embed([cand.content])[0]
                 prov = Provenance(agent=source, extractor=self.extractor.name, origin=origin)
                 res = consolidate(self.store, cand, emb, prov, router=self.router)
@@ -146,12 +148,13 @@ class Engine:
         The cost lever (heuristic gate) still drops slices with no durable fact; only the
         survivors are sent to the model, together, in a single call.
         """
-        cleaned = [redact(c) for c in contents]
+        cleaned = [redact(c, pii=self.config.redact_pii) for c in contents]
         per_slice = self.extractor.extract_batch(cleaned, scope=scope, force=force)
         results: list[ConsolidationResult] = []
         with self.store.tx():
             for cands in per_slice:
                 for cand in cands:
+                    cand.content = redact(cand.content, pii=self.config.redact_pii)
                     emb = self.embedder.embed([cand.content])[0]
                     prov = Provenance(agent=source, extractor=self.extractor.name, origin=origin)
                     res = consolidate(self.store, cand, emb, prov, router=self.router)
@@ -248,6 +251,71 @@ class Engine:
             self.store.upsert_memory(mem)
             self.store.add_history("forget", mem.id, {})
         return [mem.id]
+
+    def conflicts(self) -> list[dict]:
+        """Unresolved conflicting fact pairs (both still active), surfaced for the user to judge.
+
+        v2 plan §1.5: Helix keeps contradictory facts side-by-side with provenance rather than
+        silently picking a winner. Returns each pair with content + source.
+        """
+        out: list[dict] = []
+        for e in self.store.edges_by_relation("conflicts_with"):
+            a = self.store.get_memory(e.from_id)
+            b = self.store.get_memory(e.to_id)
+            if a and b and a.status == Status.ACTIVE and b.status == Status.ACTIVE:
+                out.append(
+                    {
+                        "a": {"id": a.id, "content": a.content, "type": a.type.value},
+                        "b": {"id": b.id, "content": b.content, "type": b.type.value},
+                    }
+                )
+        return out
+
+    def review_queue(self, *, limit: int = 100) -> list[dict]:
+        """Facts that want human attention: possibly-stale or in conflict (v2 plan §6.3).
+
+        Prioritized stale-first (they degrade silently); never auto-changes anything.
+        """
+        items: list[dict] = []
+        for m in self.store.all_memories(limit=100000):
+            if m.attributes.get("_hub"):
+                continue
+            if m.attributes.get("_stale_suspected"):
+                items.append(
+                    {
+                        "id": m.id,
+                        "kind": "stale",
+                        "content": m.content,
+                        "reason": m.attributes.get("_stale_reason", ""),
+                    }
+                )
+            elif m.attributes.get("_conflict"):
+                items.append(
+                    {
+                        "id": m.id,
+                        "kind": "conflict",
+                        "content": m.content,
+                        "reason": "contradicts another fact",
+                    }
+                )
+        items.sort(key=lambda d: 0 if d["kind"] == "stale" else 1)
+        return items[:limit]
+
+    def resolve_stale(self, memory_id: str, *, keep: bool) -> Memory | None:
+        """Clear a stale/conflict flag: keep the fact (clear the flag) or forget it."""
+        mem = self.store.get_memory(memory_id)
+        if mem is None:
+            return None
+        if not keep:
+            self.forget(memory_id)
+            return self.store.get_memory(memory_id)
+        with self.store.tx():
+            for key in ("_stale_suspected", "_stale_reason", "_conflict"):
+                mem.attributes.pop(key, None)
+            mem.updated_at = utcnow()
+            self.store.upsert_memory(mem)
+            self.store.add_history("review-keep", mem.id, {})
+        return mem
 
     def list_memories(self, *, scope: Scope | None = None, limit: int = 100) -> list[Memory]:
         return [

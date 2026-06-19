@@ -24,6 +24,10 @@ W_REC = 0.08
 W_CONF = 0.08
 W_GRAPH = 0.15
 
+# Advisory down-weight for facts a supersession marked possibly-stale (v2 plan §1.3). They stay
+# retrievable (never hidden) but rank below fresh facts unless nothing else matches.
+STALE_PENALTY = 0.6
+
 _TOKEN = re.compile(r"[A-Za-z0-9]+")
 
 
@@ -92,6 +96,8 @@ def recall(
             + W_CONF * mem.confidence
             + W_GRAPH * g
         )
+        if mem.attributes.get("_stale_suspected"):
+            final *= STALE_PENALTY
         scored.append(Hit(memory=mem, score=final, similarity=sim, salience=sal))
 
     scored.sort(key=lambda h: h.score, reverse=True)
@@ -123,15 +129,22 @@ def _mmr_dedup(hits: list[Hit], k: int, sim_cutoff: float = 0.9) -> list[Hit]:
     return selected
 
 
-def pack_context(hits: list[Hit], budget_tokens: int = 1500) -> str:
+def pack_context(hits: list[Hit], budget_tokens: int = 1500, *, min_ratio: float = 0.22) -> str:
     """Pack hits into a context block under a token budget, most-salient at head and tail.
 
-    Beats "lost in the middle" (docs/RETRIEVAL.md) by placing the strongest memories at the
-    edges. Token estimate ~ 4 chars/token.
+    Tighter packing (v2 plan §2.3): drop near-duplicate facts and marginal tail hits (those
+    scoring below `min_ratio` of the top hit) before packing — fewer, stronger facts beat a
+    stuffed window ("context rot"). Strongest memories go at the edges to beat "lost in the
+    middle" (docs/RETRIEVAL.md). Token estimate ~ 4 chars/token.
     """
+    ranked = sorted(hits, key=lambda h: h.score, reverse=True)
+    ranked = _dedup_near(ranked)
+    if ranked:
+        floor = ranked[0].score * min_ratio
+        ranked = [ranked[0]] + [h for h in ranked[1:] if h.score >= floor]
     chosen: list[Hit] = []
     used = 0
-    for h in hits:
+    for h in ranked:
         cost = max(len(h.memory.content) // 4, 1)
         if used + cost > budget_tokens:
             break
@@ -141,6 +154,19 @@ def pack_context(hits: list[Hit], budget_tokens: int = 1500) -> str:
         return ""
     lines = [f"- ({h.memory.type.value}) {h.memory.content}" for h in chosen_order(chosen)]
     return "\n".join(lines)
+
+
+def _dedup_near(hits: list[Hit], sim_cutoff: float = 0.85) -> list[Hit]:
+    """Drop near-duplicate content by token overlap (semantically-related distractors hurt most)."""
+    kept: list[Hit] = []
+    kept_tokens: list[set[str]] = []
+    for h in hits:
+        toks = _tokens(h.memory.content)
+        if any(_jaccard(toks, s) >= sim_cutoff for s in kept_tokens):
+            continue
+        kept.append(h)
+        kept_tokens.append(toks)
+    return kept
 
 
 def chosen_order(chosen: list[Hit]) -> list[Hit]:

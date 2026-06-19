@@ -79,7 +79,38 @@ def consolidate(
             return _supersede(store, best, candidate, embedding, provenance, now, best_sim)
         return _update(store, best, candidate, embedding, provenance, now, best_sim)
 
-    return _add(store, candidate, embedding, provenance, now)
+    # Weakly-similar but contradictory (gray band, no confident resolution): keep BOTH and
+    # surface the conflict rather than silently picking a winner (v2 plan §1.5).
+    res = _add(store, candidate, embedding, provenance, now)
+    if best and same_type and best_sim >= GRAY_LOW and _contradiction_signal(candidate, best):
+        _flag_conflict(store, res.memory_id, best.id, best_sim)
+    return res
+
+
+def _contradiction_signal(candidate: CandidateFact, best: Memory) -> bool:
+    return bool(_NEGATION.search(candidate.content)) or candidate.type.value in _SINGLETON
+
+
+def _flag_conflict(store, new_id: str, old_id: str, sim: float) -> None:
+    """Record a bidirectional-by-convention `conflicts_with` edge and flag both memories.
+
+    Both stay ACTIVE; the edge makes the conflict visible (recall's graph expansion pulls the
+    counterpart in, and the review queue lists it). Never auto-resolved.
+    """
+    store.add_edge(
+        Edge(
+            id=edge_id(new_id, "conflicts_with", old_id),
+            from_id=new_id,
+            to_id=old_id,
+            relation="conflicts_with",
+        )
+    )
+    for mid in (new_id, old_id):
+        mem = store.get_memory(mid)
+        if mem is not None and not mem.attributes.get("_conflict"):
+            mem.attributes["_conflict"] = True
+            store.upsert_memory(mem)
+    store.add_history("conflict", new_id, {"with": old_id, "sim": round(sim, 3)})
 
 
 def _noop(store, best, provenance, now, sim, op: str = "noop") -> ConsolidationResult:
@@ -152,6 +183,10 @@ def _supersede(
         )
     )
     store.add_history("supersede", new.id, {"superseded": old.id, "sim": round(sim, 3)})
+    # Implicit invalidation: facts referencing a subject this change dropped are now suspect.
+    from .staleness import flag_stale_dependents
+
+    flag_stale_dependents(store, old, new.content, now)
     return ConsolidationResult("SUPERSEDE", new.id)
 
 
