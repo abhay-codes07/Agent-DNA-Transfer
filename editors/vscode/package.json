@@ -1,0 +1,52 @@
+{
+  "name": "helix-memory",
+  "displayName": "Helix — portable AI memory",
+  "description": "Browse, capture, and recall your AI's memory from inside VS Code. Local-first, $0.",
+  "version": "0.1.0",
+  "publisher": "helix-dna",
+  "license": "Apache-2.0",
+  "engines": { "vscode": "^1.85.0" },
+  "categories": ["AI", "Other"],
+  "keywords": ["ai", "memory", "mcp", "agents", "local-first"],
+  "repository": { "type": "git", "url": "https://github.com/abhay-codes07/Agent-DNA-Transfer" },
+  "main": "./out/extension.js",
+  "activationEvents": ["onStartupFinished"],
+  "contributes": {
+    "commands": [
+      { "command": "helix.remember", "title": "Helix: Remember selection", "category": "Helix" },
+      { "command": "helix.search", "title": "Helix: Search memory", "category": "Helix" },
+      { "command": "helix.about", "title": "Helix: What do I know about…?", "category": "Helix" },
+      { "command": "helix.dashboard", "title": "Helix: Open dashboard", "category": "Helix" },
+      { "command": "helix.connectMcp", "title": "Helix: Configure MCP for Copilot", "category": "Helix" }
+    ],
+    "keybindings": [
+      { "command": "helix.remember", "key": "ctrl+alt+m", "mac": "cmd+alt+m", "when": "editorTextFocus" },
+      { "command": "helix.search", "key": "ctrl+alt+k", "mac": "cmd+alt+k" }
+    ],
+    "menus": {
+      "editor/context": [
+        { "command": "helix.remember", "when": "editorHasSelection", "group": "helix@1" }
+      ]
+    },
+    "configuration": {
+      "title": "Helix",
+      "properties": {
+        "helix.endpoint": {
+          "type": "string",
+          "default": "http://127.0.0.1:8787",
+          "description": "URL of the local Helix dashboard daemon (run `helix dashboard`)."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.85.0",
+    "@types/node": "^20",
+    "typescript": "^5"
+  }
+}

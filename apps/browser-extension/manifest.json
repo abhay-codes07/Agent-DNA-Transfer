@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "Helix — save to memory",
+  "version": "0.1.0",
+  "description": "Capture ChatGPT/Claude/Gemini conversations into your local Helix memory. Local-first, $0.",
+  "permissions": ["storage"],
+  "host_permissions": ["http://127.0.0.1/*", "http://localhost/*"],
+  "action": { "default_popup": "popup.html", "default_title": "Helix" },
+  "background": { "service_worker": "background.js" },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://chatgpt.com/*",
+        "https://chat.openai.com/*",
+        "https://claude.ai/*",
+        "https://gemini.google.com/*"
+      ],
+      "js": ["content.js"]
+    }
+  ]
+}

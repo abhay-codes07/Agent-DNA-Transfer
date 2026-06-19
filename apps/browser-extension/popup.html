@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      body {
+        width: 240px;
+        margin: 0;
+        background: #0b0e14;
+        color: #e6e9ef;
+        font: 13px system-ui, sans-serif;
+        padding: 14px;
+      }
+      h1 {
+        font-size: 15px;
+        margin: 0 0 4px;
+      }
+      .dim {
+        color: #8b95a7;
+        font-size: 12px;
+      }
+      .dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #8b95a7;
+        margin-right: 6px;
+      }
+      button {
+        width: 100%;
+        margin-top: 10px;
+        background: linear-gradient(120deg, #5b8cff, #7b5bff);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 9px;
+        cursor: pointer;
+        font: inherit;
+      }
+      code {
+        background: #1b2230;
+        border-radius: 4px;
+        padding: 1px 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🧬 Helix</h1>
+    <div class="dim"><span class="dot" id="dot"></span><span id="status">checking…</span></div>
+    <div class="dim" style="margin-top: 8px">
+      Select text in a chat, then click <b>Save to Helix</b>.
+    </div>
+    <button id="open">Open dashboard</button>
+    <div class="dim" style="margin-top: 10px">
+      Not connected? Run <code>helix dashboard</code>.
+    </div>
+    <script src="popup.js"></script>
+  </body>
+</html>

@@ -201,8 +201,14 @@ tombstones + DSAR, sleep-time consolidation, an optional reranker, scoped redact
 quarantine, a memory copilot (`helix about`), an observability + **$0-meter** surface, and
 LangGraph/AutoGen adapters — all $0/offline, behind 13 new `helix` commands.
 
-Still phased (see the [Roadmap](ROADMAP.md)): React dashboard, BLAKE3 + S3 sync backend,
-PyPI packaging, and the portable-memory open standard.
+Plus a **redesigned local dashboard** (`helix dashboard` — copilot, canvas knowledge graph,
+review queue, $0-meter + heatmap, bitemporal time-travel, audit, cmd-K, and a "watch the graph
+assemble itself" first-run), per-fact **Ed25519 signing**, procedural/skill memory, a
+**GitHub/repo connector** (`helix repo`), and **VS Code** + **browser** extensions
+(`editors/vscode`, `apps/browser-extension`).
+
+Still phased (see the [Roadmap](ROADMAP.md)): BLAKE3 + S3 sync backend, PyPI packaging, and the
+portable-memory open standard.
 
 ## License
 
