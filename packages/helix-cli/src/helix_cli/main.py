@@ -101,6 +101,40 @@ def repo(
     eng.close()
 
 
+@app.command(name="export-portable")
+def export_portable_cmd(
+    out: str,
+    sign: bool = typer.Option(False, help="sign every fact (reaches the 'signed' level)"),
+) -> None:
+    """Export memory in the open Portable Agent Memory format (vendor-neutral JSON)."""
+    eng = _engine()
+    res = eng.export_portable(out, sign=sign)
+    console.print(
+        f"[green]exported[/] {res['memories']} memories -> [cyan]{out}[/] "
+        f"(portable-agent-memory, level: {res['level']})"
+    )
+    eng.close()
+
+
+@app.command()
+def conform(file: str, as_json: bool = typer.Option(False, "--json")) -> None:
+    """Validate a file against the Portable Agent Memory standard."""
+    eng = _engine()
+    rep = eng.conform(file)
+    eng.close()
+    if as_json:
+        print(json.dumps(rep, indent=2))
+    elif rep["valid"]:
+        console.print(
+            f"[green]✓ conformant[/] — level [cyan]{rep['level']}[/], {rep['count']} memories"
+        )
+    else:
+        console.print(f"[red]✗ not conformant[/] ({len(rep['errors'])} issue(s))")
+        for e in rep["errors"][:10]:
+            console.print(f"  [red]·[/] {e}")
+        raise typer.Exit(1)
+
+
 @app.command(name="export-md")
 def export_md(out: str) -> None:
     """Export your memory as human-readable, portable Markdown."""

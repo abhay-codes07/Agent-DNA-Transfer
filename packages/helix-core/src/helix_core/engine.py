@@ -291,6 +291,40 @@ class Engine:
             "doc_stored": doc_stored,
         }
 
+    def export_portable(self, path, *, sign: bool = False) -> dict:
+        """Export memory in the open Portable Agent Memory format (v2 plan §8).
+
+        A vendor-neutral JSON interchange anyone can read/write — the open record format the
+        `.dna` container carries. Includes a BLAKE2b Merkle integrity root (computed locally at
+        $0). With `sign=True`, every fact is signed first so the export reaches the "signed"
+        conformance level.
+        """
+        from . import __version__, standard
+        from .stores.sqlite_store import content_fingerprint
+        from .strand.crypto import merkle_root
+
+        if sign:
+            self.sign_facts()
+        mems = self.list_memories(limit=1_000_000)
+        edges = [e for e in self.store.all_edges() if e.relation != "has_member"]
+        root = merkle_root([content_fingerprint(m) for m in mems]) if mems else None
+        doc = standard.build_bundle(
+            mems,
+            edges,
+            generator=f"helix/{__version__}",
+            created_at=utcnow().isoformat(),
+            merkle_root=root,
+        )
+        Path(path).write_text(json.dumps(doc, indent=2), encoding="utf-8")
+        return {"path": str(path), "memories": len(mems), "level": standard.validate(doc)["level"]}
+
+    def conform(self, path) -> dict:
+        """Validate a file against the Portable Agent Memory standard. Returns the report."""
+        from . import standard
+
+        doc = json.loads(Path(path).read_text(encoding="utf-8"))
+        return standard.validate(doc)
+
     def export_markdown(self, path) -> int:
         """Dump active memories to human-readable Markdown (portable, editable). Returns count."""
         from .serialize import memories_to_markdown

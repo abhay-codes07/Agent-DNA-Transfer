@@ -624,6 +624,27 @@ dependency permanently (the field is converging back to built-in entity linking 
 (cost, violates single-file portability). (b) Pivot general-purpose to chase Mem0 — rejected (abandons
 the only white-space we own). (c) Lead with a hosted cloud product — rejected (violates local-first).
 
+## ADR-036 — Portable Agent Memory: publish `.dna`'s record format as an open standard
+**Status:** Proposed · **Date:** 2026-06-20
+**Context.** v2 plan §8 (the moonshot): MCP standardized how agents *talk to* memory but not a
+portable memory *artifact*. Owning that gap positions Helix as the category's interchange layer.
+**Decision.** Publish a vendor-neutral **Portable Agent Memory** standard
+([`docs/PORTABLE_MEMORY_STANDARD.md`](docs/PORTABLE_MEMORY_STANDARD.md), v1.0): an open JSON record
+format (typed, bi-temporal, provenance-bearing) with three conformance levels — **core** (required
+fields), **signed** (per-fact Ed25519 + BLAKE2b Merkle root), **encrypted** (the `.dna` container).
+Ship a reference implementation in `helix_core.standard` (`validate()` is pure stdlib so any project
+can vendor it), wired via `Engine.export_portable`/`conform` and `helix export-portable`/`helix
+conform`. The encrypted binary `.dna` (ADR-008/019/032) remains the secure *container*; this is the
+open *record format* it carries.
+**Consequences.** Other tools can read/write/verify Helix memory without Helix; the validator is a
+small adoption surface. Mirrors the *Portable Agent Memory* research (arXiv 2605.11032) but adds a
+concrete, encrypt-at-rest reference + conformance checker. No new dependency; integrity uses the
+existing BLAKE2b Merkle.
+**Alternatives considered.** (a) Keep memory Helix-only — rejected (the moat is portability/ownership).
+(b) Standardize the binary `.dna` itself as the interchange — rejected (encrypted + Python-specific;
+a plain JSON record format is far easier for others to adopt). (c) Reuse the MCP wire format — rejected
+(MCP is a transport, not a portable artifact).
+
 ---
 
 ## How to add a decision
