@@ -105,3 +105,16 @@ def test_dashboard_html_has_all_views():
         assert marker in DASHBOARD_HTML
     assert "confirmErase" in DASHBOARD_HTML  # type-to-confirm erase
     assert "openK" in DASHBOARD_HTML  # cmd-k palette
+
+
+def test_dashboard_html_has_onboarding_assemble():
+    for marker in ("vOnboard", "seedDemo", "goGraphAssemble", "onAssembled", "opts.assemble"):
+        assert marker in DASHBOARD_HTML  # the "graph assembles itself" first-run moment
+
+
+def test_seed_endpoint_builds_a_graph(server):
+    s, _, b = _req(server, "POST", "/api/seed")
+    assert json.loads(b)["seeded"] >= 6
+    s, _, b = _req(server, "GET", "/api/graph")
+    g = json.loads(b)
+    assert len(g["nodes"]) >= 6 and len(g["edges"]) >= 1  # relations give it structure to animate

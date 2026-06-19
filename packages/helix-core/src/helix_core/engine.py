@@ -232,6 +232,35 @@ class Engine:
                 stored[key] = stored.get(key, 0) + val
         return {"files": files, "slices": slices, "stored": stored}
 
+    def seed_demo(self) -> dict:
+        """Seed a small, realistic sample memory (for the dashboard's first-run "wow").
+
+        A curated set of coding facts about a fictional billing service, plus a few relations so
+        the graph has structure to animate. Idempotent-ish: re-stating facts just reinforces.
+        """
+        facts = [
+            "We chose Postgres over MongoDB for the billing service because it needs ACID transactions.",
+            "The billing service is built with FastAPI and deployed on Fly.io.",
+            "All API errors use the RFC-7807 problem+json format.",
+            "Events flow through NATS, not Kafka.",
+            "Auth uses short-lived JWTs with refresh tokens.",
+            "The staging database resets every night at 2am UTC.",
+            "I prefer pytest over unittest.",
+            "Use ruff and black for Python formatting and linting.",
+        ]
+        ids: list[str] = []
+        for content in facts:
+            scope = "global" if content.startswith(("I prefer", "Use ruff")) else "project:billing"
+            res = self.remember(content, scope=scope, source="demo")
+            if res:
+                ids.append(res[0].memory_id)
+        # A few relations give the graph a readable shape (Postgres ↔ FastAPI ↔ NATS, etc.).
+        links = [(0, 1), (1, 3), (0, 5), (3, 4), (1, 2)]
+        for a, b in links:
+            if a < len(ids) and b < len(ids):
+                self.relate(ids[a], ids[b], "related_to")
+        return {"seeded": len(ids), "links": len(links)}
+
     def export_markdown(self, path) -> int:
         """Dump active memories to human-readable Markdown (portable, editable). Returns count."""
         from .serialize import memories_to_markdown

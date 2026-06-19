@@ -136,6 +136,8 @@ def _make_handler(engine: Engine):
                     source="dashboard",
                 )
                 self._json({"results": [{"op": r.op, "id": r.memory_id} for r in res]})
+            elif u.path == "/api/seed":
+                self._json(engine.seed_demo())
             elif u.path == "/api/forget":
                 self._json({"forgot": engine.forget(str(b.get("id", "")))})
             elif u.path == "/api/erase":
@@ -503,21 +505,33 @@ async function ask(q){q=q||$('#ask').value.trim();if(!q)return;$('#ask').value='
   st.scrollTop=st.scrollHeight}
 
 /* ---------- Graph ---------- */
-async function vGraph(){
-  $('#main').innerHTML=head('Graph','your memory as a living network — size = recall, color = type')+
-    `<canvas id="gcanvas"></canvas><div class="legend" id="legend"></div>`;
+async function vGraph(assemble){
+  $('#main').innerHTML=head(assemble?'Building your memory…':'Graph','your memory as a living network — size = recall, color = type')+
+    `<canvas id="gcanvas"></canvas><div class="legend" id="legend"></div><div id="assemblecta"></div>`;
   $('#legend').innerHTML=Object.entries(TYPES).map(([t,c])=>`<span><span class="dot" style="background:${c}"></span> ${t}</span>`).join('');
-  const d=await api('/api/graph');forceGraph($('#gcanvas'),d)}
+  const d=await api('/api/graph');forceGraph($('#gcanvas'),d,{assemble:!!assemble,onSettle:assemble?onAssembled:null})}
+function onAssembled(){const cta=$('#assemblecta');if(!cta)return;
+  $('.head h2')&&($('.head h2').textContent='Graph');
+  cta.innerHTML=`<div class="card fade-in" style="margin-top:14px;text-align:center;background:var(--raised);border-color:var(--line-strong)">
+    <div style="font-size:15px;color:var(--fg)">🧬 That's your agent's brain — assembled in seconds.</div>
+    <div class="muted" style="margin:6px 0 12px">Every fact is sourced, editable, and yours. Now ask Helix what it knows.</div>
+    <button class="btn pri" onclick="go('copilot')">Ask the copilot →</button></div>`}
+function goGraphAssemble(){CUR='graph';location.hash='graph';renderNav();vGraph(true)}
 
-function forceGraph(cv,data){
+function forceGraph(cv,data,opts){opts=opts||{};
   const tip=$('#gtip');const dpr=Math.min(devicePixelRatio||1,2);
+  const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const assemble=opts.assemble&&!RM;
   function size(){cv.width=cv.clientWidth*dpr;cv.height=cv.clientHeight*dpr}
   size();const W=()=>cv.width/dpr,H=()=>cv.height/dpr;
-  const ns=data.nodes.slice(0,400).map(n=>({...n,x:W()/2+(Math.random()-.5)*240,y:H()/2+(Math.random()-.5)*240,vx:0,vy:0}));
+  const spread=assemble?14:240;
+  const ns=data.nodes.slice(0,400).map((n,i)=>({...n,x:W()/2+(Math.random()-.5)*spread,y:H()/2+(Math.random()-.5)*spread,vx:0,vy:0,born:assemble?i*42:0}));
   const idx={};ns.forEach((n,i)=>idx[n.id]=i);
   const ls=data.edges.map(e=>({s:idx[e.from],t:idx[e.to],rel:e.relation})).filter(l=>l.s!=null&&l.t!=null);
   const deg={};ls.forEach(l=>{deg[l.s]=(deg[l.s]||0)+1;deg[l.t]=(deg[l.t]||0)+1});
-  let view={x:0,y:0,k:1},hot=null,alpha=1,dragN=null,pan=null;
+  let view={x:0,y:0,k:1},hot=null,alpha=assemble?2.2:1,dragN=null,pan=null,settled=false;
+  const t0=performance.now(),lastBorn=assemble?(ns.length-1)*42:0;
+  const el=()=>performance.now()-t0, shown=n=>!assemble||el()>=n.born, fade=n=>assemble?Math.min((el()-n.born)/300,1):1;
   const R=n=>4+Math.sqrt((n.reinforced||0))*2.2+Math.min((deg[idx[n.id]]||0),6)*.6;
   function step(){
     if(alpha<.005)return;alpha*=.985;
@@ -531,16 +545,20 @@ function forceGraph(cv,data){
   function draw(){const c=cv.getContext('2d');c.setTransform(dpr,0,0,dpr,0,0);c.clearRect(0,0,W(),H());
     c.save();c.translate(view.x,view.y);c.scale(view.k,view.k);
     const near=hot!=null?new Set([hot,...ls.filter(l=>l.s===hot||l.t===hot).flatMap(l=>[l.s,l.t])]):null;
-    ls.forEach(l=>{const a=ns[l.s],b=ns[l.t];const on=near&&(l.s===hot||l.t===hot);
+    ls.forEach(l=>{const a=ns[l.s],b=ns[l.t];if(!shown(a)||!shown(b))return;const on=near&&(l.s===hot||l.t===hot);
+      c.globalAlpha=Math.min(fade(a),fade(b));
       c.strokeStyle=on?'rgba(123,91,255,.7)':near?'rgba(140,150,170,.05)':'rgba(91,140,255,.16)';
       c.lineWidth=on?1.6:1;c.beginPath();c.moveTo(a.x,a.y);c.lineTo(b.x,b.y);c.stroke()});
-    ns.forEach((n,i)=>{const dim=near&&!near.has(i);c.globalAlpha=dim?.18:1;
+    ns.forEach((n,i)=>{if(!shown(n))return;const dim=near&&!near.has(i);c.globalAlpha=(dim?.18:1)*fade(n);
       c.beginPath();c.arc(n.x,n.y,R(n),0,7);c.fillStyle=tcolor(n.type);c.fill();
       if(i===hot){c.lineWidth=2;c.strokeStyle='#fff';c.stroke()}
-      if(R(n)>7||i===hot){c.globalAlpha=dim?.18:.85;c.fillStyle='#cbd5e1';c.font='10px ui-sans-serif';
+      if(R(n)>7||i===hot){c.globalAlpha=(dim?.18:.85)*fade(n);c.fillStyle='#cbd5e1';c.font='10px ui-sans-serif';
         c.fillText((n.content||'').slice(0,22),n.x+R(n)+3,n.y+3)}});
     c.restore();c.globalAlpha=1}
-  function loop(){step();draw();requestAnimationFrame(loop)}loop();
+  function loop(){step();draw();
+    if(!settled&&opts.onSettle&&(assemble?(el()>lastBorn+700&&alpha<.04):false)){settled=true;opts.onSettle()}
+    requestAnimationFrame(loop)}loop();
+  if(opts.onSettle&&(RM||!assemble))setTimeout(()=>{if(!settled){settled=true;opts.onSettle()}},400);
   function at(ev){const r=cv.getBoundingClientRect();const mx=(ev.clientX-r.left-view.x)/view.k,my=(ev.clientY-r.top-view.y)/view.k;
     let best=null,bd=1e9;ns.forEach((n,i)=>{const d=(n.x-mx)**2+(n.y-my)**2;if(d<bd&&d<Math.max(R(n)*R(n),120)){bd=d;best=i}});return best}
   cv.onmousedown=e=>{const i=at(e);if(i!=null){dragN=ns[i]}else pan={x:e.clientX-view.x,y:e.clientY-view.y};cv.style.cursor='grabbing'};
@@ -657,9 +675,23 @@ function kNav(e){if(e.key==='ArrowDown'){KSEL=Math.min(KSEL+1,KITEMS.length-1);e
   $('#kres').querySelectorAll('.it').forEach((d,i)=>d.classList.toggle('sel',i===KSEL))}
 function fz(s,q){s=s.toLowerCase();q=q.toLowerCase().trim();if(!q)return true;let j=0;for(const ch of s){if(ch===q[j])j++;if(j===q.length)return true}return false}
 
+function vOnboard(){
+  $('#main').innerHTML=`<div class="empty" style="padding:7vh 20px">
+    <div class="g" style="margin-bottom:18px">${bigHelix()}</div>
+    <h2 style="font-size:25px;margin:0 0 8px;letter-spacing:-.5px;color:var(--fg)">Give your AI a memory that's yours</h2>
+    <div style="color:var(--fg-body);max-width:460px;margin:0 auto 24px;line-height:1.6">Helix remembers your projects, decisions, and conventions — local, private, and portable across every agent. Watch it build one in seconds.</div>
+    <div class="row" style="justify-content:center">
+      <button class="btn pri" onclick="seedDemo()">✨ Load a sample memory</button>
+      <button class="btn" onclick="go('memories')">I'll add my own</button></div>
+    <div class="muted" style="margin-top:16px;font-size:12px">or connect an agent: <span class="mono">helix connect cursor</span></div></div>`}
+async function seedDemo(){$('#main').innerHTML=`<div class="empty" style="padding:14vh 20px"><div class="g">${bigHelix()}</div><div class="muted" style="margin-top:10px">Distilling a sample memory…</div></div>`;
+  await post('/api/seed');await new Promise(r=>setTimeout(r,250));refreshMeta();goGraphAssemble()}
 const VIEWMAP={memories:vMemories,copilot:vCopilot,graph:vGraph,review:vReview,insights:vInsights,timeline:vTimeline,audit:vAudit};
 document.addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();openK()}
   if(e.key==='Escape')closeK()});
-const start=(location.hash.slice(1)&&VIEWMAP[location.hash.slice(1)])?location.hash.slice(1):'memories';
-CUR=start;renderNav();VIEWMAP[start]();refreshMeta();
+async function boot(){let d={memories:[]};try{d=await api('/api/memories')}catch(e){}
+  refreshMeta();const hash=location.hash.slice(1);
+  if(!d.memories.length&&!(hash&&VIEWMAP[hash])){CUR='memories';renderNav();vOnboard();return}
+  const start=(hash&&VIEWMAP[hash])?hash:'memories';CUR=start;renderNav();VIEWMAP[start]()}
+boot();
 </script></body></html>"""
