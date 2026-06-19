@@ -1147,6 +1147,23 @@ class Engine:
         out.sort(key=lambda d: d["changed_at"], reverse=True)
         return out[:limit]
 
+    def as_of(self, when: datetime) -> list[Memory]:
+        """Bitemporal snapshot (v2 plan §1.4): the facts believed true at `when`.
+
+        A fact counts if it was valid then — `valid_from <= when` and it had not yet been
+        superseded (`valid_to` is None or after `when`). Includes superseded facts, so you see
+        what the agent *used* to believe, not just what it believes now.
+        """
+        out: list[Memory] = []
+        for m in self.store.all_memories(
+            statuses=(Status.ACTIVE.value, Status.SUPERSEDED.value), limit=1_000_000
+        ):
+            if m.attributes.get("_hub"):
+                continue
+            if m.valid_from and m.valid_from <= when and (m.valid_to is None or m.valid_to > when):
+                out.append(m)
+        return out
+
     # --- procedural / skill memory (v2 plan §1.1) ----------------------------
     def learn_procedure(
         self,

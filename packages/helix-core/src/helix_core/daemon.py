@@ -109,6 +109,19 @@ def _make_handler(engine: Engine):
                 self._json({"themes": engine.themes(scope=scope)})
             elif u.path == "/api/changes":
                 self._json({"changes": engine.changes(scope=scope)})
+            elif u.path == "/api/asof":
+                from datetime import datetime as _dt
+                from datetime import timezone as _tz
+
+                try:
+                    when = _dt.fromisoformat(q.get("at", ""))
+                except ValueError:
+                    self._json({"error": "bad date"}, 400)
+                    return
+                if when.tzinfo is None:  # the UI sends a naive UTC stamp
+                    when = when.replace(tzinfo=_tz.utc)
+                mems = engine.as_of(when)
+                self._json({"count": len(mems), "facts": [memory_to_dict(m) for m in mems]})
             elif u.path == "/api/audit":
                 self._json({"intact": engine.verify_audit(), "entries": engine.audit_log(80)})
             elif u.path == "/api/graph":
@@ -525,12 +538,12 @@ function forceGraph(cv,data,opts){opts=opts||{};
   function size(){cv.width=cv.clientWidth*dpr;cv.height=cv.clientHeight*dpr}
   size();const W=()=>cv.width/dpr,H=()=>cv.height/dpr;
   const spread=assemble?14:240;
-  const ns=data.nodes.slice(0,400).map((n,i)=>({...n,x:W()/2+(Math.random()-.5)*spread,y:H()/2+(Math.random()-.5)*spread,vx:0,vy:0,born:assemble?i*42:0}));
+  const ns=data.nodes.slice(0,400).map((n,i)=>({...n,x:W()/2+(Math.random()-.5)*spread,y:H()/2+(Math.random()-.5)*spread,vx:0,vy:0,born:assemble?i*32:0}));
   const idx={};ns.forEach((n,i)=>idx[n.id]=i);
   const ls=data.edges.map(e=>({s:idx[e.from],t:idx[e.to],rel:e.relation})).filter(l=>l.s!=null&&l.t!=null);
   const deg={};ls.forEach(l=>{deg[l.s]=(deg[l.s]||0)+1;deg[l.t]=(deg[l.t]||0)+1});
   let view={x:0,y:0,k:1},hot=null,alpha=assemble?2.2:1,dragN=null,pan=null,settled=false;
-  const t0=performance.now(),lastBorn=assemble?(ns.length-1)*42:0;
+  const t0=performance.now(),lastBorn=assemble?(ns.length-1)*32:0;
   const el=()=>performance.now()-t0, shown=n=>!assemble||el()>=n.born, fade=n=>assemble?Math.min((el()-n.born)/300,1):1;
   const R=n=>4+Math.sqrt((n.reinforced||0))*2.2+Math.min((deg[idx[n.id]]||0),6)*.6;
   function step(){
@@ -619,13 +632,25 @@ function buildHeat(byday){const today=new Date();let out='';for(let i=111;i>=0;i
 async function vTimeline(){
   const[c,h]=await Promise.all([api('/api/changes'),api('/api/history')]);
   let html=head('Timeline','how your memory evolved');
+  html+=`<div class="section"><h3>Time travel — what did Helix believe?</h3>
+    <input type="range" id="asofr" min="0" max="120" value="120" style="width:100%;accent-color:var(--accent)" oninput="asof(this.value)">
+    <div style="display:flex;justify-content:space-between;color:var(--dim);font-size:11px;margin-top:2px"><span>~4 months ago</span><span>now</span></div>
+    <div id="asofout" style="margin:12px 0 6px;color:var(--fg)">today — drag to rewind</div>
+    <div id="asoflist"></div></div>`;
   if(c.changes.length){html+='<div class="section"><h3>Changes</h3>'+c.changes.map(x=>
     `<div class="bar" style="display:block"><span class="muted mono">${(x.changed_at||'').slice(0,10)}</span>
      &nbsp; <span style="color:var(--danger)">${esc(x.from)}</span> → <span style="color:var(--green)">${esc(x.to)}</span></div>`).join('')+'</div>'}
   html+='<div class="section"><h3>Events</h3>'+(h.history||[]).map(e=>
     `<div class="bar"><span class="muted mono" style="width:130px">${(e.ts||'').replace('T',' ').slice(0,16)}</span>
      <span class="pill t">${e.op}</span><span class="muted mono" style="font-size:11px">${esc(e.memory_id||'')}</span></div>`).join('')+'</div>';
-  $('#main').innerHTML=html}
+  $('#main').innerHTML=html;asof(120)}
+async function asof(v){const max=120,dago=max-(+v);const d=new Date();d.setDate(d.getDate()-dago);
+  if(dago>0)d.setHours(23,59,59,0);
+  const r=await api('/api/asof?at='+encodeURIComponent(d.toISOString().slice(0,19)));
+  const lbl=dago===0?'today':d.toISOString().slice(0,10);
+  if($('#asofout'))$('#asofout').innerHTML=`<b>${lbl}</b> — ${r.count} fact${r.count===1?'':'s'} believed`;
+  if($('#asoflist'))$('#asoflist').innerHTML=r.facts.slice(0,8).map(f=>
+    `<div class="bar" style="display:block"><span class="dot" style="background:${tcolor(f.type)}"></span> <span class="pill t">${f.type}</span> ${esc(f.content)}</div>`).join('')||'<span class="muted">nothing believed yet at that point</span>'}
 
 /* ---------- Audit ---------- */
 async function vAudit(){const d=await api('/api/audit');
@@ -694,4 +719,5 @@ async function boot(){let d={memories:[]};try{d=await api('/api/memories')}catch
   if(!d.memories.length&&!(hash&&VIEWMAP[hash])){CUR='memories';renderNav();vOnboard();return}
   const start=(hash&&VIEWMAP[hash])?hash:'memories';CUR=start;renderNav();VIEWMAP[start]()}
 boot();
+setInterval(()=>{if(!document.hidden)refreshMeta()},6000);  /* live $0-meter + review badge */
 </script></body></html>"""

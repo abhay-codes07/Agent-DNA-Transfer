@@ -118,3 +118,21 @@ def test_seed_endpoint_builds_a_graph(server):
     s, _, b = _req(server, "GET", "/api/graph")
     g = json.loads(b)
     assert len(g["nodes"]) >= 6 and len(g["edges"]) >= 1  # relations give it structure to animate
+
+
+def test_asof_endpoint_bitemporal_snapshot(server):
+    from datetime import datetime, timedelta, timezone
+
+    soon = (datetime.now(timezone.utc) + timedelta(minutes=1)).strftime("%Y-%m-%dT%H:%M:%S")
+    s, _, b = _req(server, "GET", "/api/asof?at=" + soon)
+    assert s == 200 and json.loads(b)["count"] >= 1  # the seeded billing fact is believed now
+    # Long before anything existed -> nothing believed.
+    s, _, b = _req(server, "GET", "/api/asof?at=2000-01-01T00:00:00")
+    assert json.loads(b)["count"] == 0
+    s, _, _ = _req(server, "GET", "/api/asof?at=not-a-date")
+    assert s == 400
+
+
+def test_dashboard_html_has_timetravel_and_live():
+    for marker in ("asofr", "async function asof", "setInterval", "document.hidden"):
+        assert marker in DASHBOARD_HTML
