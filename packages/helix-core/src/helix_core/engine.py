@@ -261,6 +261,36 @@ class Engine:
                 self.relate(ids[a], ids[b], "related_to")
         return {"seeded": len(ids), "links": len(links)}
 
+    def ingest_repo(self, path, *, scope: Scope | None = None) -> dict:
+        """Distill durable facts from a code repo's docs & configs (the GitHub connector, §5.6).
+
+        Learns the stack, tooling, CI, and ownership, and ingests the contributing/AGENTS doc as
+        distilled notes — so an agent wakes up already knowing the project's conventions. Local,
+        $0; reads a clone on disk and stores facts (never raw files).
+        """
+        import re as _re
+
+        from .connectors.repo import contributing_doc, repo_facts
+
+        root = Path(path)
+        scope = scope or "project:" + _re.sub(r"[^a-z0-9]+", "-", root.name.lower()).strip("-")
+        facts = repo_facts(root)
+        ops = {"ADD": 0, "UPDATE": 0, "NOOP": 0, "SUPERSEDE": 0}
+        for f in facts:
+            for r in self.remember(
+                f, scope=scope, source="github:repo", origin=Origin.AGENT_INGESTED
+            ):
+                ops[r.op] = ops.get(r.op, 0) + 1
+        doc = contributing_doc(root)
+        doc_stored = self.ingest_file(doc, scope=scope)["stored"] if doc else None
+        return {
+            "scope": scope,
+            "facts": len(facts),
+            "stored": ops,
+            "doc": doc.name if doc else None,
+            "doc_stored": doc_stored,
+        }
+
     def export_markdown(self, path) -> int:
         """Dump active memories to human-readable Markdown (portable, editable). Returns count."""
         from .serialize import memories_to_markdown

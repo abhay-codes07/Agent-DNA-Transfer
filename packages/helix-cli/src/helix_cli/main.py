@@ -86,6 +86,21 @@ def ingest(
     eng.close()
 
 
+@app.command()
+def repo(
+    path: str = typer.Argument(".", help="path to a code repo (a clone)"),
+    scope: str = typer.Option(None, help="scope (default: project:<repo-name>)"),
+) -> None:
+    """Learn a project's conventions from a repo's docs & configs (stack, tooling, CI, owners)."""
+    eng = _engine()
+    res = eng.ingest_repo(path, scope=scope)
+    console.print(
+        f"[green]learned[/] {res['facts']} facts from the repo -> [cyan]{res['scope']}[/]"
+        + (f"  (+ {res['doc']})" if res["doc"] else "")
+    )
+    eng.close()
+
+
 @app.command(name="export-md")
 def export_md(out: str) -> None:
     """Export your memory as human-readable, portable Markdown."""
