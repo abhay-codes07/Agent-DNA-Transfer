@@ -77,7 +77,20 @@ CREATE TABLE IF NOT EXISTS history (
     memory_id  TEXT,
     detail     TEXT
 );
+
+CREATE TABLE IF NOT EXISTS tombstones (
+    fp        TEXT PRIMARY KEY,   -- content fingerprint of an erased fact
+    erased_at TEXT
+);
 """
+
+
+def content_fingerprint(mem: Memory) -> str:
+    """Stable hash of a fact's identity (type + normalized content) for tombstone matching."""
+    import hashlib
+
+    key = f"{mem.type.value}|{mem.content.strip().lower()}"
+    return hashlib.blake2b(key.encode("utf-8"), digest_size=16).hexdigest()
 
 
 def _iso(dt: datetime | None) -> str | None:
@@ -217,6 +230,37 @@ class SqliteStore:
             "VALUES(?,?,?,?,?,?)",
             (edge.id, edge.from_id, edge.to_id, edge.relation, edge.weight, _iso(edge.created_at)),
         )
+
+    def delete_memory(self, memory_id: str, *, tombstone: bool = True) -> bool:
+        """Hard-delete a memory and everything tied to it: vector, FTS row, and any edges.
+
+        Unlike `forget` (soft, recoverable), this is irreversible erasure (GDPR Art. 17). When
+        `tombstone=True`, a content fingerprint is recorded so a later merge can't resurrect it.
+        """
+        mem = self.get_memory(memory_id)
+        if mem is None:
+            return False
+        if tombstone:
+            self.add_tombstone(content_fingerprint(mem))
+        self.conn.execute("DELETE FROM vectors WHERE id=?", (memory_id,))
+        if self.fts:
+            self.conn.execute("DELETE FROM memories_fts WHERE id=?", (memory_id,))
+        self.conn.execute("DELETE FROM edges WHERE from_id=? OR to_id=?", (memory_id, memory_id))
+        self.conn.execute("DELETE FROM memories WHERE id=?", (memory_id,))
+        return True
+
+    def add_tombstone(self, fp: str) -> None:
+        self.conn.execute(
+            "INSERT OR IGNORE INTO tombstones(fp, erased_at) VALUES(?,?)", (fp, _iso(utcnow()))
+        )
+
+    def is_tombstoned(self, fp: str) -> bool:
+        return (
+            self.conn.execute("SELECT 1 FROM tombstones WHERE fp=?", (fp,)).fetchone() is not None
+        )
+
+    def tombstone_count(self) -> int:
+        return int(self.conn.execute("SELECT COUNT(*) FROM tombstones").fetchone()[0])
 
     def add_history(self, op: str, memory_id: str, detail: dict | None = None) -> None:
         self.conn.execute(

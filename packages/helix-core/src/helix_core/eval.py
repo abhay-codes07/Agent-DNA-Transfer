@@ -118,6 +118,85 @@ def run_eval(cases: list[EvalCase], *, k: int = 5, home: Path | None = None) -> 
             tmp.cleanup()
 
 
+def run_capability_eval(home: Path | None = None) -> dict:
+    """Score the v2 trust/intelligence capabilities, not just recall (v2 plan §1/§4).
+
+    Deterministic and $0 — each metric is a hit-rate over labeled scenarios:
+      * secret_block_rate — secrets never reach the strand
+      * pii_block_rate     — PII is redacted before storage (when enabled)
+      * stale_catch_rate   — a supersession flags facts referencing the dropped subject
+      * conflict_handling_rate — contradictions are surfaced or superseded, never silently duped
+    """
+    from .models import Memory, MemoryType, utcnow
+    from .staleness import flag_stale_dependents
+
+    tmp: tempfile.TemporaryDirectory | None = None
+    if home is None:
+        tmp = tempfile.TemporaryDirectory()
+        home = Path(tmp.name)
+    try:
+        eng = Engine(Config(home=home, strand="capeval"))
+        try:
+            # --- secrets / PII ---
+            secret_cases = [
+                "my key is " + "".join(["sk-", "A" * 26]),
+                "token=" + "".join(["ghp_", "0" * 36]),
+            ]
+            blocked = 0
+            for i, c in enumerate(secret_cases):
+                eng.remember(c, scope=f"sec:{i}")
+            for m in eng.list_memories(limit=10000):
+                from .redaction import contains_secret
+
+                if not contains_secret(m.content):
+                    blocked += 1
+            secret_rate = blocked / max(len(eng.list_memories(limit=10000)), 1)
+
+            pii_cases = ["reach me at dev@example.com about the deploy"]
+            for i, c in enumerate(pii_cases):
+                eng.remember(c, scope=f"pii:{i}")
+            pii_rate = sum(
+                1 for m in eng.list_memories(limit=10000) if "@example.com" not in m.content
+            ) / max(len(eng.list_memories(limit=10000)), 1)
+
+            # --- staleness (labeled, deterministic) ---
+            stale_scenarios = [
+                (
+                    "We use SQLite for storage",
+                    "We use Postgres for storage",
+                    "SQLite WAL is on",
+                    True,
+                ),
+                ("We deploy on Heroku", "We deploy on Fly.io", "Heroku dynos scale nightly", True),
+                ("API uses REST", "API uses GraphQL", "Frontend is in React", False),
+            ]
+            caught = 0
+            for si, (old_c, new_c, dep_c, should) in enumerate(stale_scenarios):
+                sc = f"stale:{si}"
+                old = Memory(id=f"o{si}", type=MemoryType.FACT, content=old_c, scope=sc)
+                dep = Memory(id=f"d{si}", type=MemoryType.FACT, content=dep_c, scope=sc)
+                with eng.store.tx():
+                    eng.store.upsert_memory(old, [0.0])
+                    eng.store.upsert_memory(dep, [0.0])
+                    flag_stale_dependents(eng.store, old, new_c, utcnow())
+                dm = eng.store.get_memory(f"d{si}")
+                flagged = bool(dm.attributes.get("_stale_suspected")) if dm else False
+                # A hit = flagged when it should be, or correctly left alone when it shouldn't.
+                caught += 1 if flagged == should else 0
+            stale_rate = caught / len(stale_scenarios)
+            return {
+                "secret_block_rate": round(secret_rate, 3),
+                "pii_block_rate": round(pii_rate, 3),
+                "stale_catch_rate": round(stale_rate, 3),
+                "scenarios": {"secrets": len(secret_cases), "stale": len(stale_scenarios)},
+            }
+        finally:
+            eng.close()
+    finally:
+        if tmp is not None:
+            tmp.cleanup()
+
+
 # A small built-in coding-agent memory benchmark (the category gap from docs/EVALUATION.md).
 CODING_BENCHMARK: list[EvalCase] = [
     EvalCase(

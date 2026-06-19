@@ -317,6 +317,61 @@ class Engine:
             self.store.add_history("review-keep", mem.id, {})
         return mem
 
+    def erase(self, id_or_query: str) -> dict:
+        """Irreversibly erase a fact and cascade (GDPR Art. 17 / v2 plan §4.1).
+
+        Unlike `forget` (soft, recoverable), this hard-deletes the memory, its embedding, its
+        FTS row, and its edges; records a tombstone so a later merge can't resurrect it; and
+        flags facts *derived from* it as possibly-stale (their basis is gone). We delete discrete
+        vectors, not model weights — no "machine unlearning" required.
+        """
+        mem = self.store.get_memory(id_or_query)
+        if mem is None:
+            hits = self.recall(id_or_query, k=1)
+            if not hits:
+                return {"erased": 0}
+            mem = hits[0].memory
+        dependents = [
+            e.from_id for e in self.store.edges_by_relation("derived_from") if e.to_id == mem.id
+        ]
+        with self.store.tx():
+            for did in dependents:
+                dm = self.store.get_memory(did)
+                if dm is not None:
+                    dm.attributes["_stale_suspected"] = True
+                    dm.attributes["_stale_reason"] = "a source fact was erased"
+                    dm.updated_at = utcnow()
+                    self.store.upsert_memory(dm)
+            self.store.delete_memory(mem.id, tombstone=True)
+            self.store.add_history("erase", mem.id, {"dependents": len(dependents)})
+        return {"erased": 1, "id": mem.id, "dependents_flagged": len(dependents)}
+
+    def export_subject(self, subject: str, *, k: int = 200) -> dict:
+        """Data-subject access export (DSAR): everything Helix knows about a subject + lineage.
+
+        Returns each matching fact with its provenance and confidence — human-readable and
+        portable (GDPR Art. 15). `subject` is matched by recall.
+        """
+        hits = self.recall(subject, k=k)
+        facts = []
+        for h in hits:
+            m = h.memory
+            facts.append(
+                {
+                    "id": m.id,
+                    "type": m.type.value,
+                    "content": m.content,
+                    "scope": m.scope,
+                    "confidence": m.confidence,
+                    "created_at": m.created_at.isoformat(),
+                    "provenance": [
+                        {"agent": p.agent, "extractor": p.extractor, "origin": p.origin.value}
+                        for p in m.provenance
+                    ],
+                }
+            )
+        return {"subject": subject, "count": len(facts), "facts": facts}
+
     def list_memories(self, *, scope: Scope | None = None, limit: int = 100) -> list[Memory]:
         return [
             m
@@ -476,6 +531,7 @@ class Engine:
             "fts5": self.store.fts,
             "active_memories": self.store.count(),
             "archived_memories": self.store.count((Status.ARCHIVED.value,)),
+            "tombstones": self.store.tombstone_count(),
             "extractor": getattr(self.extractor, "name", "deterministic"),
             "llm_provider": self.config.llm_provider,
             "llm_enabled": self.router is not None and self.router.available(),
@@ -574,9 +630,15 @@ class Engine:
             manifest = import_dna(Path(path), other_path, passphrase=pw)
             other = SqliteStore(other_path)
             try:
+                from .stores.sqlite_store import content_fingerprint
+
                 with self.store.tx():
                     for mem in other.all_memories(limit=1_000_000):
                         if mem.attributes.get("_hub"):
+                            continue
+                        # Tombstoned (erased) facts must never be resurrected by a merge.
+                        if self.store.is_tombstoned(content_fingerprint(mem)):
+                            ops["NOOP"] += 1
                             continue
                         cand = CandidateFact(
                             type=mem.type,
