@@ -402,6 +402,9 @@ class SqliteStore:
             for r in rows
         ]
 
+    def history_count(self) -> int:
+        return int(self.conn.execute("SELECT COUNT(*) FROM history").fetchone()[0])
+
     def get_version(self) -> int:
         return int(self.get_meta("version") or 0)
 

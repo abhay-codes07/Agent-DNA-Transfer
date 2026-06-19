@@ -704,6 +704,77 @@ class Engine:
         except Exception:
             return []
 
+    # --- copilot + observability (v2 plan §6.1 / §6.2) -----------------------
+    def about(self, subject: str, *, k: int = 8) -> dict:
+        """Answer "what do you know about X?" — sourced facts + related facts + flags.
+
+        Backs the memory copilot: every returned fact carries its provenance and any
+        stale/conflict flag so the answer is inspectable, not a black box.
+        """
+        hits = self.recall(subject, k=k)
+        facts = []
+        for h in hits:
+            m = h.memory
+            facts.append(
+                {
+                    "id": m.id,
+                    "type": m.type.value,
+                    "content": m.content,
+                    "confidence": round(m.confidence, 2),
+                    "source": (m.provenance[0].agent if m.provenance else None),
+                    "stale": bool(m.attributes.get("_stale_suspected")),
+                    "conflict": bool(m.attributes.get("_conflict")),
+                }
+            )
+        related: list[dict] = []
+        if hits:
+            for nb in self.store.neighbors(hits[0].memory.id, depth=1)[:5]:
+                if not nb.attributes.get("_hub"):
+                    related.append({"id": nb.id, "content": nb.content})
+        return {"subject": subject, "facts": facts, "related": related, "count": len(facts)}
+
+    def analytics(self) -> dict:
+        """A snapshot of the memory's health for the observability dashboard."""
+        from collections import Counter
+
+        mems = self.list_memories(limit=1_000_000)
+        by_type = Counter(m.type.value for m in mems)
+        by_day: Counter = Counter(m.created_at.date().isoformat() for m in mems)
+        most = sorted(mems, key=lambda m: float(m.attributes.get("_reinforced", 0)), reverse=True)
+        stale = sum(1 for m in mems if m.attributes.get("_stale_suspected"))
+        return {
+            "total": len(mems),
+            "by_type": dict(by_type),
+            "facts_per_day": dict(sorted(by_day.items())),
+            "most_recalled": [
+                {"content": m.content, "recalled": int(m.attributes.get("_reinforced", 0))}
+                for m in most[:5]
+                if m.attributes.get("_reinforced")
+            ],
+            "to_review": stale + len(self.conflicts()),
+            "conflicts": len(self.conflicts()),
+            "stale_suspected": stale,
+            "quarantined": len(self.review_incoming()),
+            "tombstones": self.store.tombstone_count(),
+        }
+
+    # Estimated cloud-equivalent prices for the "$0 saved" meter (transparent, conservative).
+    _EMBED_USD = 0.0000004  # ~20 tokens @ text-embedding-3-small ($0.02/1M)
+    _OP_USD = 0.00008  # an avoided cloud memory extract/recall call (conservative)
+
+    def savings(self) -> dict:
+        """The "$0 meter": estimate what running locally has saved vs a cloud memory service."""
+        mems = self.store.count()
+        ops = self.store.history_count()
+        est = mems * self._EMBED_USD + ops * self._OP_USD
+        return {
+            "local_embeddings": mems,
+            "local_operations": ops,
+            "llm_enabled": self.router is not None and self.router.available(),
+            "est_usd_saved": round(est, 4),
+            "note": "estimate vs a hosted memory API; Helix runs these locally at $0",
+        }
+
     # --- diagnostics ----------------------------------------------------------
     def stats(self) -> dict:
         return {

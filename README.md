@@ -22,7 +22,7 @@ One memory. Every agent. Owned by you.
 ![license](https://img.shields.io/badge/license-Apache--2.0-blue)
 ![local-first](https://img.shields.io/badge/local--first-yes-brightgreen)
 ![cost](https://img.shields.io/badge/default%20cost-%240%2Fmo-brightgreen)
-![tests](https://img.shields.io/badge/tests-84%20passing-brightgreen)
+![tests](https://img.shields.io/badge/tests-110%20passing-brightgreen)
 ![version](https://img.shields.io/badge/version-0.1.0--alpha-blue)
 
 </div>
@@ -195,8 +195,14 @@ clean). Shipped so far:
   (encrypted push/pull).
 - **SDKs** (Python + TypeScript) and a built-in **recall benchmark** (`helix eval`).
 
+**v2 / Wave A is landing now** ([`docs/V2_PLAN.md`](docs/V2_PLAN.md), "Git for your AI's memory"):
+secret + PII gate, conflict surfacing, staleness detection, tighter packing, erasure cascade +
+tombstones + DSAR, sleep-time consolidation, an optional reranker, scoped redacted sharing with
+quarantine, a memory copilot (`helix about`), an observability + **$0-meter** surface, and
+LangGraph/AutoGen adapters — all $0/offline, behind 13 new `helix` commands.
+
 Still phased (see the [Roadmap](ROADMAP.md)): React dashboard, BLAKE3 + S3 sync backend,
-LLM-assisted consolidation, PyPI packaging, and a public docs site.
+PyPI packaging, and the portable-memory open standard.
 
 ## License
 

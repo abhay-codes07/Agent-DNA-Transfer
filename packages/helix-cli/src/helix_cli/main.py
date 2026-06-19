@@ -464,6 +464,207 @@ def pull(
 
 
 @app.command()
+def about(
+    subject: str,
+    k: int = typer.Option(8, help="max facts"),
+    as_json: bool = typer.Option(False, "--json", help="machine-readable output"),
+) -> None:
+    """Ask the memory copilot what Helix knows about a subject (sourced + flagged)."""
+    eng = _engine()
+    ans = eng.about(subject, k=k)
+    if as_json:
+        print(json.dumps(ans, indent=2))
+        eng.close()
+        return
+    if not ans["facts"]:
+        console.print(f"[dim]nothing known about '{subject}' yet[/]")
+    else:
+        console.print(f"[bold]What I know about[/] [cyan]{subject}[/]:")
+        for f in ans["facts"]:
+            flag = " [yellow](stale?)[/]" if f["stale"] else ""
+            flag += " [red](conflict)[/]" if f["conflict"] else ""
+            console.print(f"  • {f['content']} [dim]({f['type']}, conf {f['confidence']})[/]{flag}")
+    eng.close()
+
+
+@app.command()
+def conflicts(as_json: bool = typer.Option(False, "--json")) -> None:
+    """Show contradictory facts Helix is keeping side-by-side for you to judge."""
+    eng = _engine()
+    pairs = eng.conflicts()
+    if as_json:
+        print(json.dumps(pairs, indent=2))
+    elif not pairs:
+        console.print("[green]no unresolved conflicts[/]")
+    else:
+        for p in pairs:
+            console.print(f"[red]conflict[/]: {p['a']['content']}  [dim]vs[/]  {p['b']['content']}")
+    eng.close()
+
+
+@app.command()
+def review(as_json: bool = typer.Option(False, "--json")) -> None:
+    """List facts wanting attention: possibly-stale or in conflict (the review queue)."""
+    eng = _engine()
+    q = eng.review_queue()
+    if as_json:
+        print(json.dumps(q, indent=2))
+    elif not q:
+        console.print("[green]nothing to review[/]")
+    else:
+        for item in q:
+            tag = "[yellow]stale[/]" if item["kind"] == "stale" else "[red]conflict[/]"
+            console.print(
+                f"  {tag} [cyan]{item['id']}[/] {item['content']}  [dim]{item['reason']}[/]"
+            )
+    eng.close()
+
+
+@app.command()
+def erase(target: str) -> None:
+    """Irreversibly erase a fact + cascade (GDPR). Unlike `forget`, this cannot be undone."""
+    eng = _engine()
+    res = eng.erase(target)
+    if res["erased"]:
+        console.print(
+            f"[magenta]erased[/] {res['id']} (tombstoned; {res['dependents_flagged']} derived flagged)"
+        )
+    else:
+        console.print("[dim]nothing matched[/]")
+    eng.close()
+
+
+@app.command()
+def sleep(
+    min_reinforced: int = typer.Option(2, help="recalls before an episode is semanticized"),
+) -> None:
+    """Run offline 'sleep-time' consolidation (promote reinforced episodes; synthesize insights)."""
+    eng = _engine()
+    res = eng.consolidate_sleep(min_reinforced=min_reinforced)
+    console.print(
+        f"[green]consolidated[/]: {res['promoted']} promoted, {res['insights']} insight(s)"
+    )
+    eng.close()
+
+
+@app.command()
+def savings(as_json: bool = typer.Option(False, "--json")) -> None:
+    """The $0 meter: estimated savings vs a hosted memory service (Helix runs locally)."""
+    eng = _engine()
+    s = eng.savings()
+    if as_json:
+        print(json.dumps(s, indent=2))
+    else:
+        console.print(
+            f"[green]${s['est_usd_saved']}[/] saved — {s['local_embeddings']} local embeddings, "
+            f"{s['local_operations']} ops, all at [bold]$0[/] [dim]({s['note']})[/]"
+        )
+    eng.close()
+
+
+@app.command()
+def analytics(as_json: bool = typer.Option(False, "--json")) -> None:
+    """A snapshot of your memory's health (totals, types, growth, review queue)."""
+    eng = _engine()
+    a = eng.analytics()
+    if as_json:
+        print(json.dumps(a, indent=2))
+    else:
+        console.print(f"[bold]{a['total']}[/] memories  [dim]·[/]  by type: {a['by_type']}")
+        console.print(
+            f"to review: [yellow]{a['to_review']}[/] "
+            f"(conflicts {a['conflicts']}, stale {a['stale_suspected']})  "
+            f"·  tombstones {a['tombstones']}  ·  quarantined {a['quarantined']}"
+        )
+    eng.close()
+
+
+@app.command(name="share")
+def share_cmd(
+    out: str,
+    scope: str = typer.Option(None, help="restrict the share to a scope"),
+    contributor: str = typer.Option(None, help="your contributor name (default: strand name)"),
+) -> None:
+    """Export a scoped, redacted, attributable share bundle (JSON) for a teammate/agent."""
+    eng = _engine()
+    res = eng.export_share(out, scope=scope, contributor=contributor)
+    console.print(f"[green]shared[/] {res['facts']} facts -> [cyan]{out}[/] (redacted, attributed)")
+    eng.close()
+
+
+@app.command(name="import-share")
+def import_share_cmd(
+    file: str,
+    trust: bool = typer.Option(
+        False, help="trust the contributor (import directly, not quarantine)"
+    ),
+) -> None:
+    """Import a share bundle. Untrusted facts are quarantined for review."""
+    eng = _engine()
+    res = eng.import_share(file, trust=trust)
+    console.print(
+        f"[green]imported[/] from {res['contributor']}: {res['added']} added, "
+        f"[yellow]{res['quarantined']} quarantined[/], {res['tampered']} tampered (dropped)"
+    )
+    if res["quarantined"]:
+        console.print("[dim]review with `helix review-incoming`[/]")
+    eng.close()
+
+
+@app.command(name="review-incoming")
+def review_incoming_cmd(as_json: bool = typer.Option(False, "--json")) -> None:
+    """List quarantined facts from share imports awaiting your approval."""
+    eng = _engine()
+    pending = eng.review_incoming()
+    if as_json:
+        print(json.dumps(pending, indent=2))
+    elif not pending:
+        console.print("[green]nothing quarantined[/]")
+    else:
+        for p in pending:
+            console.print(f"  [cyan]{p['id']}[/] [dim](from {p['from']})[/] {p['content']}")
+        console.print("[dim]approve with `helix approve <id>`[/]")
+    eng.close()
+
+
+@app.command()
+def approve(memory_id: str) -> None:
+    """Accept a quarantined fact into active memory."""
+    eng = _engine()
+    m = eng.approve_incoming(memory_id)
+    console.print(f"[green]approved[/] {memory_id}" if m else "[dim]not a quarantined id[/]")
+    eng.close()
+
+
+@app.command(name="dsar")
+def dsar_cmd(subject: str, as_json: bool = typer.Option(True, "--json/--table")) -> None:
+    """Export everything Helix knows about a subject + provenance (GDPR access request)."""
+    eng = _engine()
+    out = eng.export_subject(subject)
+    if as_json:
+        print(json.dumps(out, indent=2))
+    else:
+        console.print(f"[bold]{out['count']}[/] facts about [cyan]{subject}[/]")
+        for f in out["facts"]:
+            console.print(f"  • {f['content']}")
+    eng.close()
+
+
+@app.command(name="capeval")
+def capeval_cmd() -> None:
+    """Run the v2 capability benchmark (secret-block / PII-block / stale-catch rates)."""
+    from helix_core.eval import run_capability_eval
+
+    res = run_capability_eval()
+    table = Table(title="Helix capability scorecard", show_header=False)
+    table.add_column(style="cyan")
+    table.add_column(justify="right")
+    for key, val in res.items():
+        table.add_row(key, str(val))
+    console.print(table)
+
+
+@app.command()
 def log(limit: int = typer.Option(20)) -> None:
     """Show how your memory evolved (git-style history)."""
     eng = _engine()
