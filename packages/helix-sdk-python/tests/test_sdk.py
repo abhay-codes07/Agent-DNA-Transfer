@@ -33,6 +33,25 @@ def test_sdk_memory_parity(tmp_path):
         assert mem.forget(mid) == [mid]
 
 
+def test_sdk_v2_surface(tmp_path):
+    with _helix(tmp_path) as mem:
+        mem.remember("We chose Postgres for billing.", scope="project:billing")
+        # copilot + observability
+        assert mem.about("billing database")["count"] >= 1
+        assert "est_usd_saved" in mem.savings()
+        assert mem.analytics()["total"] >= 1
+        assert isinstance(mem.conflicts(), list) and isinstance(mem.review_queue(), list)
+        # procedural memory
+        pid = mem.learn_procedure("the build breaks", ["clear the cache", "rebuild"])
+        assert any(p["id"] == pid for p in mem.recall_procedures("build is broken"))
+        # trust + the portable standard
+        assert mem.sign_facts()["signed"] >= 1
+        assert mem.verify_facts()["tampered"] == []
+        out = tmp_path / "brain.json"
+        mem.export_portable(str(out))
+        assert mem.conform(str(out))["valid"] is True
+
+
 def test_sdk_transfer_roundtrip(tmp_path):
     pytest.importorskip("nacl")
     a = _helix(tmp_path / "a")

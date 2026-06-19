@@ -25,6 +25,9 @@ TOOLS = [
     "memory_forget",
     "memory_relate",
     "memory_list",
+    "memory_about",
+    "memory_how",
+    "memory_learn",
 ]
 RESOURCES = ["helix://graph", "helix://strand/manifest"]
 
@@ -77,6 +80,27 @@ def build_server(toolset: HelixToolset | None = None):
     @mcp.tool(description="List stored memories (for inspection).")
     def memory_list(scope: str = "", limit: int = 50) -> str:
         return json.dumps(ts.list(scope=scope or None, limit=limit))
+
+    @mcp.tool(
+        description="Ask what the user's memory knows about a subject — returns sourced facts "
+        "(the copilot surface). Prefer this when answering questions about the user/project."
+    )
+    def memory_about(subject: str, k: int = 8) -> str:
+        return json.dumps(ts.about(subject, k=k))
+
+    @mcp.tool(
+        description="Recall reusable how-to recipes (procedures/skills) matching the current "
+        "situation — situation->action knowledge, e.g. 'the billing tests are flaky'."
+    )
+    def memory_how(situation: str, scope: str = "", k: int = 5) -> str:
+        return json.dumps(ts.how(situation, scope=scope or None, k=k))
+
+    @mcp.tool(
+        description="Teach a reusable how-to recipe (a skill) keyed by a trigger condition, with "
+        "ordered steps. Use after solving something worth reusing."
+    )
+    def memory_learn(trigger: str, steps: list, scope: str = "global") -> str:
+        return json.dumps(ts.learn(trigger, steps, scope=scope))
 
     # --- resources (application-controlled context; ADR-023) ---
     @mcp.resource(

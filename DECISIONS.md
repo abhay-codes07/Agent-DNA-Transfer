@@ -645,6 +645,23 @@ existing BLAKE2b Merkle.
 a plain JSON record format is far easier for others to adopt). (c) Reuse the MCP wire format — rejected
 (MCP is a transport, not a portable artifact).
 
+## ADR-037 — Grow the MCP tool surface to 10: add `memory_about`, `memory_how`, `memory_learn`
+**Status:** Proposed · **Date:** 2026-06-20
+**Context.** v2 added a large engine surface (copilot, procedural/skill memory, etc.), but the MCP
+toolset stayed at the v1 7 tools — so agents (the primary consumer, "MCP is the interface") couldn't
+reach any of it. ADR-003 requires MCP growth to be deliberate and documented.
+**Decision.** Add three agent-facing tools (kept minimal/stable): **`memory_about`** (copilot — what
+the memory knows about a subject, sourced), **`memory_how`** (recall reusable how-to procedures for a
+situation), **`memory_learn`** (teach a procedure). These expose the capabilities most valuable to a
+*coding* agent (situation→action knowledge + sourced recall) without bloating the surface with
+curation/admin operations (conflicts/review/sign/erase remain user-facing via CLI + dashboard).
+Documented in [`docs/MCP_INTEGRATION.md`](docs/MCP_INTEGRATION.md); the Python SDK gains full parity.
+**Consequences.** Agents can now recall and grow procedural skill memory over MCP — the defining
+coding-agent capability. Surface is 10 tools + 2 resources; still small and semver'd.
+**Alternatives considered.** (a) Expose everything (~20 methods) — rejected (surface bloat; many are
+curation/admin, better on the CLI/dashboard). (b) Leave MCP at v1 — rejected (violates "MCP is the
+interface"; the new intelligence would be unreachable by agents).
+
 ---
 
 ## How to add a decision

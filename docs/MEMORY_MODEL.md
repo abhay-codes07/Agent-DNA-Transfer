@@ -53,6 +53,7 @@ confidence-scored, and editable.
 | `decision` | semantic | A durable choice + rationale | "Chose Postgres over Mongo — needs ACID; 2026-05" |
 | `convention` | procedural | Rules/standards in a context | "All API errors use RFC-7807 problem+json" |
 | `snippet` | procedural | Reusable idiom/playbook | "retry-with-jitter helper (Python)" |
+| `procedure` | procedural | A verified how-to recipe keyed by a trigger (v2 §1.1) | "When billing tests flake: pin the clock; rerun" |
 | `entity` | entity graph | People/teams/repos/services | "Priya owns `auth-svc`" |
 | `episode` | episodic | A specific event | "Build broke on 2026-06-12 due to X" |
 | `fact` | semantic | Generic catch-all | "Deploys frozen on Fridays" |
@@ -82,7 +83,7 @@ Types are extensible; new domains register additional types without touching the
   "recorded_at": "2026-05-14T10:32:00Z",   // transaction-time: when Helix learned it
 
   // --- lifecycle ---
-  "status": "active",       // active | archived | forgotten | superseded
+  "status": "active",       // active | archived | forgotten | superseded | quarantined (staged, untrusted import — v2 §3.2)
   "last_seen_at": "...",    // reinforcement signal
   "provenance": [ { "agent": "claude-code", "ref": "session:...", "extractor": "llm:gemini-2.0-flash",
                     "origin": "user-asserted" } ]   // origin: user-asserted | agent-ingested — ADR-029

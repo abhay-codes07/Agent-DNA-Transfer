@@ -28,6 +28,14 @@ validates `Origin` (DNS-rebinding defense); see [Security Model](SECURITY_MODEL.
 | `memory.forget` | Soft-delete a fact | `id` \| `query` | removed ids |
 | `memory.list` | Inspect stored memories | `scope?`, `type?`, `limit?` | memories |
 | `memory.relate` | Link two memories | `from_id`, `to_id`, `relation` | edge id |
+| `memory.about` | Copilot: what's known about a subject | `subject`, `k?` | sourced facts + related |
+| `memory.how` | Recall reusable how-to recipes (skills) | `situation`, `scope?`, `k?` | procedures (trigger + steps) |
+| `memory.learn` | Teach a reusable procedure (skill) | `trigger`, `steps[]`, `scope?` | procedure id |
+
+> Server names use `memory_*` (e.g. `memory_about`); the dotted form here is the logical surface.
+> The procedural tools (`memory.how`/`memory.learn`) are what make Helix a *coding-agent* memory:
+> agents recall situation→action knowledge, not just facts. Surface growth is tracked in
+> [`DECISIONS.md`](../DECISIONS.md) (ADR-003 → ADR-037).
 
 Design rules:
 - **Token-budgeted:** recall tools accept `budget_tokens` and pack greedily by rank so an

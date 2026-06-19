@@ -13,6 +13,8 @@ agents and scripts — full parity with the CLI/MCP surface. $0/offline by defau
 
 from __future__ import annotations
 
+from typing import Any
+
 from helix_core.config import Config
 from helix_core.engine import Engine
 
@@ -59,11 +61,87 @@ class Helix:
     def maintain(self, **kw) -> dict:
         return self._engine.maintain(**kw)
 
+    def purge(self, **kw) -> dict:
+        return self._engine.purge(**kw)
+
     def history(self, limit: int = 50):
         return self._engine.history(limit)
 
     def stats(self) -> dict:
         return self._engine.stats()
+
+    # --- v2: copilot, intelligence, observability ---
+    def about(self, subject: str, *, k: int = 8) -> dict:
+        return self._engine.about(subject, k=k)
+
+    def proactive(self, hint: str, *, scope: str | None = None, k: int = 3):
+        return self._engine.proactive(hint, scope=scope, k=k)
+
+    def conflicts(self) -> Any:
+        return self._engine.conflicts()
+
+    def review_queue(self) -> Any:
+        return self._engine.review_queue()
+
+    def changes(self, *, scope: str | None = None):
+        return self._engine.changes(scope=scope)
+
+    def themes(self, *, scope: str | None = None, top: int = 8):
+        return self._engine.themes(scope=scope, top=top)
+
+    def analytics(self) -> dict:
+        return self._engine.analytics()
+
+    def savings(self) -> dict:
+        return self._engine.savings()
+
+    def as_of(self, when):
+        return self._engine.as_of(when)
+
+    def consolidate_sleep(self, **kw) -> dict:
+        return self._engine.consolidate_sleep(**kw)
+
+    def erase(self, id_or_query: str) -> dict:
+        return self._engine.erase(id_or_query)
+
+    # --- v2: procedural / skill memory ---
+    def learn_procedure(self, trigger: str, steps: Any, **kw) -> str:
+        return self._engine.learn_procedure(trigger, steps, **kw)
+
+    def recall_procedures(self, situation: str, *, scope: str | None = None, k: int = 5):
+        return self._engine.recall_procedures(situation, scope=scope, k=k)
+
+    def record_procedure_outcome(self, proc_id: str, success: bool):
+        return self._engine.record_procedure_outcome(proc_id, success)
+
+    # --- v2: trust, sharing, governance ---
+    def sign_facts(self) -> dict:
+        return self._engine.sign_facts()
+
+    def verify_facts(self) -> dict:
+        return self._engine.verify_facts()
+
+    def export_share(self, out_path: str, **kw) -> dict:
+        return self._engine.export_share(out_path, **kw)
+
+    def import_share(self, path_or_bundle, *, trust: bool = False) -> dict:
+        return self._engine.import_share(path_or_bundle, trust=trust)
+
+    def audit_log(self, limit: int = 100):
+        return self._engine.audit_log(limit)
+
+    def verify_audit(self) -> bool:
+        return self._engine.verify_audit()
+
+    # --- v2: connectors + the portable standard ---
+    def ingest_repo(self, path: str, *, scope: str | None = None) -> dict:
+        return self._engine.ingest_repo(path, scope=scope)
+
+    def export_portable(self, path: str, *, sign: bool = False) -> dict:
+        return self._engine.export_portable(path, sign=sign)
+
+    def conform(self, path: str) -> dict:
+        return self._engine.conform(path)
 
     # --- transfer (.dna) ---
     def export(self, path: str, *, passphrase: str | None = None, label: str = ""):

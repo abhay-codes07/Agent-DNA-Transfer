@@ -8,6 +8,8 @@ returned as `{"ok": False, "error": ...}` so the server can map them to MCP `isE
 
 from __future__ import annotations
 
+from typing import Any
+
 from helix_core.engine import Engine
 from helix_core.models import Origin
 from helix_core.serialize import hit_to_dict, memory_to_dict
@@ -88,6 +90,36 @@ class HelixToolset:
     def list(self, *, scope: str | None = None, limit: int = 50) -> dict:
         mems = self.engine.list_memories(scope=scope, limit=limit)
         return {"ok": True, "count": len(mems), "memories": [memory_to_dict(m) for m in mems]}
+
+    # memory.about (copilot) ---------------------------------------------
+    def about(self, subject: str, *, k: int = 8) -> dict:
+        """What the memory knows about a subject — sourced facts (the copilot surface)."""
+        return {"ok": True, **self.engine.about(subject, k=k)}
+
+    # memory.how (recall procedures) -------------------------------------
+    def how(self, situation: str, *, scope: str | None = None, k: int = 5) -> dict:
+        """Recall reusable how-to recipes (procedures/skills) matching a situation."""
+        return {
+            "ok": True,
+            "procedures": self.engine.recall_procedures(situation, scope=scope, k=k),
+        }
+
+    # memory.learn (teach a procedure) -----------------------------------
+    def learn(
+        self,
+        trigger: str,
+        steps: Any,
+        *,
+        scope: str = "global",
+        success_signal: str | None = None,
+    ) -> dict:
+        """Teach a reusable how-to recipe (a skill) keyed by a trigger condition."""
+        if not steps:
+            return {"ok": False, "error": "a procedure needs at least one step"}
+        pid = self.engine.learn_procedure(
+            trigger, list(steps), scope=scope, success_signal=success_signal
+        )
+        return {"ok": True, "id": pid}
 
 
 def _apply_budget(rows: list[dict], budget_tokens: int | None) -> list[dict]:

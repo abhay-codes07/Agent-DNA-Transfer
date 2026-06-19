@@ -60,6 +60,23 @@ def test_toolset_relate_and_forget(tmp_path):
     assert f["ok"] and a in f["forgot"]
 
 
+def test_toolset_about_returns_sourced_facts(tmp_path):
+    t = _toolset(tmp_path)
+    t.write("We chose Postgres for the billing service.", scope="project:billing")
+    a = t.about("which database for billing")
+    assert a["ok"] and a["count"] >= 1
+    assert "source" in a["facts"][0]
+
+
+def test_toolset_learn_and_how(tmp_path):
+    t = _toolset(tmp_path)
+    assert t.learn("the billing tests flake", [])["ok"] is False  # needs steps
+    learned = t.learn("the billing tests flake", ["pin the clock", "rerun pytest -k billing"])
+    assert learned["ok"] and learned["id"]
+    how = t.how("billing tests are flaky again")
+    assert how["ok"] and how["procedures"] and how["procedures"][0]["steps"]
+
+
 # --- server (real mcp SDK) ---
 
 
