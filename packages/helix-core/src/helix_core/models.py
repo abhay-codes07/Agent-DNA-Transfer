@@ -59,6 +59,7 @@ class Status(str, Enum):
     ARCHIVED = "archived"
     FORGOTTEN = "forgotten"
     SUPERSEDED = "superseded"
+    QUARANTINED = "quarantined"  # imported from an untrusted contributor; staged, not retrievable
 
 
 class Origin(str, Enum):

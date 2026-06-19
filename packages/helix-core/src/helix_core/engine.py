@@ -18,7 +18,7 @@ from .consolidate import ConsolidationResult, consolidate
 from .decay import reinforce, salience
 from .embed import get_embedder
 from .extract.deterministic import DeterministicExtractor
-from .ids import edge_id, slug
+from .ids import edge_id, new_id, slug
 from .models import (
     GLOBAL,
     CandidateFact,
@@ -399,6 +399,137 @@ class Engine:
             for m in self.store.all_memories(scope=scope, limit=limit)
             if not m.attributes.get("_hub")
         ]
+
+    # --- scoped sharing + quarantine (v2 plan §3.1 / §3.2) -------------------
+    def _trusted_contributors(self) -> set[str]:
+        raw = self.store.get_meta("trusted_contributors")
+        return set(json.loads(raw)) if raw else set()
+
+    def trust_contributor(self, name: str) -> None:
+        """Pin a contributor as trusted (TOFU): their future shared facts import directly."""
+        names = self._trusted_contributors()
+        names.add(name)
+        self.store.set_meta("trusted_contributors", json.dumps(sorted(names)))
+
+    def export_share(
+        self,
+        out_path,
+        *,
+        scope: Scope | None = None,
+        contributor: str | None = None,
+        pii: bool = True,
+    ) -> dict:
+        """Write a scoped, redacted, attributable share bundle (JSON) for a teammate/agent."""
+        from .sharing import build_bundle
+
+        who = contributor or self.config.strand
+        bundle = build_bundle(
+            self.list_memories(limit=1_000_000), contributor=who, scope=scope, pii=pii
+        )
+        Path(out_path).write_text(json.dumps(bundle, indent=2), encoding="utf-8")
+        return {"facts": len(bundle["facts"]), "scope": scope, "path": str(out_path)}
+
+    def import_share(self, path_or_bundle, *, trust: bool = False) -> dict:
+        """Import a share bundle. Untrusted contributors are quarantined until reviewed.
+
+        Tampered facts (failed fingerprint) and tombstoned (previously erased) facts are dropped.
+        """
+        from .sharing import verify_bundle
+
+        if isinstance(path_or_bundle, dict):
+            bundle = path_or_bundle
+        else:
+            bundle = json.loads(Path(path_or_bundle).read_text(encoding="utf-8"))
+        valid, tampered = verify_bundle(bundle)
+        contributor = bundle.get("contributor", "unknown")
+        trusted = trust or contributor in self._trusted_contributors()
+        added = quarantined = skipped = 0
+        with self.store.tx():
+            for f in valid:
+                if self.store.is_tombstoned(f.get("fingerprint", "")):
+                    skipped += 1
+                    continue
+                mtype = MemoryType(f["type"])
+                content = f["content"]
+                if trusted:
+                    cand = CandidateFact(
+                        type=mtype,
+                        content=content,
+                        scope=f.get("scope", GLOBAL),
+                        importance=f.get("importance", 0.5),
+                        confidence=f.get("confidence", 0.5),
+                    )
+                    emb = self.embedder.embed([content])[0]
+                    prov = Provenance(
+                        agent=contributor, extractor="share", origin=Origin.AGENT_INGESTED
+                    )
+                    consolidate(self.store, cand, emb, prov, router=self.router)
+                    added += 1
+                else:
+                    now = utcnow()
+                    mem = Memory(
+                        id=new_id(mtype.value, content),
+                        type=mtype,
+                        content=content,
+                        scope=f.get("scope", GLOBAL),
+                        importance=f.get("importance", 0.5),
+                        confidence=f.get("confidence", 0.5),
+                        status=Status.QUARANTINED,
+                        attributes={"_contributor": contributor},
+                        provenance=[
+                            Provenance(
+                                agent=contributor,
+                                extractor="share",
+                                origin=Origin.AGENT_INGESTED,
+                            )
+                        ],
+                        valid_from=now,
+                        recorded_at=now,
+                        created_at=now,
+                        updated_at=now,
+                        last_seen_at=now,
+                    )
+                    self.store.upsert_memory(mem, self.embedder.embed([content])[0])
+                    self.store.add_history("quarantine", mem.id, {"from": contributor})
+                    quarantined += 1
+            if trust and contributor != "unknown":
+                self.trust_contributor(contributor)
+        return {
+            "added": added,
+            "quarantined": quarantined,
+            "tampered": len(tampered),
+            "skipped_tombstoned": skipped,
+            "contributor": contributor,
+        }
+
+    def review_incoming(self, *, limit: int = 100) -> list[dict]:
+        """List quarantined (untrusted) facts awaiting approval."""
+        rows = self.store.all_memories(statuses=(Status.QUARANTINED.value,), limit=limit)
+        return [
+            {"id": m.id, "content": m.content, "from": m.attributes.get("_contributor", "?")}
+            for m in rows
+        ]
+
+    def approve_incoming(self, memory_id: str) -> Memory | None:
+        """Accept a quarantined fact into active memory."""
+        mem = self.store.get_memory(memory_id)
+        if mem is None or mem.status != Status.QUARANTINED:
+            return None
+        with self.store.tx():
+            mem.status = Status.ACTIVE
+            mem.attributes.pop("_contributor", None)
+            mem.updated_at = utcnow()
+            self.store.upsert_memory(mem)
+            self.store.add_history("approve-incoming", mem.id, {})
+        return mem
+
+    def reject_incoming(self, memory_id: str) -> bool:
+        """Discard a quarantined fact (tombstoned so a re-share won't re-stage it)."""
+        with self.store.tx():
+            ok = self.store.delete_memory(memory_id, tombstone=True)
+            if ok:
+                self.store.add_history("reject-incoming", memory_id, {})
+        return ok
 
     def edit_memory(
         self,
