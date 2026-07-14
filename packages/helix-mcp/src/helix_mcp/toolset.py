@@ -121,6 +121,22 @@ class HelixToolset:
         )
         return {"ok": True, "id": pid}
 
+    # memory.outcome (credit assignment — the compounding loop) -----------
+    def outcome(self, memory_ids: Any, success: bool) -> dict:
+        """Report whether recalled memories helped a task (success/failure) so memory compounds."""
+        ids = list(memory_ids) if memory_ids else []
+        if not ids:
+            return {"ok": False, "error": "pass the ids of the memories that were recalled"}
+        return {"ok": True, **self.engine.record_outcome(ids, success)}
+
+    # memory.distill (pre-compaction session sink) -----------------------
+    def distill(self, messages: Any, *, scope: str = "global") -> dict:
+        """Distill an agent's about-to-be-compacted working context into durable, sourced facts."""
+        msgs = list(messages) if messages else []
+        if not msgs:
+            return {"ok": False, "error": "pass the messages to distill"}
+        return {"ok": True, **self.engine.distill_session([str(m) for m in msgs], scope=scope)}
+
 
 def _apply_budget(rows: list[dict], budget_tokens: int | None) -> list[dict]:
     if not budget_tokens:

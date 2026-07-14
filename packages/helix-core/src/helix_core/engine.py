@@ -363,6 +363,7 @@ class Engine:
             scope=scope,
             k=fetch_k,
             expand_depth=2 if use_deep else 1,
+            experience=self.config.experience_ranking,
             now=now,
         )
         if use_rerank and hits:
@@ -1341,6 +1342,140 @@ class Engine:
             "reliability": round(float(p.attributes["reliability"]), 2),
             "success_count": int(p.attributes.get("success_count", 0)),
         }
+
+    # --- experience / credit assignment (v3 plan §1.1) -----------------------
+    def record_outcome(self, memory_ids: list[str], success: bool, *, weight: float = 1.0) -> dict:
+        """Credit (or debit) recalled facts for a task outcome — the compounding loop.
+
+        The generalization of `record_procedure_outcome` to *every* fact (v3 plan §1.1): when
+        the memories an agent recalled contribute to a task that passed (tests green, task done)
+        or failed, each earns a Laplace-smoothed reliability that gently biases future ranking.
+        Offline arithmetic (Memory-R2-lite), never RL; nothing is deleted — a persistently
+        unhelpful fact is flagged for review, not removed. Success also reinforces (SM-2).
+        """
+        from .experience import record_use, reliability
+
+        updated: list[dict] = []
+        now = utcnow()
+        with self.store.tx():
+            for mid in memory_ids:
+                mem = self.store.get_memory(mid)
+                if mem is None or mem.attributes.get("_hub"):
+                    continue
+                record_use(mem, success, weight=weight)
+                if success:
+                    reinforce(mem, now)
+                elif reliability(mem) < 0.34 and float(mem.attributes.get("_uses", 0)) >= 3:
+                    # Repeatedly present at failures — surface for human review, never auto-delete.
+                    mem.attributes["_stale_suspected"] = True
+                    mem.attributes.setdefault("_stale_reason", "often unhelpful at task time")
+                mem.updated_at = now
+                self.store.upsert_memory(mem)
+                self.store.add_history("outcome", mem.id, {"success": success})
+                updated.append({"id": mem.id, "reliability": round(reliability(mem), 3)})
+        return {"updated": len(updated), "success": success, "facts": updated}
+
+    def compounding(self) -> dict:
+        """The 'compounding meter' (v3 plan §1.3): is this memory getting measurably better?
+
+        The v3 analogue of the $0 meter — reuse rate, recorded outcomes, win rate, and average
+        reliability, all computed locally. Turns "your memory compounds" into a number.
+        """
+        from .experience import reliability
+
+        mems = self.list_memories(limit=1_000_000)
+        if not mems:
+            return {
+                "facts": 0,
+                "reuse_rate": 0.0,
+                "outcomes": 0,
+                "win_rate": 0.0,
+                "avg_reliability": 0.5,
+                "proven": 0,
+            }
+        reused = sum(1 for m in mems if float(m.attributes.get("_reinforced", 0)) > 0)
+        uses = sum(float(m.attributes.get("_uses", 0)) for m in mems)
+        wins = sum(float(m.attributes.get("_wins", 0)) for m in mems)
+        proven = sum(
+            1 for m in mems if reliability(m) > 0.6 and float(m.attributes.get("_uses", 0))
+        )
+        avg_rel = sum(reliability(m) for m in mems) / len(mems)
+        return {
+            "facts": len(mems),
+            "reuse_rate": round(reused / len(mems), 3),
+            "outcomes": int(uses),
+            "win_rate": round(wins / uses, 3) if uses else 0.0,
+            "avg_reliability": round(avg_rel, 3),
+            "proven": proven,
+            "note": "facts that earned reliability from real task outcomes — computed locally at $0",
+        }
+
+    # --- temporal reasoning (v3 plan §2.1) -----------------------------------
+    def history_of(self, subject: str, *, k: int = 12) -> dict:
+        """The belief timeline for a subject: what Helix believed, and how it changed over time.
+
+        Closes the temporal-reasoning gap (v3 plan §2.1) that pure semantic recall misses: it
+        walks the supersession chain of the facts matching `subject` and returns the ordered
+        transitions (from → to → when), plus the currently-true facts. Deterministic, over the
+        existing bi-temporal columns.
+        """
+        hits = self.recall(subject, k=k)
+        seen = {h.memory.id for h in hits}
+        # Follow supersedes edges from the matched facts to recover prior beliefs (now superseded).
+        transitions: list[dict] = []
+        for h in hits:
+            for e in self.store.edges_by_relation("supersedes"):
+                if e.from_id != h.memory.id:
+                    continue
+                old = self.store.get_memory(e.to_id)
+                if old is None:
+                    continue
+                seen.add(old.id)
+                when = old.valid_to or h.memory.valid_from
+                transitions.append(
+                    {"from": old.content, "to": h.memory.content, "changed_at": when.isoformat()}
+                )
+        transitions.sort(key=lambda d: d["changed_at"])
+        current = [
+            {
+                "id": h.memory.id,
+                "content": h.memory.content,
+                "type": h.memory.type.value,
+                "since": h.memory.valid_from.isoformat(),
+            }
+            for h in hits
+            if h.memory.status == Status.ACTIVE and not h.memory.attributes.get("_hub")
+        ]
+        return {
+            "subject": subject,
+            "current": current,
+            "transitions": transitions,
+            "changes": len(transitions),
+        }
+
+    # --- compaction bridge (v3 plan §3.1) ------------------------------------
+    def distill_session(
+        self, messages: list[str], *, scope: Scope = GLOBAL, source: str = "session"
+    ) -> dict:
+        """Distill an agent's about-to-be-dropped working context into durable facts.
+
+        The compaction sink (v3 plan §3.1): when a long-horizon agent compacts, the pruned
+        context is exactly the material Helix keeps. This distills — it does **not** log — so
+        only durable facts survive, redacted and gated like any other write. Marked with a
+        `compaction` origin so the user can audit the automatic sink.
+        """
+        text = "\n".join(m for m in messages if m and m.strip())
+        slices = _slice_notes(text) if text else []
+        # The slicer already drops chatter (headers, fences, <3-word lines); the agent chose to
+        # hand these off, so we capture the survivors like `ingest` (force=True) rather than
+        # gating them away — extraction + redaction still distill, and nothing is logged verbatim.
+        results = self.remember_batch(
+            slices, scope=scope, source=source, origin=Origin.AGENT_INGESTED, force=True
+        )
+        ops: dict[str, int] = {"ADD": 0, "UPDATE": 0, "NOOP": 0, "SUPERSEDE": 0}
+        for r in results:
+            ops[r.op] = ops.get(r.op, 0) + 1
+        return {"messages": len(messages), "candidates": len(slices), "stored": ops}
 
     # --- diagnostics ----------------------------------------------------------
     def stats(self) -> dict:

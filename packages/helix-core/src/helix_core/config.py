@@ -83,6 +83,12 @@ class Config:
     auto_link: bool = field(
         default_factory=lambda: os.environ.get("HELIX_AUTO_LINK", "0") in ("1", "true", "yes")
     )
+    # Experience-weighted ranking (v3 plan §1.2): proven facts (via record_outcome) rank higher.
+    # On by default and neutral at baseline — a strand with no recorded outcomes ranks unchanged.
+    experience_ranking: bool = field(
+        default_factory=lambda: os.environ.get("HELIX_EXPERIENCE_RANKING", "1")
+        not in ("0", "false", "no")
+    )
 
     # --- llm router (optional; used only for extraction/consolidation) ---
     llm_provider: str = field(default_factory=_env("HELIX_LLM_PROVIDER", "none"))

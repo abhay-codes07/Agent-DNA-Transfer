@@ -52,6 +52,23 @@ def test_sdk_v2_surface(tmp_path):
         assert mem.conform(str(out))["valid"] is True
 
 
+def test_sdk_v3_compounding_surface(tmp_path):
+    with _helix(tmp_path) as mem:
+        mid = mem.remember("Deploys use blue-green.", scope="project:ops")[0].memory_id
+        # credit assignment + the compounding meter
+        assert mem.record_outcome([mid], True)["updated"] == 1
+        c = mem.compounding()
+        assert c["outcomes"] == 1 and c["win_rate"] == 1.0
+        # temporal reasoning
+        h = mem.history_of("deploy strategy")
+        assert "current" in h and "transitions" in h
+        # compaction bridge
+        d = mem.distill_session(
+            ["remember the ops team owns the deploy pipeline"], scope="project:ops"
+        )
+        assert d["candidates"] >= 1
+
+
 def test_sdk_transfer_roundtrip(tmp_path):
     pytest.importorskip("nacl")
     a = _helix(tmp_path / "a")

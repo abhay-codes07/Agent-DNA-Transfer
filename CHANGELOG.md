@@ -3,6 +3,29 @@
 All notable changes to Helix are documented here. Format: [Keep a Changelog](https://keepachangelog.com);
 this project aims for [Semantic Versioning](https://semver.org).
 
+## [Unreleased] — v3 Wave A: "Memory that compounds"
+
+From a July-2026 frontier sweep (agent-memory survey + preprints, long-horizon coding benchmarks,
+context-engineering/compaction, on-device embeddings) → [`docs/V3_PLAN.md`](docs/V3_PLAN.md),
+ADR-038. Additive, $0/offline, 175 tests; ruff + black + mypy clean.
+
+### Added — compounding memory
+- **Outcome-driven credit assignment for every fact** (`Engine.record_outcome` / SDK
+  `record_outcome` / MCP `memory_outcome`): recalled facts earn a Laplace-smoothed reliability
+  from real task outcomes (Memory-R2-lite, deterministic — not RL). Never auto-deletes; a
+  persistently-unhelpful fact is flagged for review.
+- **Experience-weighted ranking** — a bounded, neutral-at-baseline multiplier so proven facts rank
+  higher; a fresh strand ranks unchanged (`HELIX_EXPERIENCE_RANKING`, default on).
+- **The compounding meter** (`Engine.compounding`) — reuse rate, outcomes, win rate, avg
+  reliability; the v3 analogue of the $0 meter.
+
+### Added — temporal reasoning & the compaction bridge
+- **`history_of(subject)`** — the belief timeline (current + superseded facts, with transitions),
+  closing the temporal-reasoning gap over the existing bi-temporal columns.
+- **`distill_session(messages)`** / MCP **`memory_distill`** — the durable sink for an agent's
+  about-to-be-compacted context: distills facts, never logs the transcript.
+- MCP surface grows **10 → 12** (still small, semver'd).
+
 ## [0.1.1] — 2026-06-20
 
 The v2 wave: **"Git for your AI's memory."** 162 tests; ruff + black + mypy clean; CI green. Still

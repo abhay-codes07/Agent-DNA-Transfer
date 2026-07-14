@@ -5,6 +5,10 @@
 > **v2 / Phase 2 is now scoped in detail** → see [`docs/V2_PLAN.md`](docs/V2_PLAN.md), the
 > research-backed plan that drives the next major version ("Git for your AI's memory" + the
 > portable-memory open standard). This file remains the high-level phase ledger.
+>
+> **v3 / Phase 3 is now scoped** → see [`docs/V3_PLAN.md`](docs/V3_PLAN.md) ("Memory that
+> compounds"): outcome-driven credit assignment, temporal reasoning (`history_of`), and the
+> compaction bridge, from a July-2026 frontier sweep. Wave A is landing (ADR-038).
 
 Phased plan from a working wedge to a platform. Each phase is shippable on its own and
 preserves the invariants: **local-first, user-owns-memory, $0 default, MCP interface.**

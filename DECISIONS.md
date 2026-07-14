@@ -662,6 +662,42 @@ coding-agent capability. Surface is 10 tools + 2 resources; still small and semv
 curation/admin, better on the CLI/dashboard). (b) Leave MCP at v1 — rejected (violates "MCP is the
 interface"; the new intelligence would be unreachable by agents).
 
+## ADR-038 — v3: memory that compounds (credit assignment) + grow MCP to 12
+**Status:** Proposed · **Date:** 2026-07-14
+**Context.** A July-2026 frontier sweep (agent-memory survey + preprints: Memory-R2, Fine-Mem,
+DELTAMEM; context-engineering/compaction incl. Anthropic's `compact-2026-01-12`; LongMemEval-V2/
+SWE-EVO) found the field moved three ways since the v2 plan: memory is becoming **active** (the
+agent writes/edits/compacts as actions), experience must **compound** via fair credit assignment,
+and **temporal reasoning** is the #1 unsolved gap (up to 15-pt benchmark gaps). v2 already had the
+raw assets — bi-temporal columns, procedural reliability — but only procedures learned from
+outcomes, and the dropped context at compaction had nowhere to go. Full plan in
+[`docs/V3_PLAN.md`](docs/V3_PLAN.md).
+**Decision.** v3 is **additive, not a rewrite** (as v2 was). Wave A ships, all $0/offline:
+(1) **Outcome-driven credit assignment for every fact** — `Engine.record_outcome(memory_ids,
+success)` earns each recalled fact a Laplace-smoothed reliability `(wins+1)/(uses+2)`
+(Memory-R2-**lite**: deterministic arithmetic, *not* RL — RL/auto-tuning stays opt-in cloud per
+v2 §1.7), generalizing `record_procedure_outcome`; (2) **experience-weighted ranking** — a
+bounded, **neutral-at-baseline** multiplier (reliability 0.5 → ×1.0, so a strand with no outcomes
+ranks identically), gated by `experience_ranking` (default on); (3) the **compounding meter**
+(`Engine.compounding()`) — the v3 analogue of the $0 meter; (4) **temporal reasoning**
+(`Engine.history_of(subject)`) — the belief timeline from the supersession chain; (5) the
+**compaction bridge** (`Engine.distill_session(messages)`) — distill an agent's about-to-be-dropped
+context into durable, redacted facts (distills, never logs). The **MCP surface grows 10 → 12**:
+**`memory_outcome`** (the credit-assignment loop) and **`memory_distill`** (the compaction sink) —
+the two operations that make memory active from the agent side. Documented in
+[`docs/MCP_INTEGRATION.md`](docs/MCP_INTEGRATION.md); Python SDK gains full parity.
+**Consequences.** Recall stops being static and reflects what actually worked; the strand
+demonstrably improves and we can show the number. Credit assignment **never auto-deletes** — a
+persistently-unhelpful fact is flagged for the review queue (extends v2 §1.5). Surface is 12 tools
++ 2 resources; still small and semver'd. No new dependency; temporal reasoning reuses existing
+bitemporal columns and the BLAKE2b/edge machinery.
+**Alternatives considered.** (a) Full RL write-policy (Memory-R1/R2) as default — rejected (needs
+training/telemetry; violates $0/offline; stays opt-in cloud). (b) Auto-delete low-reliability facts
+— rejected (violates "the user owns the memory"; route to review instead). (c) Leave compaction to
+the agent and don't offer a sink — rejected (the dropped context is exactly the distilled facts
+Helix exists to keep; this is the biggest new integration surface of 2026). (d) Add a large
+temporal query grammar now — deferred to Wave B; Wave A keeps `history_of` deterministic.
+
 ---
 
 ## How to add a decision

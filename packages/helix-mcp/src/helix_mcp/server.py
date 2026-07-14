@@ -28,6 +28,8 @@ TOOLS = [
     "memory_about",
     "memory_how",
     "memory_learn",
+    "memory_outcome",
+    "memory_distill",
 ]
 RESOURCES = ["helix://graph", "helix://strand/manifest"]
 
@@ -101,6 +103,22 @@ def build_server(toolset: HelixToolset | None = None):
     )
     def memory_learn(trigger: str, steps: list, scope: str = "global") -> str:
         return json.dumps(ts.learn(trigger, steps, scope=scope))
+
+    @mcp.tool(
+        description="Report whether recalled memories helped a task succeed or fail, by their "
+        "ids, so proven memory ranks higher over time (the compounding loop). Call after you "
+        "finish a task that used recalled facts."
+    )
+    def memory_outcome(memory_ids: list, success: bool) -> str:
+        return json.dumps(ts.outcome(memory_ids, success))
+
+    @mcp.tool(
+        description="Distill your about-to-be-compacted working context into durable, sourced "
+        "facts before you drop it. Pass the messages; Helix keeps the distilled facts, not the "
+        "transcript. Use right before compaction/summarization."
+    )
+    def memory_distill(messages: list, scope: str = "global") -> str:
+        return json.dumps(ts.distill(messages, scope=scope))
 
     # --- resources (application-controlled context; ADR-023) ---
     @mcp.resource(

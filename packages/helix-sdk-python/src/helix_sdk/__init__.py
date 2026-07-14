@@ -114,6 +114,19 @@ class Helix:
     def record_procedure_outcome(self, proc_id: str, success: bool):
         return self._engine.record_procedure_outcome(proc_id, success)
 
+    # --- v3: compounding memory, temporal reasoning, compaction bridge ---
+    def record_outcome(self, memory_ids: Any, success: bool, *, weight: float = 1.0) -> dict:
+        return self._engine.record_outcome(list(memory_ids), success, weight=weight)
+
+    def compounding(self) -> dict:
+        return self._engine.compounding()
+
+    def history_of(self, subject: str, *, k: int = 12) -> dict:
+        return self._engine.history_of(subject, k=k)
+
+    def distill_session(self, messages: Any, *, scope: str = "global", source: str = "session"):
+        return self._engine.distill_session(list(messages), scope=scope, source=source)
+
     # --- v2: trust, sharing, governance ---
     def sign_facts(self) -> dict:
         return self._engine.sign_facts()

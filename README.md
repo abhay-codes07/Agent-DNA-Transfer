@@ -22,7 +22,7 @@ One memory. Every agent. Owned by you.
 ![license](https://img.shields.io/badge/license-Apache--2.0-blue)
 ![local-first](https://img.shields.io/badge/local--first-yes-brightgreen)
 ![cost](https://img.shields.io/badge/default%20cost-%240%2Fmo-brightgreen)
-![tests](https://img.shields.io/badge/tests-162%20passing-brightgreen)
+![tests](https://img.shields.io/badge/tests-175%20passing-brightgreen)
 ![version](https://img.shields.io/badge/version-0.1.1--alpha-blue)
 
 </div>
@@ -206,6 +206,12 @@ review queue, $0-meter + heatmap, bitemporal time-travel, audit, cmd-K, and a "w
 assemble itself" first-run), per-fact **Ed25519 signing**, procedural/skill memory, a
 **GitHub/repo connector** (`helix repo`), and **VS Code** + **browser** extensions
 (`editors/vscode`, `apps/browser-extension`).
+
+**v3 / Wave A is landing now** ([`docs/V3_PLAN.md`](docs/V3_PLAN.md), "Memory that compounds"):
+**outcome-driven credit assignment** for every fact (`record_outcome` → proven facts rank higher),
+a **compounding meter**, **temporal reasoning** (`history_of` — the belief timeline), and the
+**compaction bridge** (`distill_session` — the durable sink for an agent's dropped context), with
+two new agent-facing MCP tools (`memory_outcome`, `memory_distill`) — all $0/offline (ADR-038).
 
 Still phased (see the [Roadmap](ROADMAP.md)): BLAKE3 + S3 sync backend, PyPI packaging, and the
 portable-memory open standard.

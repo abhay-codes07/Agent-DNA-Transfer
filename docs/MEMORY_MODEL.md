@@ -76,6 +76,9 @@ Types are extensible; new domains register additional types without touching the
   "importance": 0.8,        // [0..1] LLM/heuristic-rated at write time (poignancy)
   "confidence": 0.9,        // [0..1] how sure we are it's true/durable
   "salience": "derived",    // computed at read time: importance·e^(−λ·Δt_last_access) — ADR-014
+  "reliability": "derived", // computed from recorded task outcomes: (wins+1)/(uses+2) — ADR-038
+                            //   neutral 0.5 with no data; gently biases ranking so proven facts
+                            //   float up (experience-weighted recall; the compounding loop)
 
   // --- bi-temporal (ADR-013) ---
   "valid_from": "2026-05-14T00:00:00Z",

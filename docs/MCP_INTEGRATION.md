@@ -31,11 +31,15 @@ validates `Origin` (DNS-rebinding defense); see [Security Model](SECURITY_MODEL.
 | `memory.about` | Copilot: what's known about a subject | `subject`, `k?` | sourced facts + related |
 | `memory.how` | Recall reusable how-to recipes (skills) | `situation`, `scope?`, `k?` | procedures (trigger + steps) |
 | `memory.learn` | Teach a reusable procedure (skill) | `trigger`, `steps[]`, `scope?` | procedure id |
+| `memory.outcome` | Report whether recalled facts helped a task — the compounding loop | `memory_ids[]`, `success` | updated reliabilities |
+| `memory.distill` | Distill about-to-be-compacted context into durable facts (the compaction sink) | `messages[]`, `scope?` | stored counts |
 
 > Server names use `memory_*` (e.g. `memory_about`); the dotted form here is the logical surface.
 > The procedural tools (`memory.how`/`memory.learn`) are what make Helix a *coding-agent* memory:
-> agents recall situation→action knowledge, not just facts. Surface growth is tracked in
-> [`DECISIONS.md`](../DECISIONS.md) (ADR-003 → ADR-037).
+> agents recall situation→action knowledge, not just facts. The v3 tools make memory *active*:
+> `memory.outcome` closes the credit-assignment loop so proven facts rank higher over time, and
+> `memory.distill` makes Helix the durable sink for an agent's context when it compacts. Surface
+> growth is tracked in [`DECISIONS.md`](../DECISIONS.md) (ADR-003 → ADR-038).
 
 Design rules:
 - **Token-budgeted:** recall tools accept `budget_tokens` and pack greedily by rank so an

@@ -45,6 +45,7 @@ def recall(
     candidate_n: int = 50,
     expand: bool = True,
     expand_depth: int = 1,
+    experience: bool = False,
     now: datetime | None = None,
 ) -> list[Hit]:
     now = now or utcnow()
@@ -99,6 +100,11 @@ def recall(
         )
         if mem.attributes.get("_stale_suspected"):
             final *= STALE_PENALTY
+        if experience:
+            # Proven facts float up; a fresh strand (no outcomes) is neutral (v3 plan §1.2).
+            from .experience import experience_factor
+
+            final *= experience_factor(mem)
         scored.append(Hit(memory=mem, score=final, similarity=sim, salience=sal))
 
     scored.sort(key=lambda h: h.score, reverse=True)

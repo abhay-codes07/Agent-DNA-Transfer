@@ -77,6 +77,18 @@ def test_toolset_learn_and_how(tmp_path):
     assert how["ok"] and how["procedures"] and how["procedures"][0]["steps"]
 
 
+def test_toolset_outcome_and_distill(tmp_path):
+    t = _toolset(tmp_path)
+    mid = t.write("The gateway uses mTLS.", scope="project:net")["results"][0]["id"]
+    assert t.outcome([], True)["ok"] is False  # needs ids
+    o = t.outcome([mid], True)
+    assert o["ok"] and o["updated"] == 1 and o["success"] is True
+
+    assert t.distill([], scope="project:net")["ok"] is False  # needs messages
+    d = t.distill(["remember the gateway rate-limits at 1000 rps per tenant"], scope="project:net")
+    assert d["ok"] and d["candidates"] >= 1
+
+
 # --- server (real mcp SDK) ---
 
 
