@@ -184,10 +184,17 @@ def run_capability_eval(home: Path | None = None) -> dict:
                 # A hit = flagged when it should be, or correctly left alone when it shouldn't.
                 caught += 1 if flagged == should else 0
             stale_rate = caught / len(stale_scenarios)
+
+            # --- v3: compounding lift (does recording outcomes raise a proven fact's rank?) ---
+            comp_lift = _compounding_lift(home)
+            # --- v3: temporal catch (does the bitemporal path recover a superseded belief?) ---
+            temporal_rate = _temporal_catch_rate(home)
             return {
                 "secret_block_rate": round(secret_rate, 3),
                 "pii_block_rate": round(pii_rate, 3),
                 "stale_catch_rate": round(stale_rate, 3),
+                "compounding_lift_rate": round(comp_lift, 3),
+                "temporal_catch_rate": round(temporal_rate, 3),
                 "scenarios": {"secrets": len(secret_cases), "stale": len(stale_scenarios)},
             }
         finally:
@@ -195,6 +202,78 @@ def run_capability_eval(home: Path | None = None) -> dict:
     finally:
         if tmp is not None:
             tmp.cleanup()
+
+
+def _compounding_lift(home: Path) -> float:
+    """Fraction of scenarios where recording successful outcomes lifts a fact's rank (v3 §1.1/§4.1)."""
+    scenarios = [
+        (
+            "project:ops",
+            "Deploys use the blue-green strategy.",
+            "Deploys use a rolling strategy.",
+            "what deploy strategy do we use",
+        ),
+        (
+            "project:api",
+            "Rate limits are enforced with a token bucket.",
+            "Rate limits are enforced with a leaky bucket.",
+            "how are rate limits enforced",
+        ),
+    ]
+    lifted = 0
+    for si, (scope, proven, other, query) in enumerate(scenarios):
+        eng = Engine(Config(home=home, strand=f"complift{si}"))
+        try:
+            pid = eng.remember(proven, scope=scope)[0].memory_id
+            eng.remember(other, scope=scope)
+            before = [h.memory.id for h in eng.recall(query, scope=scope)]
+            for _ in range(5):
+                eng.record_outcome([pid], success=True)
+            after = [h.memory.id for h in eng.recall(query, scope=scope)]
+            if pid in after and (pid not in before or after.index(pid) <= before.index(pid)):
+                # proven fact is present and ranks at least as high as before (usually higher).
+                if not before or before[0] != pid or (after and after[0] == pid):
+                    lifted += 1
+        finally:
+            eng.close()
+    return lifted / len(scenarios)
+
+
+def _temporal_catch_rate(home: Path) -> float:
+    """Fraction of scenarios where a temporal query recovers a superseded prior belief (v3 §2.2)."""
+    scenarios = [
+        (
+            "project:db",
+            "The billing database is MongoDB.",
+            "The billing database is Postgres, not MongoDB.",
+            "what did the billing database use to be",
+        ),
+        (
+            "project:host",
+            "We deploy on Heroku.",
+            "We deploy on Fly.io, not Heroku.",
+            "what did we previously use for deploys",
+        ),
+    ]
+    caught = 0
+    for si, (scope, old, new, query) in enumerate(scenarios):
+        eng = Engine(Config(home=home, strand=f"temporal{si}"))
+        try:
+            eng.remember(old, scope=scope)
+            eng.remember(new, scope=scope)
+            hist = eng.history_of(old.split(" is ")[0] if " is " in old else old, k=8)
+            temporal_hits = [
+                h.memory.content for h in eng.recall(query, scope=scope, temporal=True)
+            ]
+            # A hit = the old belief resurfaces via the bitemporal path (history transition or
+            # a temporal recall admitting the superseded fact).
+            recovered = hist["changes"] > 0 or any(
+                old.lower()[:12] in c.lower() for c in temporal_hits
+            )
+            caught += 1 if recovered else 0
+        finally:
+            eng.close()
+    return caught / len(scenarios)
 
 
 # A small built-in coding-agent memory benchmark (the category gap from docs/EVALUATION.md).

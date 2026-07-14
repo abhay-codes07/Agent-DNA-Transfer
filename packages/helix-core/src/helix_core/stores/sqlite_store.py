@@ -304,13 +304,17 @@ class SqliteStore:
         return int(row["c"])
 
     def vector_search(
-        self, query_vec: list[float], k: int, scope: str | None = None
+        self,
+        query_vec: list[float],
+        k: int,
+        scope: str | None = None,
+        statuses: tuple[str, ...] = ("active",),
     ) -> list[tuple[str, float]]:
         q = (
             "SELECT v.id AS id, v.data AS data FROM vectors v "
-            "JOIN memories m ON m.id=v.id WHERE m.status='active'"
+            f"JOIN memories m ON m.id=v.id WHERE m.status IN ({_ph(statuses)})"
         )
-        args: list = []
+        args: list = list(statuses)
         if scope:
             q += " AND (m.scope=? OR m.scope='global')"
             args.append(scope)
@@ -322,35 +326,46 @@ class SqliteStore:
         return scored[:k]
 
     def keyword_search(
-        self, query: str, k: int, scope: str | None = None
+        self,
+        query: str,
+        k: int,
+        scope: str | None = None,
+        statuses: tuple[str, ...] = ("active",),
     ) -> list[tuple[str, float]]:
         if self.fts:
             match = _fts_query(query)
             if not match:
                 return []
-            q = "SELECT id, rank FROM memories_fts WHERE memories_fts MATCH ?"
-            args: list = [match]
+            # memories_fts has no status column; join memories to filter (temporal recall needs
+            # superseded rows, which the FTS index still carries).
+            q = (
+                "SELECT f.id AS id FROM memories_fts f JOIN memories m ON m.id=f.id "
+                f"WHERE f MATCH ? AND m.status IN ({_ph(statuses)})"
+            )
+            args: list = [match, *statuses]
             if scope:
-                q += " AND (scope=? OR scope='global')"
+                q += " AND (m.scope=? OR m.scope='global')"
                 args.append(scope)
-            q += " ORDER BY rank LIMIT ?"
+            q += " ORDER BY f.rank LIMIT ?"
             args.append(k)
             try:
                 rows = self.conn.execute(q, args).fetchall()
             except sqlite3.OperationalError:
-                return self._like_search(query, k, scope)
+                return self._like_search(query, k, scope, statuses)
             return [(r["id"], 1.0 / (i + 1)) for i, r in enumerate(rows)]
-        return self._like_search(query, k, scope)
+        return self._like_search(query, k, scope, statuses)
 
-    def _like_search(self, query: str, k: int, scope: str | None) -> list[tuple[str, float]]:
+    def _like_search(
+        self, query: str, k: int, scope: str | None, statuses: tuple[str, ...] = ("active",)
+    ) -> list[tuple[str, float]]:
         import re
 
         terms = re.findall(r"[A-Za-z0-9]+", query.lower())[:8]
         if not terms:
             return []
         clause = " OR ".join("lower(content) LIKE ?" for _ in terms)
-        q = f"SELECT id, content FROM memories WHERE status='active' AND ({clause})"
-        args: list = [f"%{t}%" for t in terms]
+        q = f"SELECT id, content FROM memories WHERE status IN ({_ph(statuses)}) AND ({clause})"
+        args: list = [*statuses, *[f"%{t}%" for t in terms]]
         if scope:
             q += " AND (scope=? OR scope='global')"
             args.append(scope)

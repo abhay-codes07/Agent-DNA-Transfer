@@ -899,6 +899,92 @@ def how(
 
 
 @app.command()
+def outcome(
+    ids: list[str] = typer.Argument(..., help="ids of the memories that were recalled"),
+    fail: bool = typer.Option(False, "--fail", help="the task failed (default: succeeded)"),
+    as_json: bool = typer.Option(False, "--json"),
+) -> None:
+    """Report whether recalled facts helped a task — the compounding loop (proven facts rank up)."""
+    eng = _engine()
+    res = eng.record_outcome(list(ids), success=not fail)
+    if as_json:
+        print(json.dumps(res, indent=2))
+    else:
+        verb = "credited" if not fail else "debited"
+        console.print(
+            f"[green]{verb}[/] {res['updated']} fact(s) from a {'win' if not fail else 'loss'}"
+        )
+        for f in res["facts"]:
+            console.print(f"  [cyan]{f['id']}[/] reliability -> {f['reliability']}")
+    eng.close()
+
+
+@app.command()
+def compounding(as_json: bool = typer.Option(False, "--json")) -> None:
+    """The compounding meter: is your memory measurably getting better from real outcomes?"""
+    eng = _engine()
+    c = eng.compounding()
+    if as_json:
+        print(json.dumps(c, indent=2))
+    else:
+        console.print(
+            f"[bold]{c['facts']}[/] facts  ·  reuse rate [green]{c['reuse_rate']}[/]  ·  "
+            f"{c['outcomes']} outcomes recorded (win rate [green]{c['win_rate']}[/])"
+        )
+        console.print(
+            f"avg reliability [cyan]{c['avg_reliability']}[/]  ·  "
+            f"[bold]{c['proven']}[/] proven facts (earned reliability from real tasks)"
+        )
+    eng.close()
+
+
+@app.command()
+def timeline(
+    subject: str,
+    as_json: bool = typer.Option(False, "--json"),
+) -> None:
+    """The belief timeline for a subject: what changed, when (temporal reasoning)."""
+    eng = _engine()
+    summ = eng.change_summary(subject)
+    hist = eng.history_of(subject)
+    if as_json:
+        print(json.dumps({"summary": summ, "history": hist}, indent=2))
+        eng.close()
+        return
+    if summ["summary"]:
+        console.print(f"[bold]{subject}[/]: {summ['summary']}")
+    if hist["transitions"]:
+        for t in hist["transitions"]:
+            console.print(
+                f"  [dim]{t['changed_at'][:10]}[/]  [red]{t['from']}[/] -> [green]{t['to']}[/]"
+            )
+    elif not summ["summary"]:
+        console.print(f"[dim]no timeline for '{subject}' yet[/]")
+    eng.close()
+
+
+@app.command()
+def distill(
+    file: str = typer.Argument(
+        None, help="a file of context (one message per line); '-' for stdin"
+    ),
+    scope: str = typer.Option(GLOBAL, help="global or project:<id>"),
+) -> None:
+    """Distill an agent's about-to-be-compacted context into durable facts (the compaction sink)."""
+    if file in (None, "-"):
+        messages = [ln for ln in sys.stdin.read().splitlines()]
+    else:
+        messages = Path(file).read_text(encoding="utf-8-sig").splitlines()
+    eng = _engine()
+    res = eng.distill_session(messages, scope=scope)
+    console.print(
+        f"[green]distilled[/] {res['candidates']} candidate(s) from {res['messages']} message(s) "
+        f"-> {res['stored']}"
+    )
+    eng.close()
+
+
+@app.command()
 def log(limit: int = typer.Option(20)) -> None:
     """Show how your memory evolved (git-style history)."""
     eng = _engine()

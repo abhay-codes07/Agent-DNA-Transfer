@@ -67,6 +67,10 @@ def test_sdk_v3_compounding_surface(tmp_path):
             ["remember the ops team owns the deploy pipeline"], scope="project:ops"
         )
         assert d["candidates"] >= 1
+        # Wave B: change summary + skill distillation
+        assert "summary" in mem.change_summary("deploy strategy")
+        pid = mem.distill_skill("the ops pager fires", ["ack it", "check the runbook"])
+        assert pid and any(p["id"] == pid for p in mem.recall_procedures("pager is firing"))
 
 
 def test_sdk_transfer_roundtrip(tmp_path):

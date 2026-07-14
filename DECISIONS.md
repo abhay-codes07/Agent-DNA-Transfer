@@ -698,6 +698,31 @@ the agent and don't offer a sink — rejected (the dropped context is exactly th
 Helix exists to keep; this is the biggest new integration surface of 2026). (d) Add a large
 temporal query grammar now — deferred to Wave B; Wave A keeps `history_of` deterministic.
 
+## ADR-039 — v3 Wave B: temporal-query recall, change summaries, skill distillation, and the proof
+**Status:** Proposed · **Date:** 2026-07-14
+**Context.** ADR-038 landed the v3 compounding core (credit assignment, `history_of`, the
+compaction sink). The V3 plan's temporal (§2.2/§2.3) and skill (§1.4) pillars, and the "prove it"
+eval (§4.1), were still docs-only, and the Wave-A engine methods had no `helix` commands.
+**Decision.** Implement Wave B, all $0/offline, **without growing the MCP surface** (stays at 12 —
+these are user/CLI + internal-session capabilities, not agent hot-path tools):
+(1) **Temporal-query recall** — `Engine.recall` auto-detects "what did we use before / when did X
+change" phrasing and admits **superseded** facts via a status-aware store search
+(`vector_search`/`keyword_search`/`_like_search` gained a `statuses` param, default active-only, so
+normal recall is byte-for-byte unchanged). (2) **`change_summary(subject)`** — a deterministic arc
+from the supersession chain, LLM-optional. (3) **`distill_skill(...)`** — auto-distill a *successful*
+trajectory into a pre-credited procedure (the automatic counterpart to `learn_procedure`).
+(4) **The proof** — `run_capability_eval` (`helix capeval`) now reports `compounding_lift_rate` and
+`temporal_catch_rate` (both 1.0 on the labeled scenarios). (5) **CLI**: `helix outcome / compounding
+/ timeline / distill`; SDK gains `change_summary` + `distill_skill` for parity.
+**Consequences.** The temporal-reasoning gap now has a working retrieval path, not just an API;
+successful sessions can grow the skill library automatically; and the compounding/temporal claims
+are measured, not asserted. The status-aware search is a pure widening (default unchanged); the FTS
+path joins `memories` to filter status since the FTS index carries superseded rows.
+**Alternatives considered.** (a) Add temporal/skill tools to MCP — deferred (keep the surface small;
+these fit the CLI + the existing `memory_distill`/`memory_how` tools). (b) A full NL temporal grammar
+(v3 §2.2 stretch) — deferred; the regex router covers the common phrasings deterministically. (c)
+Auto-distill *every* trajectory — rejected (only observed-success trajectories become skills).
+
 ---
 
 ## How to add a decision

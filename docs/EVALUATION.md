@@ -105,6 +105,11 @@ Retrieval metrics are necessary but not sufficient — the only thing that ultim
 
 We seed timelines where a fact **changes** over time (e.g., "the project switched from REST to gRPC", "the lint rule was relaxed"). Scoring checks two things: (a) does retrieval return the **current** value, not a stale one, and (b) does the system **detect and surface the contradiction** rather than silently serving both. This is the LongMemEval "knowledge updates" capability, run on Helix's own store.
 
+The built-in **capability scorecard** (`helix capeval`, `helix_core.eval.run_capability_eval`) makes two of these measurable at $0, added in v3 (ADR-038/039) alongside the secret/PII/stale rates:
+
+- **`compounding_lift_rate`** — after recording successful outcomes on a fact (`record_outcome`), does it rank at least as high as before? Proves experience-weighted ranking actually compounds (v3 §1.1/§4.1).
+- **`temporal_catch_rate`** — for a "what did we use *before*?" query, does the bitemporal path (`history_of` / temporal recall admitting superseded facts) recover the prior belief that plain active-only recall omits? Proves the temporal-reasoning surface closes the documented gap (v3 §2.1/§2.2).
+
 ### 3.4 Edit/forget cascade correctness (incl. derived embeddings)
 
 A delete is only real if everything *derived* from the record also disappears. The forget suite issues an erase and then verifies, via the **provenance cascade** (see [Consolidation](CONSOLIDATION.md)), that the source record **and** its derived embeddings, summaries, and consolidated abstractions are gone. We measure:

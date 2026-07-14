@@ -343,6 +343,7 @@ class Engine:
         touch: bool = False,
         rerank: bool | None = None,
         deep: bool | None = None,
+        temporal: bool | None = None,
         now: datetime | None = None,
     ) -> list[Hit]:
         """Hybrid retrieval + ranking. With touch=True, reinforce the surfaced memories.
@@ -352,9 +353,13 @@ class Engine:
 
         If `deep` (or auto-detected for a multi-hop query) is set, graph expansion goes two hops
         instead of one (v2 plan §2.5) — bridging facts that a single hop wouldn't reach.
+
+        If `temporal` (or auto-detected for a "what did we use before?"-style query) is set,
+        superseded facts are admitted too (v3 plan §2.2) so a prior belief can resurface.
         """
         use_rerank = self.config.rerank if rerank is None else rerank
         use_deep = _is_multi_hop(query) if deep is None else deep
+        use_temporal = _is_temporal(query) if temporal is None else temporal
         fetch_k = max(k, 30) if use_rerank else k
         hits = recall(
             self.store,
@@ -364,6 +369,7 @@ class Engine:
             k=fetch_k,
             expand_depth=2 if use_deep else 1,
             experience=self.config.experience_ranking,
+            include_superseded=use_temporal,
             now=now,
         )
         if use_rerank and hits:
@@ -1343,6 +1349,36 @@ class Engine:
             "success_count": int(p.attributes.get("success_count", 0)),
         }
 
+    def distill_skill(
+        self,
+        trigger: str,
+        steps: list[str],
+        *,
+        scope: Scope = GLOBAL,
+        succeeded: bool = True,
+        source: str = "trajectory",
+    ) -> str | None:
+        """Auto-distill a successful trajectory into a reusable procedure (v3 plan §1.4).
+
+        The automatic counterpart to `learn_procedure`: when a session/episode ends in an observed
+        success signal (tests pass/build green), the trajectory that got there becomes a `skill`.
+        Only successful trajectories are distilled; the new procedure starts pre-credited with one
+        confirmed outcome so a proven recipe outranks an untried one immediately. Returns the
+        procedure id, or None if the trajectory failed (nothing worth reusing).
+        """
+        if not succeeded or not steps:
+            return None
+        pid = self.learn_procedure(
+            trigger, steps, scope=scope, success_signal="observed success", source=source
+        )
+        p = self.store.get_memory(pid)
+        if p is not None:
+            p.attributes["_distilled"] = True
+            with self.store.tx():
+                self.store.upsert_memory(p)
+        self.record_procedure_outcome(pid, success=True)  # pre-credit the confirmed trajectory
+        return pid
+
     # --- experience / credit assignment (v3 plan §1.1) -----------------------
     def record_outcome(self, memory_ids: list[str], success: bool, *, weight: float = 1.0) -> dict:
         """Credit (or debit) recalled facts for a task outcome — the compounding loop.
@@ -1452,6 +1488,41 @@ class Engine:
             "transitions": transitions,
             "changes": len(transitions),
         }
+
+    def change_summary(self, subject: str, *, k: int = 12) -> dict:
+        """Summarize how a subject's facts evolved (v3 plan §2.3).
+
+        Deterministic by default — a one-line arc from the supersession chain (A → B → C). If an
+        LLM is configured it writes a fuller natural-language summary; either way the underlying
+        transitions are returned so the answer is inspectable.
+        """
+        hist = self.history_of(subject, k=k)
+        transitions = hist["transitions"]
+        if not transitions:
+            arc = hist["current"][0]["content"] if hist["current"] else ""
+            return {"subject": subject, "summary": arc, "transitions": [], "llm": False}
+        chain = [transitions[0]["from"]] + [t["to"] for t in transitions]
+        arc = " → ".join(chain)
+        summary, used_llm = arc, False
+        if self.router and self.router.available():
+            lines = "\n".join(
+                f"- on {t['changed_at'][:10]}: {t['from']} → {t['to']}" for t in transitions
+            )
+            prompt = (
+                f"Summarize, in 1-2 sentences, how '{subject}' changed over time, given these "
+                f'transitions. Return JSON {{"summary": "..."}}.\n{lines}'
+            )
+            try:
+                data = json.loads(
+                    self.router.complete(
+                        prompt, system="You summarize how a fact evolved.", json_mode=True
+                    ).text
+                )
+                if isinstance(data, dict) and data.get("summary"):
+                    summary, used_llm = str(data["summary"]).strip(), True
+            except Exception:
+                pass
+        return {"subject": subject, "summary": summary, "transitions": transitions, "llm": used_llm}
 
     # --- compaction bridge (v3 plan §3.1) ------------------------------------
     def distill_session(
@@ -1715,6 +1786,18 @@ def _is_multi_hop(query: str) -> bool:
     from .staleness import key_entities
 
     return bool(_MULTIHOP.search(query)) or len(key_entities(query)) >= 2
+
+
+_TEMPORAL = re.compile(
+    r"\b(when did|used to|previously|originally|before we|history of|over time|"
+    r"as of|back then|what did .* use|no longer|changed? (from|to)|migrat)\b",
+    re.I,
+)
+
+
+def _is_temporal(query: str) -> bool:
+    """Heuristic: a 'what did we use before / when did X change' query wants the bitemporal path."""
+    return bool(_TEMPORAL.search(query))
 
 
 _BULLET = re.compile(r"^([-*+]|\d+[.)])\s+")

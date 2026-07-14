@@ -124,8 +124,16 @@ class Helix:
     def history_of(self, subject: str, *, k: int = 12) -> dict:
         return self._engine.history_of(subject, k=k)
 
+    def change_summary(self, subject: str, *, k: int = 12) -> dict:
+        return self._engine.change_summary(subject, k=k)
+
     def distill_session(self, messages: Any, *, scope: str = "global", source: str = "session"):
         return self._engine.distill_session(list(messages), scope=scope, source=source)
+
+    def distill_skill(
+        self, trigger: str, steps: Any, *, scope: str = "global", succeeded: bool = True
+    ) -> str | None:
+        return self._engine.distill_skill(trigger, list(steps), scope=scope, succeeded=succeeded)
 
     # --- v2: trust, sharing, governance ---
     def sign_facts(self) -> dict:

@@ -46,12 +46,14 @@ def recall(
     expand: bool = True,
     expand_depth: int = 1,
     experience: bool = False,
+    include_superseded: bool = False,
     now: datetime | None = None,
 ) -> list[Hit]:
     now = now or utcnow()
+    statuses = ("active", "superseded") if include_superseded else ("active",)
     qvec = embedder.embed([query])[0]
-    dense = store.vector_search(qvec, candidate_n, scope=scope)  # [(id, sim)]
-    sparse = store.keyword_search(query, candidate_n, scope=scope)  # [(id, score)]
+    dense = store.vector_search(qvec, candidate_n, scope=scope, statuses=statuses)  # [(id, sim)]
+    sparse = store.keyword_search(query, candidate_n, scope=scope, statuses=statuses)  # [(id, sc)]
 
     rrf: dict[str, float] = {}
     for rank, (mid, _) in enumerate(dense):
@@ -65,10 +67,13 @@ def recall(
     max_rrf = max(rrf.values())
 
     # base candidates: id -> (memory, sim, rrf_norm)
+    # Normally only ACTIVE facts surface; a temporal query (v3 plan §2.2) also admits SUPERSEDED
+    # facts so "what did we use before?" can recover a prior belief.
+    ok_status = {Status.ACTIVE, Status.SUPERSEDED} if include_superseded else {Status.ACTIVE}
     base: dict[str, tuple] = {}
     for mid, score in rrf.items():
         mem = store.get_memory(mid)
-        if mem and mem.status == Status.ACTIVE:
+        if mem and mem.status in ok_status:
             base[mid] = (mem, sim_map.get(mid, 0.0), score / max_rrf)
 
     # graph expansion (PPR-lite): neighbors of the strongest seeds gain proximity, and

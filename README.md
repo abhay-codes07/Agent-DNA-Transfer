@@ -22,7 +22,7 @@ One memory. Every agent. Owned by you.
 ![license](https://img.shields.io/badge/license-Apache--2.0-blue)
 ![local-first](https://img.shields.io/badge/local--first-yes-brightgreen)
 ![cost](https://img.shields.io/badge/default%20cost-%240%2Fmo-brightgreen)
-![tests](https://img.shields.io/badge/tests-175%20passing-brightgreen)
+![tests](https://img.shields.io/badge/tests-181%20passing-brightgreen)
 ![version](https://img.shields.io/badge/version-0.1.1--alpha-blue)
 
 </div>
@@ -212,6 +212,10 @@ assemble itself" first-run), per-fact **Ed25519 signing**, procedural/skill memo
 a **compounding meter**, **temporal reasoning** (`history_of` — the belief timeline), and the
 **compaction bridge** (`distill_session` — the durable sink for an agent's dropped context), with
 two new agent-facing MCP tools (`memory_outcome`, `memory_distill`) — all $0/offline (ADR-038).
+Wave B adds **temporal-query recall** (a "what did we use before?" query resurfaces the superseded
+belief), **`change_summary`**, automatic **skill distillation** from successful trajectories, and a
+capability scorecard that *proves* it (`compounding_lift_rate` + `temporal_catch_rate` = 1.0) —
+surfaced by `helix outcome / compounding / timeline / distill` (ADR-039).
 
 Still phased (see the [Roadmap](ROADMAP.md)): BLAKE3 + S3 sync backend, PyPI packaging, and the
 portable-memory open standard.

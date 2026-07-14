@@ -26,6 +26,20 @@ ADR-038. Additive, $0/offline, 175 tests; ruff + black + mypy clean.
   about-to-be-compacted context: distills facts, never logs the transcript.
 - MCP surface grows **10 → 12** (still small, semver'd).
 
+### Added — Wave B: temporal grammar, change summaries, skill distillation, and the proof (ADR-039)
+- **Temporal-query recall** — a "what did we use before / when did X change" query auto-routes to
+  the bitemporal path and admits **superseded** facts (`recall(..., temporal=True)`; status-aware
+  store search). Normal recall is unchanged (active-only).
+- **`change_summary(subject)`** — a deterministic one-line arc (A → B → C) from the supersession
+  chain; a fuller natural-language summary when an LLM is configured.
+- **`distill_skill(trigger, steps, succeeded=True)`** — auto-distill a *successful* trajectory into
+  a pre-credited `procedure` (the automatic counterpart to `learn_procedure`).
+- **The proof**: `helix capeval` now reports **`compounding_lift_rate`** (do outcomes raise a proven
+  fact's rank?) and **`temporal_catch_rate`** (does the bitemporal path recover a prior belief?) —
+  both 1.0 on the labeled $0 scenarios.
+- **New `helix` commands**: `outcome`, `compounding`, `timeline`, `distill` (Wave A capabilities
+  now on the CLI); SDK gains `change_summary` + `distill_skill` for full parity.
+
 ## [0.1.1] — 2026-06-20
 
 The v2 wave: **"Git for your AI's memory."** 162 tests; ruff + black + mypy clean; CI green. Still
