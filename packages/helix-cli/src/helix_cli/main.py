@@ -789,7 +789,7 @@ def dsar_cmd(subject: str, as_json: bool = typer.Option(True, "--json/--table"))
 
 @app.command(name="capeval")
 def capeval_cmd() -> None:
-    """Run the v2 capability benchmark (secret-block / PII-block / stale-catch rates)."""
+    """Run the capability benchmark (secret/PII/stale + v3 compounding-lift & temporal-catch)."""
     from helix_core.eval import run_capability_eval
 
     res = run_capability_eval()
@@ -799,6 +799,33 @@ def capeval_cmd() -> None:
     for key, val in res.items():
         table.add_row(key, str(val))
     console.print(table)
+
+
+@app.command(name="eval-evolution")
+def eval_evolution_cmd(as_json: bool = typer.Option(False, "--json")) -> None:
+    """Run the SWE-EVO-style evolution benchmark: does memory *compound* as a project evolves?"""
+    from helix_core.eval import EVOLUTION_FLOORS, run_evolution_eval
+
+    res = run_evolution_eval()
+    if as_json:
+        print(json.dumps(res, indent=2))
+        return
+    table = Table(title="Helix evolution benchmark (does memory compound?)", show_header=False)
+    table.add_column(style="cyan")
+    table.add_column(justify="right")
+    for key, val in res.items():
+        floor = EVOLUTION_FLOORS.get(key)
+        ok = "" if floor is None else (" [green]✓[/]" if val >= floor else " [red]✗[/]")
+        table.add_row(key, f"{val}{ok}")
+    console.print(table)
+    passed = all(res[k] >= f for k, f in EVOLUTION_FLOORS.items())
+    console.print(
+        "[green]memory compounds — all floors met[/]"
+        if passed
+        else "[red]regression: a compounding floor was missed[/]"
+    )
+    if not passed:
+        raise typer.Exit(1)
 
 
 @app.command()

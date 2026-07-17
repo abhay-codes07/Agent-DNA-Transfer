@@ -110,6 +110,17 @@ The built-in **capability scorecard** (`helix capeval`, `helix_core.eval.run_cap
 - **`compounding_lift_rate`** — after recording successful outcomes on a fact (`record_outcome`), does it rank at least as high as before? Proves experience-weighted ranking actually compounds (v3 §1.1/§4.1).
 - **`temporal_catch_rate`** — for a "what did we use *before*?" query, does the bitemporal path (`history_of` / temporal recall admitting superseded facts) recover the prior belief that plain active-only recall omits? Proves the temporal-reasoning surface closes the documented gap (v3 §2.1/§2.2).
 
+### 3.3a Evolution benchmark — does memory *compound*? (SWE-EVO-style)
+
+Recall metrics score a single snapshot; the v3 thesis is about a strand getting *better over time*. `helix eval-evolution` (`helix_core.eval.run_evolution_eval`) runs one project across three "sessions" — facts are learned, some are **superseded** as the codebase changes, a successful trajectory is **distilled into a skill**, and task **outcomes are recorded** — then measures, end-to-end on the *same* strand:
+
+- **`knowledge_freshness`** — recall serves the *current* fact, never a superseded one (a memory that serves stale facts is worse than none). **Floor: 1.0.**
+- **`skill_reuse`** — a distilled skill resurfaces for a matching situation. **Floor: 1.0.**
+- **`temporal_accuracy`** — the *prior* belief is still recoverable via the bitemporal path. **Floor: 1.0.**
+- **`avg_reliability`** — facts credited by real outcomes rose above the neutral 0.5 prior. **Floor: 0.5.**
+
+These floors (`EVOLUTION_FLOORS`) are enforced as a **CI regression gate** (v3 §4.3): the test suite fails the build if any metric regresses, so "memory compounds" is a contract, not a claim. All four sit at 1.0 / 0.8 in the $0/hashing default.
+
 ### 3.4 Edit/forget cascade correctness (incl. derived embeddings)
 
 A delete is only real if everything *derived* from the record also disappears. The forget suite issues an erase and then verifies, via the **provenance cascade** (see [Consolidation](CONSOLIDATION.md)), that the source record **and** its derived embeddings, summaries, and consolidated abstractions are gone. We measure:

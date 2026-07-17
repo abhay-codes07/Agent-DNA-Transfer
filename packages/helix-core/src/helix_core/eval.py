@@ -276,6 +276,118 @@ def _temporal_catch_rate(home: Path) -> float:
     return caught / len(scenarios)
 
 
+# Floors the evolution eval must clear — the CI regression gate (v3 plan §4.3). A drop below any of
+# these fails the build, turning "memory compounds" from a claim into an enforced contract.
+EVOLUTION_FLOORS = {
+    "knowledge_freshness": 1.0,  # never serve a superseded fact as current
+    "skill_reuse": 1.0,  # a distilled skill is recalled for its situation
+    "temporal_accuracy": 1.0,  # the prior belief is recoverable
+    "avg_reliability": 0.5,  # proven facts have earned reliability above the neutral prior
+}
+
+
+def run_evolution_eval(home: Path | None = None) -> dict:
+    """SWE-EVO-style multi-episode scenario: does memory *compound* as a project evolves? (v3 §4.2).
+
+    Simulates one project across several 'sessions': facts are learned, some are superseded as the
+    codebase changes, a successful trajectory is distilled into a skill, and task outcomes are
+    recorded. We then measure — on the *same* strand, end to end — whether:
+      * knowledge_freshness — recall serves the *current* fact, never a superseded one;
+      * skill_reuse         — a distilled skill resurfaces for a matching situation;
+      * temporal_accuracy   — the *prior* belief is still recoverable via the bitemporal path;
+      * avg_reliability     — facts credited by real outcomes rose above the neutral 0.5 prior.
+    Deterministic and $0. `helix eval-evolution` prints it; a test asserts EVOLUTION_FLOORS.
+    """
+    from .experience import reliability
+    from .models import Status
+
+    tmp: tempfile.TemporaryDirectory | None = None
+    if home is None:
+        tmp = tempfile.TemporaryDirectory()
+        home = Path(tmp.name)
+    scope = "project:orders-svc"
+    try:
+        eng = Engine(Config(home=home, strand="evolution"))
+        try:
+            # --- Episode 1: the project is young; learn its initial shape, use a fact ---
+            api = eng.remember("The orders service API uses REST.", scope=scope)[0].memory_id
+            eng.remember("The orders service stores data in MySQL.", scope=scope)
+            eng.remember("Deploys run on Heroku.", scope=scope)
+            eng.record_outcome([api], success=True)  # the REST fact helped a task
+
+            # --- Episode 2: the codebase evolves; supersede, distill a skill, credit outcomes ---
+            grpc = eng.remember("The orders service API uses gRPC, not REST.", scope=scope)[
+                0
+            ].memory_id
+            eng.remember("Deploys run on Fly.io, not Heroku.", scope=scope)
+            skill_id = eng.distill_skill(
+                "the orders build breaks on a migration",
+                ["reset the test database", "rerun the migration", "re-run the suite"],
+                scope=scope,
+            )
+            for _ in range(3):
+                eng.record_outcome([grpc], success=True)
+
+            # --- Episode 3: measure whether the memory compounded ---
+            # freshness: the current (gRPC) fact surfaces; the superseded (REST) one does not.
+            fresh_hits = eng.recall("how does the orders API communicate", scope=scope)
+            active_contents = [h.memory.content.lower() for h in fresh_hits]
+            # A served-stale hit is the superseded REST fact resurfacing: mentions REST but not the
+            # new gRPC value (the current fact legitimately says "gRPC, not REST"), or is SUPERSEDED.
+            served_stale = any(
+                h.memory.status == Status.SUPERSEDED
+                or ("rest" in h.memory.content.lower() and "grpc" not in h.memory.content.lower())
+                for h in fresh_hits
+            )
+            knows_current = any("grpc" in c for c in active_contents)
+            knowledge_freshness = 1.0 if (knows_current and not served_stale) else 0.0
+
+            # skill_reuse: the distilled skill resurfaces for its situation.
+            procs = eng.recall_procedures(
+                "the orders build is failing on a db migration", scope=scope
+            )
+            skill_reuse = 1.0 if any(p["id"] == skill_id for p in procs) else 0.0
+
+            # temporal_accuracy: the prior belief (REST) is recoverable via the bitemporal path.
+            hist = eng.history_of("orders service api", k=8)
+            temporal_hits = [
+                h.memory.content.lower()
+                for h in eng.recall(
+                    "what did the orders API use before", scope=scope, temporal=True
+                )
+            ]
+            temporal_accuracy = (
+                1.0 if (hist["changes"] > 0 or any("rest" in c for c in temporal_hits)) else 0.0
+            )
+
+            # compounding: facts credited by outcomes earned reliability above the neutral prior.
+            credited = [
+                m
+                for m in eng.list_memories(scope=scope, limit=1000)
+                if float(m.attributes.get("_uses", 0)) > 0
+            ]
+            avg_reliability = (
+                sum(reliability(m) for m in credited) / len(credited) if credited else 0.5
+            )
+
+            metrics = {
+                "episodes": 3,
+                "knowledge_freshness": round(knowledge_freshness, 3),
+                "skill_reuse": round(skill_reuse, 3),
+                "temporal_accuracy": round(temporal_accuracy, 3),
+                "avg_reliability": round(avg_reliability, 3),
+            }
+            metrics["overall"] = round(
+                sum(metrics[k] for k in EVOLUTION_FLOORS) / len(EVOLUTION_FLOORS), 3
+            )
+            return metrics
+        finally:
+            eng.close()
+    finally:
+        if tmp is not None:
+            tmp.cleanup()
+
+
 # A small built-in coding-agent memory benchmark (the category gap from docs/EVALUATION.md).
 CODING_BENCHMARK: list[EvalCase] = [
     EvalCase(

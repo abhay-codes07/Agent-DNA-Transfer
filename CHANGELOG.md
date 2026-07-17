@@ -39,6 +39,11 @@ ADR-038. Additive, $0/offline, 175 tests; ruff + black + mypy clean.
   both 1.0 on the labeled $0 scenarios.
 - **New `helix` commands**: `outcome`, `compounding`, `timeline`, `distill` (Wave A capabilities
   now on the CLI); SDK gains `change_summary` + `distill_skill` for full parity.
+- **Evolution benchmark + CI regression gate** (`helix eval-evolution`,
+  `run_evolution_eval`): a SWE-EVO-style 3-session scenario that proves memory *compounds* end to
+  end — `knowledge_freshness`, `skill_reuse`, `temporal_accuracy` (all floored at 1.0) and
+  `avg_reliability` (≥0.5). `EVOLUTION_FLOORS` is enforced by the test suite, so a regression fails
+  the build (v3 plan §4.2/§4.3).
 
 ## [0.1.1] — 2026-06-20
 
