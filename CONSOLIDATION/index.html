@@ -1,0 +1,1873 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Take your AI's memory anywhere — a local-first, portable, git-like memory layer for AI coding agents.">
+      
+      
+      
+      
+        <link rel="prev" href="../MEMORY_MODEL/">
+      
+      
+        <link rel="next" href="../RETRIEVAL/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Consolidation - Helix</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#helix-memory-consolidation-decay-reflection" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Helix" class="md-header__button md-logo" aria-label="Helix" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Helix
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Consolidation
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/abhay-codes07/Agent-DNA-Transfer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Helix" class="md-nav__button md-logo" aria-label="Helix" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Helix
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/abhay-codes07/Agent-DNA-Transfer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Product & strategy
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Product & strategy
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PRD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PRD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../COMPETITIVE_ANALYSIS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Competitive Analysis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BUSINESS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Business & GTM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RESEARCH/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research Survey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Engineering
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Engineering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TSD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Technical Spec
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SYSTEM_ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    System Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MEMORY_MODEL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Memory Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Consolidation
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Consolidation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-why-a-lifecycle-at-all" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Why a lifecycle at all
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-complementary-learning-systems-the-two-stage-architecture-adr-012" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Complementary Learning Systems: the two-stage architecture (ADR-012)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-consolidation-triggers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Consolidation triggers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-the-decay-model-adr-014" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. The decay model (ADR-014)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. The decay model (ADR-014)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#per-type-half-lives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Per-type half-lives
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-reinforcement-on-recall-sm-2-adr-014" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Reinforcement on recall: SM-2 (ADR-014)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-three-factor-retrieval-scoring-tie-in" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Three-factor retrieval scoring tie-in
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-importance-rating-at-write-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Importance rating at write time
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-reflection-trees-adr-015" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Reflection trees (ADR-015)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-sleep-time-consolidation-agent-adr-015" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Sleep-time consolidation agent (ADR-015)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-anti-poisoning-integrity-guardrails-adr-029" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Anti-poisoning &amp; integrity guardrails (ADR-029)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-forgetting-is-archival-not-deletion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Forgetting is archival, not deletion
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-failure-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Failure modes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-opinionated-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. Opinionated decisions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sources
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RETRIEVAL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DNA_FORMAT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    .dna Format
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SYNC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sync & Merge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../COST_OPTIMIZATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cost Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../API_REFERENCE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MCP_INTEGRATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PLUGINS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../OBSERVABILITY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trust, quality & process
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Trust, quality & process
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SECURITY_MODEL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PRIVACY_COMPLIANCE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Privacy & Compliance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../EVALUATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GOVERNANCE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Governance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GLOSSARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-why-a-lifecycle-at-all" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Why a lifecycle at all
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-complementary-learning-systems-the-two-stage-architecture-adr-012" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Complementary Learning Systems: the two-stage architecture (ADR-012)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-consolidation-triggers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Consolidation triggers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-the-decay-model-adr-014" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. The decay model (ADR-014)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. The decay model (ADR-014)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#per-type-half-lives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Per-type half-lives
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-reinforcement-on-recall-sm-2-adr-014" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Reinforcement on recall: SM-2 (ADR-014)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-three-factor-retrieval-scoring-tie-in" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Three-factor retrieval scoring tie-in
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-importance-rating-at-write-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Importance rating at write time
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-reflection-trees-adr-015" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Reflection trees (ADR-015)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-sleep-time-consolidation-agent-adr-015" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Sleep-time consolidation agent (ADR-015)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-anti-poisoning-integrity-guardrails-adr-029" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Anti-poisoning &amp; integrity guardrails (ADR-029)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-forgetting-is-archival-not-deletion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Forgetting is archival, not deletion
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-failure-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Failure modes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-opinionated-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. Opinionated decisions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sources
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="helix-memory-consolidation-decay-reflection">Helix — Memory Consolidation, Decay &amp; Reflection<a class="headerlink" href="#helix-memory-consolidation-decay-reflection" title="Permanent link">&para;</a></h1>
+<p><strong>Status:</strong> Draft v1 · <strong>Last updated:</strong> 2026-06-18 · <strong>Related:</strong> <a href="../MEMORY_MODEL/">Memory Model</a> · <a href="../RETRIEVAL/">Retrieval</a> · <a href="../TSD/">TSD</a> · <a href="../SECURITY_MODEL/">Security</a> · <a href="../DECISIONS.md">Decisions</a></p>
+<p>This document specifies what happens to a memory <em>after</em> it is first written: how Helix <strong>consolidates</strong> raw episodes into durable knowledge, how unused memories <strong>decay</strong>, how recalled memories are <strong>reinforced</strong>, and how the system <strong>reflects</strong> to synthesize higher-level insight. The initial write path (capture, embedding, taxonomy, storage) lives in <a href="../MEMORY_MODEL/">Memory Model</a>; read-time scoring lives in <a href="../RETRIEVAL/">Retrieval</a>. This is the lifecycle layer that sits between them and runs over time, much of it offline.</p>
+<p>Helix is local-first, coding-agent-first, portable, and <code>$0</code>-by-default. Every mechanism below is designed to run on a developer laptop against a SQLite-class store with no mandatory cloud dependency, and to degrade gracefully when no LLM budget is available (decay is pure arithmetic; reflection and sleep-time consolidation are optional enrichers, not load-bearing).</p>
+<hr />
+<h2 id="1-why-a-lifecycle-at-all">1. Why a lifecycle at all<a class="headerlink" href="#1-why-a-lifecycle-at-all" title="Permanent link">&para;</a></h2>
+<p>A naive agent memory is an append-only log that is embedded and retrieved by similarity. It rots. Three things go wrong, and all three are documented failure modes (see <a href="#10-failure-modes">§10</a>): the log grows without bound so retrieval drowns in stale context (<strong>context rot</strong>); compression heuristics over-weight whatever is recent or loud (<strong>catastrophic forgetting</strong>, <a href="https://www.indium.tech/blog/agent-memory-compression-failure-modes/">Indium</a>); and self-edits accumulate drift and injected falsehoods that <strong>persist and self-reinforce</strong> (<a href="https://arxiv.org/html/2512.16962v1">MemoryGraft</a>).</p>
+<p>Human memory solves the analogous problem with structure, not storage. It separates a fast, cheap, one-shot capture system from a slow, integrative system that distills structure across many episodes, and it lets unused traces fade while keeping useful ones through repeated recall. Helix copies that architecture deliberately. The biological mapping is not decoration — it is the design rationale, and each borrowed mechanism has a concrete computational form below.</p>
+<hr />
+<h2 id="2-complementary-learning-systems-the-two-stage-architecture-adr-012">2. Complementary Learning Systems: the two-stage architecture (ADR-012)<a class="headerlink" href="#2-complementary-learning-systems-the-two-stage-architecture-adr-012" title="Permanent link">&para;</a></h2>
+<p>Systems consolidation in the brain moves memories from the <strong>hippocampus</strong> (fast, sparse, one-shot binding of an event to its time and place) to the <strong>neocortex</strong> (slow, distributed, integrating across many episodes to extract semantic structure), with offline replay — especially during sleep — driving the transfer (<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4526749/">systems consolidation review</a>; <a href="https://www.pnas.org/doi/10.1073/pnas.2123432119">CLS, PNAS</a>; <a href="https://pubmed.ncbi.nlm.nih.gov/22141588/">McClelland-lineage CLS</a>). The Complementary Learning Systems (CLS) framing is explicit: you <em>want</em> two systems with different speeds, because a single system fast enough to learn one-shot would catastrophically overwrite its own generalizations.</p>
+<p>Helix adopts this as a <strong>two-stage architecture</strong> (ADR-012):</p>
+<div class="highlight"><pre><span></span><code>   ONLINE  (fast, cheap, &quot;hippocampus&quot;)          OFFLINE (slow, generalizing, &quot;neocortex&quot;)
+  ┌───────────────────────────────────┐         ┌─────────────────────────────────────────┐
+  │  Episodic capture                  │  replay │  Consolidation worker                    │
+  │  • one-shot, append-only           │ ───────▶│  • clusters episodes                     │
+  │  • cheap importance rating (1–10)  │         │  • distills semantic facts               │
+  │  • bind to time / place / session  │         │  • distills procedural playbooks         │
+  │  • NEVER blocks the agent          │         │  • builds reflection trees               │
+  │  live context window = working mem │         │  • stronger/slower model, idle-time      │
+  └───────────────────────────────────┘         └─────────────────────────────────────────┘
+        system of record: episodic log                 derived, regenerable: semantic/procedural
+</code></pre></div>
+<p><strong>Stage 1 — online episodic capture (hippocampus).</strong> Every salient observation is written immediately to the episodic event log as a discrete, timestamped record bound to its session and context. Writes are one-shot and must never block the agent's turn. The only model call on this path is a <em>cheap</em> importance rating (<a href="#7-importance-rating-at-write-time">§7</a>). The live context window is treated as <strong>working memory</strong> in the Baddeley sense — it manipulates, it is never the system of record (see <a href="../MEMORY_MODEL/">Memory Model</a>).</p>
+<p><strong>Stage 2 — offline generalizing consolidation (neocortex).</strong> A background worker replays clusters of recent episodes and distills them into <strong>semantic facts</strong> and <strong>procedural playbooks</strong>. The canonical example: ten separate episodes of <em>"had to activate the venv before running pytest"</em> collapse into one semantic rule — <em>"this project requires activating <code>.venv</code> before test commands"</em> — plus, if the steps are stereotyped, a procedural script. This is generalization across episodes, exactly what neocortex does. The derived memories are <strong>regenerable</strong>: if you delete every semantic fact, a re-run of consolidation over the surviving episodic log reconstructs them. The episodic log is the system of record; everything downstream is a cache with provenance.</p>
+<p>This separation is what makes the rest of the document coherent: decay rates differ by stage, reinforcement targets the derived layer, reflection runs in stage 2, and anti-poisoning gates the episodic→semantic boundary.</p>
+<hr />
+<h2 id="3-consolidation-triggers">3. Consolidation triggers<a class="headerlink" href="#3-consolidation-triggers" title="Permanent link">&para;</a></h2>
+<p>Consolidation is expensive (LLM calls, possibly a larger model) so it is event-driven, not continuous. Two triggers fire it; either is sufficient.</p>
+<table>
+<thead>
+<tr>
+<th>Trigger</th>
+<th>Condition</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Accumulated-importance threshold</strong></td>
+<td>Running sum of importance scores of episodes since the last consolidation exceeds <strong>150</strong></td>
+<td>Borrowed directly from Stanford Generative Agents' reflection trigger (<a href="https://ar5iv.labs.arxiv.org/html/2304.03442">Generative Agents</a>); yields ~2–3 consolidations/day under typical load, scaling with <em>significance</em> of activity rather than raw volume</td>
+</tr>
+<tr>
+<td><strong>Session boundary</strong></td>
+<td>Always, when an agent session ends (or on explicit <code>helix flush</code>)</td>
+<td>Guarantees the episodic log never carries an unconsolidated session into the next; bounds worst-case context rot; gives a natural "sleep" point</td>
+</tr>
+</tbody>
+</table>
+<p>The importance-budget trigger is the load-balancer: a quiet session of trivial observations may never reach 150 and only consolidates at the boundary, while a dense debugging session crosses 150 mid-stream and consolidates early. The session-boundary trigger is the floor that guarantees forward progress. Pseudocode:</p>
+<div class="highlight"><pre><span></span><code>on_episode_write(e):
+    log.append(e)
+    budget += e.importance
+    if budget &gt;= 150:
+        enqueue_consolidation(reason=&quot;importance_budget&quot;)
+        budget = 0
+
+on_session_end():
+    enqueue_consolidation(reason=&quot;session_boundary&quot;)
+    budget = 0
+</code></pre></div>
+<p>Enqueued jobs are drained by the sleep-time worker (<a href="#8-sleep-time-consolidation-agent">§8</a>) during idle time, so the trigger firing never stalls the agent.</p>
+<hr />
+<h2 id="4-the-decay-model-adr-014">4. The decay model (ADR-014)<a class="headerlink" href="#4-the-decay-model-adr-014" title="Permanent link">&para;</a></h2>
+<p>Memories that are never used should fade out of <em>default</em> retrieval. Helix models this on the Ebbinghaus forgetting curve, which is approximately exponential — roughly 42% of new material is lost within ~20 minutes and about two-thirds within a day if never revisited (<a href="https://memia.app/en/resources/blog/ebbinghaus-forgetting-curve">Ebbinghaus</a>). The standard form is <code>R(t) = e^(−t/S)</code> where <code>S</code> is <em>stability</em>; the half-life of a trace is <code>S·ln2</code>, and successful recall increases <code>S</code> (<a href="https://sesen.ai/forgetting-curve">forgetting curve / stability</a>).</p>
+<p>Helix combines decay with importance into a single <strong>salience</strong> score:</p>
+<div class="highlight"><pre><span></span><code>   salience(m, now) = importance(m) · e^( −λ · Δt_last_access )
+
+   where  Δt_last_access = now − m.last_access_time
+          λ              = ln2 / half_life(m.type, m)
+</code></pre></div>
+<p><code>importance(m)</code> is the cached 1–10 poignancy from write time (<a href="#7-importance-rating-at-write-time">§7</a>). The exponential term is the decay factor: it equals 1.0 at the moment of access and halves every <code>half_life</code>. Note the clock is reset by <em>access</em>, not by <em>creation</em> — a frequently recalled memory effectively never decays, which is the whole point and the hook for reinforcement (<a href="#5-reinforcement-on-recall-sm-2-adr-014">§5</a>).</p>
+<h3 id="per-type-half-lives">Per-type half-lives<a class="headerlink" href="#per-type-half-lives" title="Permanent link">&para;</a></h3>
+<p>Decay rate is a function of memory <strong>type</strong>, because episodes are perishable and skills are not:</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Default half-life</th>
+<th>λ = ln2/half_life</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Episodic</strong></td>
+<td>~7 days</td>
+<td>≈ 0.099 / day</td>
+<td>Events are perishable; an un-recalled episode is near-floor within ~2–3 weeks. The raw event still exists on disk (archival, <a href="#9-forgetting-is-archival-not-deletion">§9</a>); it just drops from default retrieval.</td>
+</tr>
+<tr>
+<td><strong>Procedural</strong></td>
+<td>~90 days</td>
+<td>≈ 0.0077 / day</td>
+<td>Skills and playbooks are sticky; a learned procedure survives months of disuse before fading.</td>
+</tr>
+<tr>
+<td><strong>Semantic</strong></td>
+<td><strong>non-decaying</strong> (λ ≈ 0) until contradicted</td>
+<td>≈ 0</td>
+<td>A fact stays at full salience indefinitely. Facts don't expire with time — they expire when <strong>contradicted</strong> (see contradiction detection, <a href="#10-failure-modes">§10</a> / <a href="../SECURITY_MODEL/">Security</a>).</td>
+</tr>
+</tbody>
+</table>
+<p>Semantic non-decay is the payoff of consolidation: the perishable episodes that <em>grounded</em> a fact may all decay out of default retrieval, but the distilled fact they produced persists, because the cost of one-shot capture was paid by episodic memory and the durable generalization was paid by neocortex. This is precisely the CLS division of labor from <a href="#2-complementary-learning-systems-the-two-stage-architecture-adr-012">§2</a>.</p>
+<p>Half-lives are defaults, not constants. Reinforcement grows a memory's <em>effective</em> half-life (<a href="#5-reinforcement-on-recall-sm-2-adr-014">§5</a>), so a frequently-used episode can behave more like a procedure over time.</p>
+<hr />
+<h2 id="5-reinforcement-on-recall-sm-2-adr-014">5. Reinforcement on recall: SM-2 (ADR-014)<a class="headerlink" href="#5-reinforcement-on-recall-sm-2-adr-014" title="Permanent link">&para;</a></h2>
+<p>Recall is a vote of confidence. When a memory is actually retrieved <em>and used</em>, Helix strengthens it, mirroring how successful retrieval raises stability on the forgetting curve. The mechanism is adapted from SuperMemo's <strong>SM-2</strong> algorithm, the spaced-repetition scheme behind Anki (<a href="https://en.wikipedia.org/wiki/SuperMemo">SuperMemo / SM-2</a>).</p>
+<p>Each reinforceable memory carries an <strong>easiness factor</strong> <code>EF</code> (default 2.5). On a successful recall event with quality <code>q</code> (0–5, where <code>q</code> is derived from whether the retrieved memory was used / led to a good outcome), update:</p>
+<div class="highlight"><pre><span></span><code>   EF&#39; = EF + ( 0.1 − (5 − q) · ( 0.08 + (5 − q) · 0.02 ) )
+   EF&#39; = max(EF&#39;, 1.3)                      # clamp: EF never drops below 1.3
+</code></pre></div>
+<p>The clamp at <strong>1.3</strong> is load-bearing — it prevents a string of poor recalls from driving a memory's interval to collapse, which is the same protection SM-2 uses to stop "leeches" from thrashing.</p>
+<p>On reinforcement Helix then does three things:</p>
+<ol>
+<li><strong>Reset Δt.</strong> Set <code>last_access_time = now</code>, so the decay clock restarts and the exponential factor returns to 1.0.</li>
+<li><strong>Grow the effective half-life.</strong> Multiply the memory's effective half-life by <code>EF'</code> (equivalently, divide λ by <code>EF'</code>):
+   <code>half_life_eff ← half_life_eff · EF'</code>. SM-2's expanding interval schedule (<code>I(1)=1</code>, <code>I(2)=6</code>, <code>I(n)=round(I(n−1)·EF)</code> days) becomes a continuously growing half-life rather than a discrete review date — every successful recall pushes the next "fade" further out, super-linearly for repeatedly-useful memories.</li>
+<li><strong>Persist</strong> the new <code>EF</code>, <code>half_life_eff</code>, and <code>last_access_time</code>.</li>
+</ol>
+<p>Net effect: a memory recalled and used many times asymptotes toward non-decaying, regardless of its type default; a memory never recalled rides its type's base half-life to the floor.</p>
+<hr />
+<h2 id="6-three-factor-retrieval-scoring-tie-in">6. Three-factor retrieval scoring tie-in<a class="headerlink" href="#6-three-factor-retrieval-scoring-tie-in" title="Permanent link">&para;</a></h2>
+<p>Consolidation and decay exist to feed retrieval. Helix scores candidate memories at read time with the Generative Agents three-factor formula (<a href="https://ar5iv.labs.arxiv.org/html/2304.03442">Generative Agents</a>), and the lifecycle machinery above is <em>what supplies two of the three factors</em>:</p>
+<div class="highlight"><pre><span></span><code>   score(m, query) = α_recency · recency(m)
+                   + α_importance · importance(m)
+                   + α_relevance · relevance(m, query)
+
+   default α_recency = α_importance = α_relevance = 1   (all factors min-max normalized to [0,1])
+</code></pre></div>
+<ul>
+<li><strong>recency(m)</strong> — exponential decay since last access, <code>0.995</code> per hour in the original; in Helix this is the same <code>e^(−λΔt)</code> decay factor from <a href="#4-the-decay-model-adr-014">§4</a>, so reinforcement's Δt-reset directly boosts recency.</li>
+<li><strong>importance(m)</strong> — the cached 1–10 poignancy from <a href="#7-importance-rating-at-write-time">§7</a>.</li>
+<li><strong>relevance(m, query)</strong> — cosine similarity between the query embedding and the memory embedding.</li>
+</ul>
+<p>The full read-time pipeline (normalization windows, candidate generation, MMR diversification, hybrid lexical+vector) is specified in <a href="../RETRIEVAL/">Retrieval</a> and <a href="../TSD/">TSD</a>. The contract here: <strong>salience drives what is eligible and recency-weighted; relevance is supplied by the query at read time.</strong> Low-salience memories aren't deleted, they simply lose the recency and importance contributions and fall below the default cutoff.</p>
+<hr />
+<h2 id="7-importance-rating-at-write-time">7. Importance rating at write time<a class="headerlink" href="#7-importance-rating-at-write-time" title="Permanent link">&para;</a></h2>
+<p>Every captured memory gets a single <strong>importance / poignancy score from 1 to 10</strong>, assigned by a cheap LLM call at write time, following Generative Agents' "rate the likely poignancy" prompt (<a href="https://ar5iv.labs.arxiv.org/html/2304.03442">Generative Agents</a>) — 1 for mundane chatter ("listed the files in a directory"), 10 for pivotal events ("the user changed the project's database from Postgres to SQLite"). This score is the <code>importance(m)</code> term used by both salience (<a href="#4-the-decay-model-adr-014">§4</a>) and retrieval (<a href="#6-three-factor-retrieval-scoring-tie-in">§6</a>).</p>
+<p>Constraints that keep it <code>$0</code>-friendly and non-blocking:
+- <strong>Cached.</strong> The score is computed once and stored on the memory; it is never recomputed at read time.
+- <strong>Cheap model, online.</strong> Importance rating uses the small/fast model, on the hippocampal path. It must not stall the agent's turn; if the budget is <code>$0</code>, fall back to a heuristic (length, presence of decisions/errors, entity density) and let the sleep-time worker upgrade scores later.
+- <strong>Distinct from confidence.</strong> Importance is "how much should I weight this," not "how true is this." Truth is tracked separately as confidence + provenance (<a href="#10-failure-modes">§10</a>, <a href="../SECURITY_MODEL/">Security</a>).</p>
+<hr />
+<h2 id="8-reflection-trees-adr-015">8. Reflection trees (ADR-015)<a class="headerlink" href="#8-reflection-trees-adr-015" title="Permanent link">&para;</a></h2>
+<p>Consolidation distills facts; <strong>reflection</strong> synthesizes <em>insight</em>. When the importance-budget trigger (<a href="#3-consolidation-triggers">§3</a>) fires, the worker runs the Generative Agents reflection procedure (<a href="https://ar5iv.labs.arxiv.org/html/2304.03442">Generative Agents</a>):</p>
+<ol>
+<li>Take the most important recent episodes.</li>
+<li>Ask the model to generate the few most salient high-level <strong>questions</strong> about them.</li>
+<li>Retrieve memories relevant to each question.</li>
+<li>Synthesize <strong>insights</strong> that answer them, each citing the memories that grounded it.</li>
+</ol>
+<p>The insights are stored as <strong>first-class memories</strong> (typically semantic), <strong>linked back to their source memories</strong>. Because insights can themselves be inputs to later reflection, the structure is a <strong>tree</strong>: leaves are raw observations, interior nodes are progressively higher-level abstractions.</p>
+<div class="highlight"><pre><span></span><code>        (insight)  &quot;I work best in small, test-driven increments on this repo&quot;
+            ▲                         ▲
+        (insight)                 (insight)
+    &quot;tests gate my PRs&quot;     &quot;I refactor after green, not before&quot;
+        ▲      ▲                  ▲        ▲
+     (obs)   (obs)             (obs)    (obs)      ← leaves = episodic observations
+</code></pre></div>
+<p>Targets ~<strong>2–3 reflections per day</strong> under normal load, the same cadence the 150-budget produces in Generative Agents. Every node retains links to its supporting leaves — those links are what the integrity gate (<a href="#10-failure-modes">§10</a>) validates and what makes a synthesized claim auditable rather than a free-floating assertion.</p>
+<hr />
+<h2 id="9-sleep-time-consolidation-agent-adr-015">9. Sleep-time consolidation agent (ADR-015)<a class="headerlink" href="#9-sleep-time-consolidation-agent-adr-015" title="Permanent link">&para;</a></h2>
+<p>The offline stage runs as a <strong>sleep-time consolidation agent</strong>: a background worker that shares the primary agent's memory store and rewrites/derives memory asynchronously during <strong>idle time</strong>, using a <strong>stronger but slower model</strong> than the online path. This is the Letta "sleep-time compute" pattern — background agents that share the primary agent's memory and rewrite memory blocks asynchronously while the foreground agent is idle (<a href="https://www.letta.com/blog/sleep-time-compute">Letta blog</a>, <a href="https://docs.letta.com/guides/agents/architectures/sleeptime/">Letta docs</a>).</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Online (hippocampus)</th>
+<th>Sleep-time (neocortex)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>When</td>
+<td>During the agent's turn</td>
+<td>Idle time / session boundary / queued</td>
+</tr>
+<tr>
+<td>Model</td>
+<td>Small, fast, cheap</td>
+<td>Larger, slower, more capable</td>
+</tr>
+<tr>
+<td>Latency budget</td>
+<td>Must not block the turn</td>
+<td>Unbounded; can take seconds–minutes</td>
+</tr>
+<tr>
+<td>Work</td>
+<td>One-shot capture, cheap importance</td>
+<td>Cluster, distill, reflect, contradiction-check, score upgrades</td>
+</tr>
+<tr>
+<td>Blocking?</td>
+<td>Never blocks foreground</td>
+<td>Never blocks foreground</td>
+</tr>
+</tbody>
+</table>
+<p>The conceptual lineage also includes MemGPT's virtual-context paging — main vs. external context with function-call "page faults" to move memory in and out (<a href="https://arxiv.org/abs/2310.08560">MemGPT</a>). Helix's working memory (the live context window) is the <em>main</em> context; the episodic/semantic/procedural stores are <em>external</em> context; consolidation and retrieval are the paging machinery. The sleep-time agent is, in effect, the process that decides what gets paged <em>out</em> and rewritten while no one is looking.</p>
+<p>Because the foreground path needs none of this to function, sleep-time consolidation is fully optional under a <code>$0</code> budget — it just means weaker generalization and importance scores until compute is available.</p>
+<hr />
+<h2 id="10-anti-poisoning-integrity-guardrails-adr-029">10. Anti-poisoning &amp; integrity guardrails (ADR-029)<a class="headerlink" href="#10-anti-poisoning-integrity-guardrails-adr-029" title="Permanent link">&para;</a></h2>
+<p>A memory that can be written and later self-edited is an attack surface. Memory poisoning (e.g. <strong>MemoryGraft</strong>) injects a false memory that then <strong>persists and self-reinforces</strong> across sessions (<a href="https://arxiv.org/html/2512.16962v1">MemoryGraft</a>; <a href="https://christian-schneider.net/blog/persistent-memory-poisoning-in-ai-agents/">persistent memory poisoning</a>). Reconstructive memory theory predicts the broader risk: schemas aid recall but <em>introduce distortion</em>, and stereotyped scripts can overwrite specifics (<a href="https://www.academica-group.com/en/knowledge/bartletts-schematheory">Bartlett schema theory</a>). Helix's consolidation pipeline is therefore the <em>most</em> dangerous place to be sloppy, because it is exactly where one episode becomes a durable, generalized, self-reinforcing semantic fact.</p>
+<p>Guardrails, all enforced at the episodic→semantic boundary (full spec in <a href="../SECURITY_MODEL/">Security</a>):</p>
+<ul>
+<li><strong>Provenance + confidence on every memory.</strong> No memory exists without a record of where it came from and how much we trust it. This is the metacognitive layer; it also explicitly records <em>gaps</em> ("I don't know X") rather than fabricating.</li>
+<li><strong>Validation gate — grounding requirement.</strong> A consolidated/semantic fact must <strong>cite ≥1 grounding episode</strong>. A "fact" with no supporting episode in the log is rejected (or quarantined at low confidence). This makes consolidation strictly <em>derivative</em> of the episodic system of record and kills free-floating injected assertions.</li>
+<li><strong>Contradiction detection flags, never silently overwrites.</strong> When a new fact conflicts with an existing one, Helix raises a flag for resolution and lowers confidence on both; it does not silently clobber. (This is also what "non-decaying until contradicted" in <a href="#4-the-decay-model-adr-014">§4</a> hooks into — contradiction is the <em>only</em> thing that expires a semantic fact.)</li>
+<li><strong>Separate user-asserted vs. agent-ingested provenance.</strong> A fact the <em>user</em> stated is trusted differently from a fact the <em>agent</em> inferred or ingested from a tool/web source. Provenance class is first-class metadata and gates how easily a memory may be promoted, reinforced, or used to overwrite.</li>
+<li><strong>Reflection inherits the gate.</strong> Synthesized insights (<a href="#8-reflection-trees-adr-015">§8</a>) must keep their links to supporting leaves; an insight whose grounding is deleted is demoted, not retained.</li>
+</ul>
+<hr />
+<h2 id="11-forgetting-is-archival-not-deletion">11. Forgetting is archival, not deletion<a class="headerlink" href="#11-forgetting-is-archival-not-deletion" title="Permanent link">&para;</a></h2>
+<p>Helix is local-first, so disk is cheap and trust matters more than space. <strong>Forgetting never deletes.</strong> When a memory's salience falls below the retrieval floor, it is <strong>dropped from default retrieval</strong> but <strong>stays on disk</strong> and remains <strong>searchable on demand</strong> (explicit "deep recall" / full-text scan). Three reasons:</p>
+<ol>
+<li><strong>Reconstructability.</strong> The episodic log is the system of record; deleting it would make consolidated facts ungroundable and break the <a href="#10-anti-poisoning--integrity-guardrails-adr-029">§10</a> validation gate.</li>
+<li><strong>Reversibility of decay.</strong> A faded memory can be reinforced (<a href="#5-reinforcement-on-recall-sm-2-adr-014">§5</a>) back into default retrieval if it turns out to matter again; deletion is irreversible, decay is not.</li>
+<li><strong>Auditability.</strong> Security and provenance review need the full history, including memories that fell out of working use.</li>
+</ol>
+<p>Below-floor memories are candidates for <strong>consolidation</strong> (roll several stale episodes into one semantic summary) — but the originals are archived, not erased. Hard deletion is reserved for explicit user action (<code>helix forget --hard</code>) and secrets redaction, both covered in <a href="../SECURITY_MODEL/">Security</a>.</p>
+<hr />
+<h2 id="12-failure-modes">12. Failure modes<a class="headerlink" href="#12-failure-modes" title="Permanent link">&para;</a></h2>
+<p>These are the named risks the design above is built to resist; each maps to a specific mitigation.</p>
+<table>
+<thead>
+<tr>
+<th>Failure mode</th>
+<th>What it looks like</th>
+<th>Mitigation in Helix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Catastrophic forgetting</strong></td>
+<td>Compression over-weights recent / high-salience memories and silently drops the rest (<a href="https://www.indium.tech/blog/agent-memory-compression-failure-modes/">Indium</a>)</td>
+<td>Archival-not-deletion (<a href="#11-forgetting-is-archival-not-deletion">§11</a>); episodic log is system of record; consolidation summarizes rather than discards; reinforcement rescues important-but-old memories</td>
+</tr>
+<tr>
+<td><strong>Hallucinated memories / semantic drift</strong></td>
+<td>Self-edits accumulate falsehoods; facts drift from their evidence over successive rewrites</td>
+<td>Grounding gate (≥1 source episode), provenance + confidence, contradiction flagging (<a href="#10-anti-poisoning--integrity-guardrails-adr-029">§10</a>); derived layer is regenerable from the immutable episodic log</td>
+</tr>
+<tr>
+<td><strong>Memory poisoning</strong></td>
+<td>Injected false memory persists and self-reinforces across sessions (<a href="https://arxiv.org/html/2512.16962v1">MemoryGraft</a>)</td>
+<td>User-asserted vs. agent-ingested provenance split; validation gate on promotion; no silent overwrite; confidence decay on contradiction (<a href="#10-anti-poisoning--integrity-guardrails-adr-029">§10</a>)</td>
+</tr>
+<tr>
+<td><strong>Recency bias</strong></td>
+<td>Newest memories dominate retrieval regardless of importance</td>
+<td>Three-factor scoring with independent, equally-weighted importance and relevance terms (<a href="#6-three-factor-retrieval-scoring-tie-in">§6</a>); importance cached from write time, not inferred from age</td>
+</tr>
+<tr>
+<td><strong>Context rot</strong></td>
+<td>Irrelevant accumulated context in the window degrades performance</td>
+<td>Working memory is never the system of record; consolidation + salience floor keep default retrieval small; session-boundary trigger bounds unconsolidated backlog (<a href="#3-consolidation-triggers">§3</a>)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="13-opinionated-decisions">13. Opinionated decisions<a class="headerlink" href="#13-opinionated-decisions" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Decision</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D1</td>
+<td><strong>Two-stage CLS architecture is mandatory</strong>, not an optimization</td>
+<td>One-shot + generalization in one system is catastrophic forgetting by construction (ADR-012)</td>
+</tr>
+<tr>
+<td>D2</td>
+<td><strong>Episodic log is the only system of record</strong>; semantic &amp; procedural are regenerable caches</td>
+<td>Lets us delete/rebuild derived memory safely and ground every fact</td>
+</tr>
+<tr>
+<td>D3</td>
+<td><strong>Decay is <code>salience = importance · e^(−λΔt_last_access)</code></strong>, clock reset by <em>access</em> not creation</td>
+<td>Frequently-used memories never fade; unused ones do — the desired behavior in one formula (ADR-014)</td>
+</tr>
+<tr>
+<td>D4</td>
+<td><strong>Per-type half-lives</strong>: episodic ~7d, procedural ~90d, semantic non-decaying-until-contradicted</td>
+<td>Perishability differs by kind; facts expire on contradiction, not on a timer (ADR-014)</td>
+</tr>
+<tr>
+<td>D5</td>
+<td><strong>Reinforcement via SM-2 with <code>EF ≥ 1.3</code> clamp</strong>, growing effective half-life by <code>EF</code></td>
+<td>Proven spaced-repetition curve; clamp prevents thrash/leeches (ADR-014)</td>
+</tr>
+<tr>
+<td>D6</td>
+<td><strong>Importance is a cached 1–10 LLM poignancy score</strong>, computed once at write</td>
+<td>Stable retrieval weight; no per-read cost; <code>$0</code> heuristic fallback (ADR-015)</td>
+</tr>
+<tr>
+<td>D7</td>
+<td><strong>Consolidate at importance-sum &gt; 150 OR at every session boundary</strong></td>
+<td>Significance-scaled cadence with a guaranteed floor (ADR-012/015)</td>
+</tr>
+<tr>
+<td>D8</td>
+<td><strong>Reflection produces first-class, source-linked insight trees</strong> (~2–3/day)</td>
+<td>Auditable abstraction; insights are memories, not throwaway summaries (ADR-015)</td>
+</tr>
+<tr>
+<td>D9</td>
+<td><strong>Heavy work runs in a sleep-time agent</strong>, stronger/slower model, idle-time, never blocks foreground</td>
+<td>Buy quality with latency we have, not latency the user feels (ADR-015)</td>
+</tr>
+<tr>
+<td>D10</td>
+<td><strong>Forgetting = archival, never deletion</strong>; low-salience drops from default retrieval, stays searchable on disk</td>
+<td>Local-first; decay must be reversible and auditable</td>
+</tr>
+<tr>
+<td>D11</td>
+<td><strong>Every memory carries provenance + confidence; user-asserted ≠ agent-ingested</strong></td>
+<td>Trust is per-source; gates promotion and overwrite (ADR-029)</td>
+</tr>
+<tr>
+<td>D12</td>
+<td><strong>Consolidated facts must cite ≥1 grounding episode; contradictions flag, never silently overwrite</strong></td>
+<td>Kills hallucinated/injected memories at the consolidation boundary (ADR-029)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="sources">Sources<a class="headerlink" href="#sources" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Declarative memory taxonomy — https://www.simplypsychology.org/declarative-memory.html</li>
+<li>Episodic / procedural / semantic memory — https://www.tutor2u.net/psychology/reference/episodic-procedural-and-semantic-memory</li>
+<li>Systems consolidation (hippocampus→neocortex) — https://pmc.ncbi.nlm.nih.gov/articles/PMC4526749/</li>
+<li>Complementary Learning Systems (PNAS) — https://www.pnas.org/doi/10.1073/pnas.2123432119</li>
+<li>Complementary Learning Systems (McClelland lineage) — https://pubmed.ncbi.nlm.nih.gov/22141588/</li>
+<li>Ebbinghaus forgetting curve — https://memia.app/en/resources/blog/ebbinghaus-forgetting-curve</li>
+<li>Forgetting curve &amp; stability (recall raises S) — https://sesen.ai/forgetting-curve</li>
+<li>SuperMemo / SM-2 algorithm — https://en.wikipedia.org/wiki/SuperMemo</li>
+<li>Stanford Generative Agents (memory stream, reflection, three-factor retrieval) — https://ar5iv.labs.arxiv.org/html/2304.03442</li>
+<li>MemGPT (virtual context paging) — https://arxiv.org/abs/2310.08560</li>
+<li>Letta sleep-time compute (blog) — https://www.letta.com/blog/sleep-time-compute</li>
+<li>Letta sleep-time architecture (docs) — https://docs.letta.com/guides/agents/architectures/sleeptime/</li>
+<li>Bartlett schema &amp; script theory — https://www.academica-group.com/en/knowledge/bartletts-schematheory</li>
+<li>MemoryGraft / persistent memory poisoning (paper) — https://arxiv.org/html/2512.16962v1</li>
+<li>Persistent memory poisoning in AI agents — https://christian-schneider.net/blog/persistent-memory-poisoning-in-ai-agents/</li>
+<li>Agent memory compression failure modes — https://www.indium.tech/blog/agent-memory-compression-failure-modes/</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.top", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,1641 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Take your AI's memory anywhere — a local-first, portable, git-like memory layer for AI coding agents.">
+      
+      
+      
+      
+        <link rel="prev" href="../RETRIEVAL/">
+      
+      
+        <link rel="next" href="../SYNC/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>.dna Format - Helix</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#helix-the-dna-strand-format" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Helix" class="md-header__button md-logo" aria-label="Helix" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Helix
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              .dna Format
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/abhay-codes07/Agent-DNA-Transfer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Helix" class="md-nav__button md-logo" aria-label="Helix" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Helix
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/abhay-codes07/Agent-DNA-Transfer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Product & strategy
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Product & strategy
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PRD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PRD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../COMPETITIVE_ANALYSIS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Competitive Analysis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BUSINESS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Business & GTM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RESEARCH/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research Survey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Engineering
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Engineering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TSD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Technical Spec
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SYSTEM_ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    System Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MEMORY_MODEL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Memory Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CONSOLIDATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Consolidation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RETRIEVAL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    .dna Format
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    .dna Format
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-container" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Container
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-manifest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Manifest
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-encryption-adr-019" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Encryption (ADR-019)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-signing-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Signing &amp; verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-integrity-content-addressing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Integrity &amp; content addressing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-versioning-history" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Versioning &amp; history
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-transfer-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Transfer operations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Transfer operations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#export-clone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        export / clone
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#import" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        import
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#merge-a-b" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        merge (A ⊕ B)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rollback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        rollback
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-compatibility-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Compatibility rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-why-not-a-blockchain-decentralized-store-for-v1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Why not a blockchain / decentralized store (for v1)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SYNC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sync & Merge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../COST_OPTIMIZATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cost Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../API_REFERENCE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MCP_INTEGRATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PLUGINS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../OBSERVABILITY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trust, quality & process
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Trust, quality & process
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SECURITY_MODEL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PRIVACY_COMPLIANCE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Privacy & Compliance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../EVALUATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GOVERNANCE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Governance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GLOSSARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-container" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Container
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-manifest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Manifest
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-encryption-adr-019" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Encryption (ADR-019)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-signing-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Signing &amp; verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-integrity-content-addressing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Integrity &amp; content addressing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-versioning-history" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Versioning &amp; history
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-transfer-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Transfer operations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Transfer operations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#export-clone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        export / clone
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#import" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        import
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#merge-a-b" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        merge (A ⊕ B)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rollback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        rollback
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-compatibility-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Compatibility rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-why-not-a-blockchain-decentralized-store-for-v1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Why not a blockchain / decentralized store (for v1)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="helix-the-dna-strand-format">Helix — The <code>.dna</code> Strand Format<a class="headerlink" href="#helix-the-dna-strand-format" title="Permanent link">&para;</a></h1>
+<p><strong>Status:</strong> Draft v1 · <strong>Last updated:</strong> 2026-06-18 · <strong>Related:</strong> <a href="../TSD/">TSD §7</a> · <a href="../SECURITY_MODEL/">Security</a> · <a href="../DECISIONS.md">ADR-008</a></p>
+<p>The <code>.dna</code> strand is the portable artifact that makes "take your memory anywhere" real. It is
+<strong>signed</strong>, <strong>encrypted</strong>, <strong>versioned</strong>, and <strong>mergeable</strong> — a memory you can move like a
+file and version like code, without a server or a blockchain.</p>
+<hr />
+<blockquote>
+<p><strong>Implementation status (Phase 4, shipped).</strong> The codec is built on PyNaCl/libsodium:
+<strong>XChaCha20-Poly1305</strong> encryption, <strong>Ed25519</strong> signatures, <strong>Argon2id</strong> KDF — matching this
+spec. Current deviations (<a href="../DECISIONS.md">ADR-032</a>): the Merkle hash is <strong>BLAKE2b</strong> (stdlib;
+BLAKE3 is a future upgrade) and the container is a <strong>zip</strong> (not tar+zstd). Encryption uses
+<strong>64 KiB XChaCha20-Poly1305 secretstream chunks</strong> (truncation-resistant), with a
+back-compatible <code>enc_mode</code> field so any legacy single-blob strands still import. Export/import/
+verify/merge/diff/push/pull are implemented and tested (round-trip, tamper, truncation,
+wrong-passphrase). <code>log</code> reads history; <code>rollback</code> restores from a prior <code>.dna</code>.</p>
+</blockquote>
+<h2 id="1-container">1. Container<a class="headerlink" href="#1-container" title="Permanent link">&para;</a></h2>
+<p>A <code>.dna</code> file is a single archive (tar, optionally zstd-compressed) containing:</p>
+<div class="highlight"><pre><span></span><code>my-brain.dna
+├── manifest.json        # plaintext metadata + integrity root (signed)
+├── manifest.sig         # detached Ed25519 signature over manifest.json
+└── strand.db.enc        # the SQLite strand, encrypted (XChaCha20-Poly1305)
+</code></pre></div>
+<p><code>manifest.json</code> is plaintext so a recipient can inspect <em>what</em> a strand is (schema, model,
+counts, author key) and verify integrity <strong>before</strong> decrypting anything.</p>
+<h2 id="2-manifest">2. Manifest<a class="headerlink" href="#2-manifest" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>{
+  &quot;format&quot;: &quot;helix.dna&quot;,
+  &quot;format_version&quot;: 1,
+  &quot;strand_id&quot;: &quot;01J...&quot;,            // stable identity across versions
+  &quot;version&quot;: 7,                      // monotonically increasing
+  &quot;created_at&quot;: &quot;2026-06-18T...Z&quot;,
+  &quot;created_by&quot;: {
+    &quot;pubkey&quot;: &quot;ed25519:base64...&quot;,   // author&#39;s signing public key
+    &quot;label&quot;: &quot;abhay@laptop&quot;
+  },
+  &quot;schema_version&quot;: 1,               // memory-model schema
+  &quot;embedding&quot;: {                     // pin the embedding space
+    &quot;provider&quot;: &quot;local&quot;,
+    &quot;model&quot;: &quot;BAAI/bge-small-en-v1.5&quot;,
+    &quot;dim&quot;: 384,
+    &quot;normalized&quot;: true
+  },
+  &quot;counts&quot;: { &quot;memories&quot;: 1243, &quot;edges&quot;: 880 },
+  &quot;encryption&quot;: {
+    &quot;cipher&quot;: &quot;xchacha20poly1305&quot;,
+    &quot;kdf&quot;: &quot;argon2id&quot;,
+    &quot;kdf_params&quot;: { &quot;mem_kib&quot;: 65536, &quot;iters&quot;: 3, &quot;parallelism&quot;: 1, &quot;salt&quot;: &quot;base64...&quot; },
+    &quot;nonce&quot;: &quot;base64...&quot;
+  },
+  &quot;integrity&quot;: {
+    &quot;merkle_root&quot;: &quot;blake3:hex...&quot;,  // root over per-row hashes (see §5)
+    &quot;db_sha256&quot;: &quot;hex...&quot;            // hash of the ciphertext blob
+  },
+  &quot;history_head&quot;: &quot;blake3:hex...&quot;,   // head of the op-history chain
+  &quot;parents&quot;: [&quot;blake3:...&quot;]          // prior version hash(es); enables diff/merge/rollback
+}
+</code></pre></div>
+<p>The signature (<code>manifest.sig</code>) covers the <strong>entire</strong> manifest, including the integrity root,
+so any tampering with content or metadata is detectable.</p>
+<h2 id="3-encryption-adr-019">3. Encryption (<a href="../DECISIONS.md">ADR-019</a>)<a class="headerlink" href="#3-encryption-adr-019" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Cipher:</strong> XChaCha20-Poly1305 (AEAD) via libsodium <strong><code>secretstream</code></strong> over <strong>64 KiB
+  chunks</strong> — authenticated, seekable, and truncation-resistant (the <code>age</code> STREAM model), not a
+  single monolithic blob.</li>
+<li><strong>Wrap-don't-encrypt:</strong> a random <strong>data key</strong> encrypts the payload; that data key is itself
+  <em>wrapped</em> by the user's unlock factor(s). So re-keying never re-encrypts the whole strand and
+  multiple factors can unlock the same file (see §4 / key management).</li>
+<li><strong>Key derivation:</strong> <strong>Argon2id</strong> from the passphrase (<code>HELIX_PASSPHRASE</code>) — desktop params
+  (start m=64 MiB, t=3, p=1) — or the data key is wrapped by a device-keychain key when no
+  passphrase is set; optional recovery code / Shamir / hardware key wrap the same data key
+  (<a href="../DECISIONS.md">ADR-020</a>).</li>
+<li><strong>Nonces:</strong> 192-bit (XChaCha) — random nonces are safe at this width.</li>
+<li><strong>Threat posture:</strong> the disk/USB/cloud-drive holding the <code>.dna</code> is treated as untrusted; the
+  plaintext strand exists only in memory on a trusted device. See <a href="../SECURITY_MODEL/">Security Model</a>.</li>
+</ul>
+<h2 id="4-signing-verification">4. Signing &amp; verification<a class="headerlink" href="#4-signing-verification" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Each user has an <strong>Ed25519 identity keypair</strong> (generated on <code>helix init</code>, stored in the OS
+  keychain / <code>helix-identity/</code>, never committed, never inside a strand).</li>
+<li><code>export</code> signs the manifest; <code>import</code> <strong>verifies</strong> the signature against the embedded
+  pubkey and warns/blocks on mismatch or on an untrusted author (for shared strands).</li>
+<li>This gives Walrus-style verifiable integrity <strong>without</strong> a blockchain or network.</li>
+</ul>
+<h2 id="5-integrity-content-addressing">5. Integrity &amp; content addressing<a class="headerlink" href="#5-integrity-content-addressing" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Each memory/edge row hashes to a stable digest (BLAKE3 over canonicalized fields).</li>
+<li>A Merkle tree over those digests yields <code>merkle_root</code>, recorded and signed.</li>
+<li>Two strands can be <strong>diffed cheaply</strong> by comparing subtrees instead of full contents — the
+  basis for fast <code>diff</code>/<code>merge</code> and for detecting exactly which facts changed.</li>
+</ul>
+<h2 id="6-versioning-history">6. Versioning &amp; history<a class="headerlink" href="#6-versioning-history" title="Permanent link">&para;</a></h2>
+<ul>
+<li><code>version</code> increments on every committed change; <code>parents</code> records prior version hash(es).</li>
+<li>An append-only <code>history</code> table logs operations (op type, affected ids, before/after hashes,
+  provenance), chained via <code>history_head</code>.</li>
+<li>This enables:</li>
+<li><code>helix log</code> — the evolution of your memory, git-style.</li>
+<li><code>helix diff vA vB</code> — what changed between versions/strands.</li>
+<li><code>helix rollback &lt;version&gt;</code> — restore a prior state (e.g., undo a wrong learning).</li>
+</ul>
+<h2 id="7-transfer-operations">7. Transfer operations<a class="headerlink" href="#7-transfer-operations" title="Permanent link">&para;</a></h2>
+<h3 id="export-clone">export / clone<a class="headerlink" href="#export-clone" title="Permanent link">&para;</a></h3>
+<p>Snapshot <code>strand.db</code> → compute row/Merkle hashes → write manifest → sign → encrypt → archive.
+Atomic (temp file + rename); never overwrites the source strand.</p>
+<h3 id="import">import<a class="headerlink" href="#import" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Read <code>manifest.json</code>; check <code>format_version</code>/<code>schema_version</code> compatibility.</li>
+<li><strong>Verify <code>manifest.sig</code>.</strong> Reject on failure (fail closed).</li>
+<li>Decrypt <code>strand.db.enc</code> (passphrase/keychain).</li>
+<li>If <code>embedding</code> space differs from the importing install, <strong>re-embed</strong> content into the
+   local space (tracked operation) rather than mixing vector spaces.</li>
+<li>Open as a new local strand (or stage for merge).</li>
+</ol>
+<h3 id="merge-a-b">merge (<code>A ⊕ B</code>)<a class="headerlink" href="#merge-a-b" title="Permanent link">&para;</a></h3>
+<p>The hard, valuable operation — and it reuses the same engine as everyday learning. Full spec in
+<a href="../SYNC/">Sync &amp; Merge</a> (<a href="../DECISIONS.md">ADR-021</a>):
+1. Align nodes/edges by content hash + semantic match (content-addressed Prolly/Merkle store
+   makes this cheap).
+2. <strong>CRDT convergence</strong> (Automerge-style, op-based with history) for concurrent edits, then
+   <strong>git-style 3-way semantic merge</strong> at the fact/field level (against the commit-DAG
+   merge-base) for contradictions — resolved with the <strong>bi-temporal</strong> model (close <code>valid_to</code>,
+   never delete). Not last-write-wins.
+3. Preserve <strong>both</strong> provenances; never silently drop a contributor's fact.
+4. Enforce the <strong>redaction invariant</strong>: secrets are never present to merge in the first place.
+5. Produce a new <code>version</code> with both <code>parents</code> (reversible via rollback).</p>
+<p>Merge is conflict-aware and reversible by construction; "two facts meet" has exactly one code
+path whether they meet over time (one user) or at once (two users/teammates).</p>
+<h3 id="rollback">rollback<a class="headerlink" href="#rollback" title="Permanent link">&para;</a></h3>
+<p>Restore a prior <code>version</code> from <code>history</code>; the rollback is itself a new version (you can undo
+an undo). No history is destroyed.</p>
+<h2 id="8-compatibility-rules">8. Compatibility rules<a class="headerlink" href="#8-compatibility-rules" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Newer <code>format_version</code> than installed</td>
+<td>Refuse with upgrade guidance (fail closed)</td>
+</tr>
+<tr>
+<td>Older <code>format_version</code></td>
+<td>Migrate forward on import</td>
+</tr>
+<tr>
+<td>Different <code>schema_version</code></td>
+<td>Run schema migration</td>
+</tr>
+<tr>
+<td>Different embedding space</td>
+<td>Re-embed locally (tracked); never mix dims silently</td>
+</tr>
+<tr>
+<td>Signature invalid / author untrusted</td>
+<td>Block import (or warn for explicitly trusted shares)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="9-why-not-a-blockchain-decentralized-store-for-v1">9. Why not a blockchain / decentralized store (for v1)<a class="headerlink" href="#9-why-not-a-blockchain-decentralized-store-for-v1" title="Permanent link">&para;</a></h2>
+<p>Walrus achieves portability + verifiability via decentralized, verifiable storage. Helix gets
+the same <em>user-facing</em> guarantees — portable, integrity-verified, owner-controlled — with a
+<strong>signed encrypted file</strong>: simpler, free, offline, and zero-infra. A decentralized/verifiable
+backend remains a <em>pluggable option</em> for users who want it (<a href="../DECISIONS.md">ADR-010</a>), not a
+requirement for everyone.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.top", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

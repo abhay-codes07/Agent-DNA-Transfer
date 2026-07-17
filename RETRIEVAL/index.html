@@ -1,0 +1,2297 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Take your AI's memory anywhere — a local-first, portable, git-like memory layer for AI coding agents.">
+      
+      
+      
+      
+        <link rel="prev" href="../CONSOLIDATION/">
+      
+      
+        <link rel="next" href="../DNA_FORMAT/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Retrieval - Helix</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#helix-retrieval-pipeline" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Helix" class="md-header__button md-logo" aria-label="Helix" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Helix
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Retrieval
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/abhay-codes07/Agent-DNA-Transfer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Helix" class="md-nav__button md-logo" aria-label="Helix" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Helix
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/abhay-codes07/Agent-DNA-Transfer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Product & strategy
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Product & strategy
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PRD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PRD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../COMPETITIVE_ANALYSIS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Competitive Analysis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BUSINESS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Business & GTM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RESEARCH/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research Survey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Engineering
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Engineering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TSD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Technical Spec
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SYSTEM_ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    System Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MEMORY_MODEL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Memory Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CONSOLIDATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Consolidation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-overview-latency-budget" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Overview &amp; Latency Budget
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Overview &amp; Latency Budget">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#latency-budget-p95-single-recall-106-items" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Latency budget (p95, single recall, ~10⁶ items)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-the-default-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. The Default Pipeline
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. The Default Pipeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stage-1-query-embed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 1 — Query embed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stage-2-scope-route" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 2 — Scope / route
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stage-3-hybrid-retrieve-dense-bm25-top-100-each" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 3 — Hybrid retrieve (dense + BM25), top-100 each
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stage-4-rrf-fuse-k60" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 4 — RRF fuse, k=60
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stage-5-graph-expansion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 5 — Graph expansion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stage-6-multi-signal-ranking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 6 — Multi-signal ranking
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stage-7-mmr-dedup-diversity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 7 — MMR dedup / diversity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stage-8-token-budgeted-packing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 8 — Token-budgeted packing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-the-ranking-formula" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. The Ranking Formula
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-embeddings-adr-017" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Embeddings (ADR-017)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Embeddings (ADR-017)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#default-tier-0-cpu-fast" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Default tier ($0, CPU, fast)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#upgrade-tier-higher-quality-still-cpu-feasible" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrade tier (higher quality, still CPU-feasible)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-optional-high-quality-rerank-tier" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Optional High-Quality Rerank Tier
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-query-understanding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Query Understanding
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-lost-in-the-middle-packing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. "Lost in the Middle" Packing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-twelve-opinionated-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Twelve Opinionated Decisions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-failure-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Failure Modes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sources
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DNA_FORMAT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    .dna Format
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SYNC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sync & Merge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../COST_OPTIMIZATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cost Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../API_REFERENCE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MCP_INTEGRATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PLUGINS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../OBSERVABILITY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trust, quality & process
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Trust, quality & process
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SECURITY_MODEL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PRIVACY_COMPLIANCE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Privacy & Compliance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../EVALUATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GOVERNANCE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Governance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GLOSSARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-overview-latency-budget" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Overview &amp; Latency Budget
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Overview &amp; Latency Budget">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#latency-budget-p95-single-recall-106-items" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Latency budget (p95, single recall, ~10⁶ items)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-the-default-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. The Default Pipeline
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. The Default Pipeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stage-1-query-embed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 1 — Query embed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stage-2-scope-route" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 2 — Scope / route
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stage-3-hybrid-retrieve-dense-bm25-top-100-each" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 3 — Hybrid retrieve (dense + BM25), top-100 each
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stage-4-rrf-fuse-k60" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 4 — RRF fuse, k=60
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stage-5-graph-expansion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 5 — Graph expansion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stage-6-multi-signal-ranking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 6 — Multi-signal ranking
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stage-7-mmr-dedup-diversity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 7 — MMR dedup / diversity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stage-8-token-budgeted-packing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 8 — Token-budgeted packing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-the-ranking-formula" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. The Ranking Formula
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-embeddings-adr-017" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Embeddings (ADR-017)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Embeddings (ADR-017)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#default-tier-0-cpu-fast" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Default tier ($0, CPU, fast)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#upgrade-tier-higher-quality-still-cpu-feasible" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrade tier (higher quality, still CPU-feasible)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-optional-high-quality-rerank-tier" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Optional High-Quality Rerank Tier
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-query-understanding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Query Understanding
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-lost-in-the-middle-packing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. "Lost in the Middle" Packing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-twelve-opinionated-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Twelve Opinionated Decisions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-failure-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Failure Modes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sources
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="helix-retrieval-pipeline">Helix — Retrieval Pipeline<a class="headerlink" href="#helix-retrieval-pipeline" title="Permanent link">&para;</a></h1>
+<p><strong>Status:</strong> Draft v1 · <strong>Last updated:</strong> 2026-06-18 · <strong>Related:</strong> <a href="../TSD/">TSD</a> · <a href="../MEMORY_MODEL/">Memory Model</a> · <a href="../CONSOLIDATION/">Consolidation</a> · <a href="../COST_OPTIMIZATION/">Cost</a> · <a href="../DECISIONS.md">Decisions</a></p>
+<hr />
+<h2 id="1-overview-latency-budget">1. Overview &amp; Latency Budget<a class="headerlink" href="#1-overview-latency-budget" title="Permanent link">&para;</a></h2>
+<p>Retrieval is the hot path. Every other Helix subsystem (ingest, <a href="../CONSOLIDATION/">consolidation</a>, graph maintenance) can be slow, async, and batched. Retrieval cannot. A coding agent calls <code>recall()</code> synchronously inside its reasoning loop, often several times per turn, and the latency stacks directly onto the user-visible response time.</p>
+<p>The design therefore inverts the usual RAG cost model: <strong>all expensive work — LLM expansion, summarization, graph construction, embedding — is pushed to ingest time. The query path does pure CPU vector math, lexical lookup, and graph traversal. No LLM call ever touches the query hot path in the default tier</strong> (ADR-016).</p>
+<p><strong>Hard constraints (honored throughout this document):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Constraint</th>
+<th>Target</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Latency</td>
+<td><strong>p95 &lt; 150 ms</strong></td>
+<td>Synchronous agent loop; multiple recalls per turn</td>
+</tr>
+<tr>
+<td>Compute</td>
+<td><strong>CPU only</strong></td>
+<td>Local-first; no GPU assumed</td>
+</tr>
+<tr>
+<td>Cost</td>
+<td><strong>$0 default</strong></td>
+<td>No paid API on query path</td>
+</tr>
+<tr>
+<td>LLM on query path</td>
+<td><strong>None</strong></td>
+<td>Pushed to ingest (doc2query, summaries, KG)</td>
+</tr>
+<tr>
+<td>Scale</td>
+<td><strong>10⁵–10⁶ typed items</strong></td>
+<td>Personal/project memory, not web-scale</td>
+</tr>
+</tbody>
+</table>
+<h3 id="latency-budget-p95-single-recall-106-items">Latency budget (p95, single recall, ~10⁶ items)<a class="headerlink" href="#latency-budget-p95-single-recall-106-items" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>┌──────────────────────────────────────────────────────────────┐
+│ TOTAL BUDGET: 150 ms (p95)                                     │
+├──────────────────────────────────────────────────────────────┤
+│ Stage                                  Budget   Cumulative     │
+│ ─────────────────────────────────────  ──────   ──────────    │
+│ 1. Query embed (int8, 384d)              8 ms      8 ms        │
+│ 2. Scope / route (metadata filter)       3 ms     11 ms        │
+│ 3a. Dense ANN top-100                    25 ms     36 ms       │
+│ 3b. BM25 top-100 (parallel w/ 3a)       (15 ms)    36 ms       │
+│ 4. RRF fuse (k=60)                        2 ms     38 ms       │
+│ 5. Graph expansion (PPR / bounded BFS)   30 ms     68 ms       │
+│ 6. Multi-signal ranking                   8 ms     76 ms       │
+│ 7. MMR dedup / diversity                 10 ms     86 ms       │
+│ 8. Token-budgeted packing                 6 ms     92 ms       │
+│ ─────────────────────────────────────  ──────   ──────────    │
+│ Headroom for GC / cold cache / I/O      ~58 ms    150 ms       │
+└──────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<p>The budget leaves ~40% headroom precisely because the killers — cross-encoder reranking and query-time LLM expansion — are <strong>excluded from the default tier</strong> and only available in opt-in tiers (§6, §7). A top-100 CPU cross-encoder rerank alone is 88–257 s, roughly <strong>600–1700× the entire budget</strong> (<a href="https://medium.com/@xiweizhou/speed-showdown-reranker-1f7987400077">Speed Showdown</a>); it is structurally impossible at p95&lt;150ms and is never default.</p>
+<hr />
+<h2 id="2-the-default-pipeline">2. The Default Pipeline<a class="headerlink" href="#2-the-default-pipeline" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>                          query string
+                               │
+            ┌──────────────────▼───────────────────┐
+            │  1. QUERY EMBED  (bge-small int8 384d)│
+            └──────────────────┬───────────────────┘
+                               │
+            ┌──────────────────▼───────────────────┐
+            │  2. SCOPE / ROUTE                     │
+            │  embedding router → {skip? · type ·  │
+            │  project · time window · ACL}         │
+            └──────────────────┬───────────────────┘
+                               │   (skip-retrieval → empty set)
+            ┌──────────────────▼───────────────────┐
+            │  3. HYBRID RETRIEVE  (parallel)       │
+            │  ┌───────────┐      ┌──────────────┐  │
+            │  │ DENSE ANN │      │  BM25 / sparse│ │
+            │  │ top-100   │      │  top-100      │  │
+            │  └─────┬─────┘      └──────┬───────┘  │
+            └────────┼───────────────────┼──────────┘
+                     └─────────┬─────────┘
+            ┌──────────────────▼───────────────────┐
+            │  4. RRF FUSE  k=60  → ranked top-100  │
+            └──────────────────┬───────────────────┘
+                               │  (seed set)
+            ┌──────────────────▼───────────────────┐
+            │  5. GRAPH EXPANSION                    │
+            │  Personalized PageRank over typed KG  │
+            │  (HippoRAG-style) OR bounded 1–2 hop  │
+            │  → adds multi-hop neighbors           │
+            └──────────────────┬───────────────────┘
+                               │  (~120–160 candidates)
+            ┌──────────────────▼───────────────────┐
+            │  6. MULTI-SIGNAL RANKING              │
+            │  sim · recency · salience · conf ·    │
+            │  graph-proximity  (weights per type)  │
+            └──────────────────┬───────────────────┘
+                               │
+            ┌──────────────────▼───────────────────┐
+            │  7. MMR DEDUP / DIVERSITY  λ=0.5      │
+            │  (MinHash-LSH ~0.8 pre-dedup)         │
+            └──────────────────┬───────────────────┘
+                               │
+            ┌──────────────────▼───────────────────┐
+            │  8. TOKEN-BUDGETED PACKING            │
+            │  lost-in-the-middle ordering          │
+            └──────────────────┬───────────────────┘
+                               │
+                       ranked memory bundle
+</code></pre></div>
+<h3 id="stage-1-query-embed">Stage 1 — Query embed<a class="headerlink" href="#stage-1-query-embed" title="Permanent link">&para;</a></h3>
+<p>The query is embedded once with the <strong>same model used at ingest</strong> (default <code>bge-small-en-v1.5</code>, 384d, int8; §6). int8 query embedding keeps this under ~8 ms on CPU. The full-precision query vector is retained in memory for the optional int8/binary <strong>rescore</strong> pass (§6) so we never pay accuracy loss on the asymmetric query side.</p>
+<h3 id="stage-2-scope-route">Stage 2 — Scope / route<a class="headerlink" href="#stage-2-scope-route" title="Permanent link">&para;</a></h3>
+<p>A cheap <strong>embedding router</strong> (~10× cheaper than LLM routing: 50–200 ms LLM vs sub-10 ms here) classifies the query against precomputed centroids to decide (<a href="https://arxiv.org/abs/2310.11511">router cost</a>):
+- <strong>skip-retrieval</strong> — Self-RAG-style; if the query needs no memory (e.g. pure arithmetic, "format this JSON"), return empty and save the whole pipeline (<a href="https://arxiv.org/abs/2310.11511">Self-RAG</a>).
+- <strong>scope filters</strong> — memory type(s), project, time window, ACL — applied as pre-filters on the ANN index so dense/BM25 only search the relevant partition.</p>
+<h3 id="stage-3-hybrid-retrieve-dense-bm25-top-100-each">Stage 3 — Hybrid retrieve (dense + BM25), top-100 each<a class="headerlink" href="#stage-3-hybrid-retrieve-dense-bm25-top-100-each" title="Permanent link">&para;</a></h3>
+<p>Dense ANN and BM25 run <strong>in parallel</strong>. Both are mandatory, not optional:
+- <strong>Dense</strong> captures semantic paraphrase. DPR beats BM25 78.4% vs 59.1% top-20 on NQ (<a href="https://arxiv.org/abs/2004.04906">DPR</a>).
+- <strong>BM25 is non-negotiable for personal/code memory.</strong> Dense retrievers degrade out-of-domain while BM25 generalizes (<a href="https://arxiv.org/abs/2104.08663">BEIR</a>), and personal memory is saturated with <strong>proper nouns, file paths, identifiers, and verbatim error strings</strong> that demand exact lexical match. SPLADE is an optional sparse-semantic upgrade (<a href="https://opensearch.org/blog/improving-document-retrieval-with-sparse-semantic-encoders/">SPLADE</a>).</p>
+<h3 id="stage-4-rrf-fuse-k60">Stage 4 — RRF fuse, k=60<a class="headerlink" href="#stage-4-rrf-fuse-k60" title="Permanent link">&para;</a></h3>
+<p>Fuse the two ranked lists with <strong>Reciprocal Rank Fusion</strong>:</p>
+<div class="highlight"><pre><span></span><code>score(d) = Σ  1 / (k + rank_i(d))         k = 60
+          i∈{dense, bm25}
+</code></pre></div>
+<p>RRF uses <strong>ranks only</strong>, sidestepping the fragility of normalizing two incomparable score distributions (<a href="https://bigdataboutique.com/blog/reciprocal-rank-fusion-how-it-works-and-when-to-use-it">RRF explained</a>). <code>k=60</code> is the original Cormack SIGIR 2009 value (<a href="https://cormack.uwaterloo.ca/cormacksigir09-rrf.pdf">Cormack RRF</a>) and matches Elasticsearch's <code>rank_constant=60</code>. <strong>Implementation note:</strong> Qdrant uses a zero-based <code>k=2</code> convention — always validate the rank-base per engine before assuming 60 (ADR-018).</p>
+<h3 id="stage-5-graph-expansion">Stage 5 — Graph expansion<a class="headerlink" href="#stage-5-graph-expansion" title="Permanent link">&para;</a></h3>
+<p>The RRF top-100 becomes the <strong>seed set</strong> for a single graph step over Helix's typed knowledge graph (built entirely at ingest). Two modes:
+- <strong>Personalized PageRank (default, HippoRAG-style)</strong> — run PPR with the seed set as the personalization vector; this performs single-step multi-hop association in one classic, cheap CPU algorithm (<a href="https://arxiv.org/abs/2405.14831">HippoRAG</a>). HippoRAG2 lifts 2Wiki Recall@5 from 76.5→90.4 (<a href="https://arxiv.org/abs/2502.14802">HippoRAG2</a>).
+- <strong>Bounded traversal (fallback)</strong> — for very large graphs or tight budgets, a 1–2 hop BFS capped at N neighbors per seed.</p>
+<p>We explicitly <strong>reject Microsoft GraphRAG</strong> for the default path: its per-chunk + community-summary LLM indexing is ruinously expensive and global search issues ~40K-token prompts (<a href="https://arxiv.org/abs/2404.16130">GraphRAG</a>); even LazyGraphRAG only cuts <em>indexing</em> cost (<a href="https://www.microsoft.com/en-us/research/blog/lazygraphrag-setting-a-new-standard-for-quality-and-cost/">LazyGraphRAG</a>). The whole point of HippoRAG-PPR is that <strong>all LLM cost lives at ingest</strong>, and the query is pure linear algebra. LightRAG (&lt;100 tokens/query, incremental insert; <a href="https://arxiv.org/abs/2410.05779">LightRAG</a>) and Graphiti (bi-temporal invalidation, ~300 ms P95; <a href="https://arxiv.org/abs/2501.13956">Graphiti</a>) inform the ingest-side graph design — see <a href="../MEMORY_MODEL/">Memory Model</a>.</p>
+<h3 id="stage-6-multi-signal-ranking">Stage 6 — Multi-signal ranking<a class="headerlink" href="#stage-6-multi-signal-ranking" title="Permanent link">&para;</a></h3>
+<p>The fused + expanded candidate pool (~120–160 items) is scored by the blended formula in §3.</p>
+<h3 id="stage-7-mmr-dedup-diversity">Stage 7 — MMR dedup / diversity<a class="headerlink" href="#stage-7-mmr-dedup-diversity" title="Permanent link">&para;</a></h3>
+<p>Maximal Marginal Relevance removes near-duplicates and diversifies (§8).</p>
+<h3 id="stage-8-token-budgeted-packing">Stage 8 — Token-budgeted packing<a class="headerlink" href="#stage-8-token-budgeted-packing" title="Permanent link">&para;</a></h3>
+<p>Pack to the caller's token budget using lost-in-the-middle ordering (§8).</p>
+<hr />
+<h2 id="3-the-ranking-formula">3. The Ranking Formula<a class="headerlink" href="#3-the-ranking-formula" title="Permanent link">&para;</a></h2>
+<p>Each signal is <strong>min-max normalized within the candidate pool</strong> to [0,1], then linearly combined. Normalize-then-blend is the standard, robust approach used by Mem0, which fuses vector + BM25 + entity signals after normalization (<a href="https://arxiv.org/html/2504.19413v1">Mem0</a>).</p>
+<div class="highlight"><pre><span></span><code>score(d, q) =  w_sim   · sim(d, q)            // cosine, normalized
+             + w_rec   · recency(d)           // exp decay from LAST ACCESS
+             + w_sal   · salience(d)           // importance, set at ingest
+             + w_conf  · confidence(d)         // source/verification trust
+             + w_graph · graphprox(d, q)       // PPR mass / inverse hop dist
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Signal</th>
+<th>Source</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sim</code></td>
+<td>cosine(query, doc)</td>
+<td>The relevance backbone. From RRF-fused rank → score.</td>
+</tr>
+<tr>
+<td><code>recency</code></td>
+<td><code>exp(-λ · Δt)</code></td>
+<td><strong>Decays from last <em>access</em>, not creation</strong> (<a href="https://python.langchain.com/v0.2/docs/how_to/time_weighted_vectorstore/">LangChain TimeWeighted</a>). Generative Agents use 0.995/hr (<a href="https://ar5iv.labs.arxiv.org/html/2304.03442">Generative Agents</a>).</td>
+</tr>
+<tr>
+<td><code>salience</code></td>
+<td>importance score, ingest-time</td>
+<td>Generative Agents use an LLM 1–10 importance; Helix computes it <strong>at ingest</strong> so the query path stays LLM-free.</td>
+</tr>
+<tr>
+<td><code>confidence</code></td>
+<td>source trust / verification</td>
+<td>E.g. a user-confirmed decision &gt; a speculative inference.</td>
+</tr>
+<tr>
+<td><code>graphprox</code></td>
+<td>PPR mass or 1/hop-distance</td>
+<td>Rewards items pulled in by Stage 5 association.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Weights are tunable per memory type.</strong> The generative-agents baseline sets recency = importance = relevance = 1 (<a href="https://ar5iv.labs.arxiv.org/html/2304.03442">Generative Agents</a>); Helix generalizes this so each type can rebalance:</p>
+<table>
+<thead>
+<tr>
+<th>Memory type</th>
+<th>sim</th>
+<th>recency</th>
+<th>salience</th>
+<th>confidence</th>
+<th>graph</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Episodic</strong> (events, sessions)</td>
+<td>0.35</td>
+<td>0.30</td>
+<td>0.15</td>
+<td>0.10</td>
+<td>0.10</td>
+<td>Time matters most</td>
+</tr>
+<tr>
+<td><strong>Semantic</strong> (facts, entities)</td>
+<td>0.40</td>
+<td>0.05</td>
+<td>0.20</td>
+<td>0.20</td>
+<td>0.15</td>
+<td>Recency nearly irrelevant; trust matters</td>
+</tr>
+<tr>
+<td><strong>Procedural</strong> (how-tos, runbooks)</td>
+<td>0.45</td>
+<td>0.10</td>
+<td>0.25</td>
+<td>0.15</td>
+<td>0.05</td>
+<td>Relevance + importance dominate</td>
+</tr>
+<tr>
+<td><strong>Decision/ADR</strong></td>
+<td>0.35</td>
+<td>0.10</td>
+<td>0.25</td>
+<td>0.25</td>
+<td>0.05</td>
+<td>Confidence weighted heavily</td>
+</tr>
+<tr>
+<td><strong>Code/path refs</strong></td>
+<td>0.50</td>
+<td>0.15</td>
+<td>0.10</td>
+<td>0.10</td>
+<td>0.15</td>
+<td>Exact relevance + graph links</td>
+</tr>
+</tbody>
+</table>
+<p>Defaults ship as config; types and weights are overridable. See <a href="../MEMORY_MODEL/">Memory Model</a> for type definitions.</p>
+<hr />
+<h2 id="4-embeddings-adr-017">4. Embeddings (ADR-017)<a class="headerlink" href="#4-embeddings-adr-017" title="Permanent link">&para;</a></h2>
+<p>All embeddings computed at <strong>ingest</strong> and stored quantized. The query path embeds once and compares against the quantized index, with optional full-precision rescore on a small top-k.</p>
+<h3 id="default-tier-0-cpu-fast">Default tier ($0, CPU, fast)<a class="headerlink" href="#default-tier-0-cpu-fast" title="Permanent link">&para;</a></h3>
+<p><strong><code>bge-small-en-v1.5</code></strong> — 384d, 33M params, MTEB 62.17 — the best-in-class small model and the Helix default (<a href="https://huggingface.co/BAAI/bge-small-en-v1.5">bge-small</a>). Stored <strong>int8</strong> (4× memory reduction, ~99.3% quality retained with rescore; <a href="https://huggingface.co/blog/embedding-quantization">quantization</a>).</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>dim</th>
+<th>params</th>
+<th>MTEB</th>
+<th>Tier</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>all-MiniLM-L6-v2</td>
+<td>384</td>
+<td>22.7M</td>
+<td>~56</td>
+<td>(legacy/tiny)</td>
+</tr>
+<tr>
+<td><strong>bge-small-en-v1.5</strong></td>
+<td><strong>384</strong></td>
+<td><strong>33M</strong></td>
+<td><strong>62.17</strong></td>
+<td><strong>DEFAULT</strong></td>
+</tr>
+<tr>
+<td>gte-small</td>
+<td>384</td>
+<td>—</td>
+<td>61.36</td>
+<td>alt small</td>
+</tr>
+<tr>
+<td>e5-small</td>
+<td>384</td>
+<td>—</td>
+<td>59.93</td>
+<td>alt small</td>
+</tr>
+<tr>
+<td>nomic-embed-text-v1.5</td>
+<td>768</td>
+<td>—</td>
+<td>62.28</td>
+<td>MRL, 8K ctx</td>
+</tr>
+<tr>
+<td>bge-base-en-v1.5</td>
+<td>768</td>
+<td>—</td>
+<td>63.55</td>
+<td>mid</td>
+</tr>
+<tr>
+<td>mxbai-embed-large-v1</td>
+<td>1024</td>
+<td>—</td>
+<td>64.68</td>
+<td><strong>upgrade</strong></td>
+</tr>
+<tr>
+<td>arctic-embed-l-v2.0</td>
+<td>1024</td>
+<td>—</td>
+<td>(multilingual)</td>
+<td><strong>upgrade</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 id="upgrade-tier-higher-quality-still-cpu-feasible">Upgrade tier (higher quality, still CPU-feasible)<a class="headerlink" href="#upgrade-tier-higher-quality-still-cpu-feasible" title="Permanent link">&para;</a></h3>
+<p><strong><code>mxbai-embed-large-v1</code></strong> (1024d, MTEB 64.68; <a href="https://huggingface.co/mixedbread-ai/mxbai-embed-large-v1">mxbai</a>) or <strong><code>arctic-embed-l-v2.0</code></strong> (1024d, multilingual; <a href="https://www.snowflake.com/en/engineering-blog/snowflake-arctic-embed-2-multilingual/">Arctic 2</a>), both <strong>Matryoshka-trained (MRL)</strong>. Use MRL truncation to claw back the cost of the larger model:
+- <strong>Matryoshka truncation</strong> — arctic-m@256d retains ~99% quality; nomic@256d loses only 1.24 MTEB (<a href="https://github.com/Snowflake-Labs/arctic-embed">Arctic MRL</a>, <a href="https://www.nomic.ai/news/nomic-embed-matryoshka">nomic MRL</a>). Store a truncated prefix for the ANN scan, full dim for rescore.
+- <strong>Binary quantization</strong> — 32× memory reduction and up to <strong>32× faster</strong> search, ~96% quality retained with a rescore pass (<a href="https://huggingface.co/blog/embedding-quantization">quantization</a>). This is what makes a 1024d model viable at 10⁶ items on CPU: binary ANN scan → int8/float rescore of top-k.</p>
+<p><strong>Rule of thumb:</strong> binary for the first-pass scan, int8/full for rescore. Never compare quantized vectors without a rescore stage on the survivors.</p>
+<hr />
+<h2 id="5-optional-high-quality-rerank-tier">5. Optional High-Quality Rerank Tier<a class="headerlink" href="#5-optional-high-quality-rerank-tier" title="Permanent link">&para;</a></h2>
+<p>Reranking is <strong>off by default</strong> because a naïve top-100 CPU cross-encoder is 88 s (bge-base) to 257 s (bge-v2-m3), 65–195× slower than GPU (<a href="https://medium.com/@xiweizhou/speed-showdown-reranker-1f7987400077">Speed Showdown</a>) — impossible at 150 ms. Two escapes make reranking feasible <strong>on CPU</strong> when the user opts in:</p>
+<table>
+<thead>
+<tr>
+<th>Approach</th>
+<th>Mechanism</th>
+<th>CPU feasibility</th>
+<th>Quality</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>answerai-colbert-small-v1</strong></td>
+<td>Late interaction (token-level), 33M</td>
+<td>Marketed for <strong>ms-scale CPU search over 100Ks of docs</strong> (<a href="https://www.answer.ai/posts/2024-08-13-small-but-mighty-colbert.html">ColBERT-small</a>); PLAID = 45× faster ColBERT on CPU (<a href="https://arxiv.org/abs/2205.09707">PLAID</a>)</td>
+<td>BEIR 53.79</td>
+</tr>
+<tr>
+<td><strong>int8 ONNX cross-encoder, top-20–30 only</strong></td>
+<td>Quantized cross-encoder over a <em>tiny</em> survivor set</td>
+<td>Feasible only if k ≤ 20–30 (<a href="https://sbert.net/docs/cross_encoder/usage/efficiency.html">CE efficiency</a>)</td>
+<td>High</td>
+</tr>
+</tbody>
+</table>
+<p>For reference, full cross-encoders score BEIR 53.94 (bge-reranker-v2-m3, 0.6B; <a href="https://huggingface.co/BAAI/bge-reranker-v2-m3">bge-rerank</a>) and 57.49 (mxbai-rerank-large-v2; <a href="https://www.mixedbread.com/blog/mxbai-rerank-v2">mxbai-rerank</a>) — excellent but GPU/cloud territory.</p>
+<p><strong>Helix rule:</strong> the only CPU-default-tier rerank option is <strong>ColBERT late interaction</strong>. The int8 ONNX cross-encoder is allowed <strong>only on the top-20–30</strong>, and any heavier reranker is pushed to the async/cloud tier (see <a href="../COST_OPTIMIZATION/">Cost</a>).</p>
+<hr />
+<h2 id="6-query-understanding">6. Query Understanding<a class="headerlink" href="#6-query-understanding" title="Permanent link">&para;</a></h2>
+<p>The dividing line is <strong>index-time vs query-time</strong>. Index-time expansion is latency-safe and $0-on-query; query-time LLM expansion violates the no-LLM-on-hot-path constraint.</p>
+<table>
+<thead>
+<tr>
+<th>Technique</th>
+<th>When</th>
+<th>Effect</th>
+<th>Verdict</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>doc2query / docTTTTTquery</strong></td>
+<td><strong>Ingest</strong></td>
+<td>Recall@1000 85.3→89.3 at <strong>~0 query cost</strong> (<a href="https://cs.uwaterloo.ca/~jimmylin/publications/Nogueira_Lin_2019_docTTTTTquery-v2.pdf">docTTTTTquery</a>)</td>
+<td><strong>DEFAULT</strong> — generate expansion queries at ingest, index them</td>
+</tr>
+<tr>
+<td><strong>Embedding router</strong></td>
+<td>Query</td>
+<td>~10× cheaper than LLM routing (sub-10 ms vs 500–2000 ms)</td>
+<td><strong>DEFAULT</strong> — Stage 2 routing</td>
+</tr>
+<tr>
+<td><strong>Skip-retrieval</strong></td>
+<td>Query</td>
+<td>Self-RAG: skip when no memory needed (<a href="https://arxiv.org/abs/2310.11511">Self-RAG</a>)</td>
+<td><strong>DEFAULT</strong> — Stage 2</td>
+</tr>
+<tr>
+<td><strong>HyDE</strong></td>
+<td>Query</td>
+<td>TREC DL19 61.3 vs 44.5, but loses to in-domain fine-tuning and adds +25–60% latency (<a href="https://arxiv.org/abs/2212.10496">HyDE</a>)</td>
+<td><strong>async/cloud tier only</strong></td>
+</tr>
+<tr>
+<td><strong>Query2doc</strong></td>
+<td>Query</td>
+<td>+15 nDCG but <strong>&gt;2000 ms/query</strong> (<a href="https://arxiv.org/abs/2303.07678">Query2doc</a>)</td>
+<td><strong>async/cloud tier only</strong></td>
+</tr>
+<tr>
+<td><strong>Multi-query</strong></td>
+<td>Query</td>
+<td>Multiple LLM rewrites</td>
+<td><strong>async/cloud tier only</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Net:</strong> Helix gets the <em>recall</em> benefit of expansion via <strong>doc2query at ingest</strong> and the <em>routing</em> benefit via a cheap embedding router — both compatible with the budget. HyDE/Query2doc/multi-query are real wins but their latency (and LLM cost) confines them to the opt-in async/cloud tier described in <a href="../COST_OPTIMIZATION/">Cost</a>.</p>
+<hr />
+<h2 id="7-lost-in-the-middle-packing">7. "Lost in the Middle" Packing<a class="headerlink" href="#7-lost-in-the-middle-packing" title="Permanent link">&para;</a></h2>
+<p>LLM accuracy on a relevant item drops from <strong>75.8% → 53.8%</strong> when that item sits in the middle of a long context (<a href="https://arxiv.org/abs/2307.03172">Lost in the Middle</a>). Packing order is therefore a first-class ranking concern, not an afterthought.</p>
+<div class="highlight"><pre><span></span><code>  context window (token budget)
+  ┌──────────────────────────────────────────────────────┐
+  │ rank 1  │ rank 3 │ rank 5 │ … │ rank 6 │ rank 4 │ rank 2│
+  │ (BEST)  │        │        │   │        │        │(2nd)  │
+  └──────────────────────────────────────────────────────┘
+     START  ◄─── most salient at BOTH ends ───►   END
+                   (weakest items buried mid)
+</code></pre></div>
+<p><strong>Pre-packing dedup &amp; diversity:</strong>
+1. <strong>MinHash-LSH</strong> near-dup removal at Jaccard threshold ~0.8 before any semantic merge.
+2. <strong>MMR</strong> for diversity (<a href="https://dl.acm.org/doi/10.1145/290941.291025">MMR</a>):</p>
+<div class="highlight"><pre><span></span><code>MMR = argmax [ λ · sim(d, q) − (1−λ) · max sim(d, dₛₑₗ) ]      λ = 0.5
+       d∉S                          dₛₑₗ∈S
+</code></pre></div>
+<ol>
+<li><strong>Selective, budget-aware packing.</strong> Don't pack everything. Mem0's selective approach yields +26% on LoCoMo, <strong>91% lower p95, and ~90% fewer tokens</strong> (<a href="https://arxiv.org/abs/2504.19413">Mem0</a>). Fewer, better, well-ordered memories beat a stuffed context — this also directly serves <a href="../COST_OPTIMIZATION/">Cost</a>.</li>
+</ol>
+<p><strong>Packing algorithm:</strong> sort survivors by final score → place rank 1 at start, rank 2 at end, rank 3 next-to-start, rank 4 next-to-end, … (outside-in interleave) until the token budget is exhausted.</p>
+<hr />
+<h2 id="8-twelve-opinionated-decisions">8. Twelve Opinionated Decisions<a class="headerlink" href="#8-twelve-opinionated-decisions" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Decision</th>
+<th>Why</th>
+<th>ADR</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>No LLM on the query hot path, ever (default tier)</strong></td>
+<td>Only way to hit p95&lt;150ms at $0</td>
+<td>ADR-016</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Hybrid dense + BM25 is mandatory, not optional</strong></td>
+<td>Personal/code memory is full of paths, IDs, error strings; BM25 generalizes where dense degrades (<a href="https://arxiv.org/abs/2104.08663">BEIR</a>)</td>
+<td>ADR-016</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>RRF fusion, k=60, ranks-only</strong></td>
+<td>Avoids score-normalization fragility (<a href="https://bigdataboutique.com/blog/reciprocal-rank-fusion-how-it-works-and-when-to-use-it">RRF</a>); validate rank-base per engine</td>
+<td>ADR-016</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>HippoRAG Personalized PageRank for graph hop</strong></td>
+<td>Multi-hop in one cheap CPU pass; all LLM cost at ingest (<a href="https://arxiv.org/abs/2405.14831">HippoRAG</a>)</td>
+<td>ADR-016</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>Reject Microsoft GraphRAG for default</strong></td>
+<td>Ruinous LLM indexing + 40K-token global queries (<a href="https://arxiv.org/abs/2404.16130">GraphRAG</a>)</td>
+<td>ADR-016</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>Cross-encoder reranking OFF by default</strong></td>
+<td>88–257 s on CPU for top-100 (<a href="https://medium.com/@xiweizhou/speed-showdown-reranker-1f7987400077">Speed Showdown</a>)</td>
+<td>ADR-016</td>
+</tr>
+<tr>
+<td>7</td>
+<td><strong>If rerank, use ColBERT late-interaction (CPU-ms) or int8 ONNX CE on top-20–30 only</strong></td>
+<td>Only CPU-feasible rerank paths (<a href="https://www.answer.ai/posts/2024-08-13-small-but-mighty-colbert.html">ColBERT-small</a>, <a href="https://sbert.net/docs/cross_encoder/usage/efficiency.html">CE efficiency</a>)</td>
+<td>ADR-016</td>
+</tr>
+<tr>
+<td>8</td>
+<td><strong>bge-small-en-v1.5 384d int8 as default embedder</strong></td>
+<td>Best small MTEB (62.17); int8 = 4× mem, ~99.3% w/ rescore (<a href="https://huggingface.co/BAAI/bge-small-en-v1.5">bge-small</a>, <a href="https://huggingface.co/blog/embedding-quantization">quant</a>)</td>
+<td>ADR-017</td>
+</tr>
+<tr>
+<td>9</td>
+<td><strong>Upgrade tier uses MRL truncation + binary quantization</strong></td>
+<td>32× mem, up to 32× faster, ~96% w/ rescore; makes 1024d viable at 10⁶ (<a href="https://huggingface.co/blog/embedding-quantization">quant</a>)</td>
+<td>ADR-017</td>
+</tr>
+<tr>
+<td>10</td>
+<td><strong>Min-max normalize each signal, then linear blend; weights per type</strong></td>
+<td>Robust fusion (Mem0); per-type recency/confidence balance (<a href="https://arxiv.org/html/2504.19413v1">Mem0</a>)</td>
+<td>ADR-016</td>
+</tr>
+<tr>
+<td>11</td>
+<td><strong>Recency decays from LAST ACCESS</strong></td>
+<td>Reinforces re-used memories (<a href="https://python.langchain.com/v0.2/docs/how_to/time_weighted_vectorstore/">LangChain</a>)</td>
+<td>ADR-016</td>
+</tr>
+<tr>
+<td>12</td>
+<td><strong>Expansion at ingest (doc2query); HyDE/multi-query async-only</strong></td>
+<td>doc2query +Recall at ~0 query cost; HyDE/Q2D cost &gt;2000 ms (<a href="https://cs.uwaterloo.ca/~jimmylin/publications/Nogueira_Lin_2019_docTTTTTquery-v2.pdf">docTTTTTquery</a>, <a href="https://arxiv.org/abs/2303.07678">Query2doc</a>)</td>
+<td>ADR-016</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="9-failure-modes">9. Failure Modes<a class="headerlink" href="#9-failure-modes" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Failure mode</th>
+<th>Symptom</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Dense-only blind spot</strong></td>
+<td>Misses exact path/ID/error-string queries</td>
+<td>BM25 leg is mandatory (decision #2); never disable sparse</td>
+</tr>
+<tr>
+<td><strong>Quantization drift</strong></td>
+<td>Binary/int8 ANN returns wrong neighbors</td>
+<td>Always rescore top-k with int8/full vectors before ranking</td>
+</tr>
+<tr>
+<td><strong>RRF rank-base bug</strong></td>
+<td>Silent quality loss from wrong <code>k</code> convention</td>
+<td>Pin and test <code>k</code>; validate zero- vs one-based per engine (Qdrant k=2)</td>
+</tr>
+<tr>
+<td><strong>Graph over-expansion</strong></td>
+<td>PPR floods pool with weak neighbors, dilutes precision</td>
+<td>Cap PPR mass / hop count; graphprox weight is small for semantic types</td>
+</tr>
+<tr>
+<td><strong>Cold ANN cache</strong></td>
+<td>First query of a session blows the budget</td>
+<td>Warm index on session start; budget has ~58 ms headroom</td>
+</tr>
+<tr>
+<td><strong>Lost-in-the-middle</strong></td>
+<td>Relevant memory present but ignored by LLM</td>
+<td>Outside-in packing; most-salient at both ends (<a href="https://arxiv.org/abs/2307.03172">Lost in the Middle</a>)</td>
+</tr>
+<tr>
+<td><strong>Over-packing</strong></td>
+<td>High tokens, high latency, lower accuracy</td>
+<td>Selective packing; cap memory count (<a href="https://arxiv.org/abs/2504.19413">Mem0</a>)</td>
+</tr>
+<tr>
+<td><strong>Recency runaway</strong></td>
+<td>Stale-but-important facts buried by fresh noise</td>
+<td>Per-type weights: low recency weight for semantic/decision types</td>
+</tr>
+<tr>
+<td><strong>Skip-retrieval false negative</strong></td>
+<td>Router skips when memory was needed</td>
+<td>Conservative router threshold; cheap to retrieve, costly to miss</td>
+</tr>
+<tr>
+<td><strong>Near-dup spam</strong></td>
+<td>Same fact repeated N times wastes budget</td>
+<td>MinHash-LSH ~0.8 pre-dedup + MMR diversity</td>
+</tr>
+<tr>
+<td><strong>Reranker accidentally enabled on CPU</strong></td>
+<td>p95 explodes to tens of seconds</td>
+<td>Default off; guard rail caps CE input to top-20–30</td>
+</tr>
+<tr>
+<td><strong>Out-of-domain dense collapse</strong></td>
+<td>Dense recall tanks on novel jargon</td>
+<td>BM25 floor + ingest-time doc2query expansion</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="sources">Sources<a class="headerlink" href="#sources" title="Permanent link">&para;</a></h2>
+<ul>
+<li>DPR — Dense Passage Retrieval: https://arxiv.org/abs/2004.04906</li>
+<li>BEIR — heterogeneous IR benchmark: https://arxiv.org/abs/2104.08663</li>
+<li>SPLADE / sparse-semantic encoders: https://opensearch.org/blog/improving-document-retrieval-with-sparse-semantic-encoders/</li>
+<li>Cormack et al., Reciprocal Rank Fusion (SIGIR 2009): https://cormack.uwaterloo.ca/cormacksigir09-rrf.pdf</li>
+<li>RRF — how it works / when to use: https://bigdataboutique.com/blog/reciprocal-rank-fusion-how-it-works-and-when-to-use-it</li>
+<li>Reranker speed showdown (CPU vs GPU): https://medium.com/@xiweizhou/speed-showdown-reranker-1f7987400077</li>
+<li>answer.ai — small-but-mighty ColBERT: https://www.answer.ai/posts/2024-08-13-small-but-mighty-colbert.html</li>
+<li>PLAID — efficient late interaction: https://arxiv.org/abs/2205.09707</li>
+<li>SBERT cross-encoder efficiency: https://sbert.net/docs/cross_encoder/usage/efficiency.html</li>
+<li>bge-reranker-v2-m3: https://huggingface.co/BAAI/bge-reranker-v2-m3</li>
+<li>mxbai-rerank-v2: https://www.mixedbread.com/blog/mxbai-rerank-v2</li>
+<li>Microsoft GraphRAG: https://arxiv.org/abs/2404.16130</li>
+<li>LazyGraphRAG: https://www.microsoft.com/en-us/research/blog/lazygraphrag-setting-a-new-standard-for-quality-and-cost/</li>
+<li>HippoRAG: https://arxiv.org/abs/2405.14831</li>
+<li>HippoRAG2: https://arxiv.org/abs/2502.14802</li>
+<li>LightRAG: https://arxiv.org/abs/2410.05779</li>
+<li>Graphiti: https://arxiv.org/abs/2501.13956</li>
+<li>HyDE: https://arxiv.org/abs/2212.10496</li>
+<li>Query2doc: https://arxiv.org/abs/2303.07678</li>
+<li>docTTTTTquery / doc2query: https://cs.uwaterloo.ca/~jimmylin/publications/Nogueira_Lin_2019_docTTTTTquery-v2.pdf</li>
+<li>Self-RAG: https://arxiv.org/abs/2310.11511</li>
+<li>bge-small-en-v1.5: https://huggingface.co/BAAI/bge-small-en-v1.5</li>
+<li>nomic-embed Matryoshka: https://www.nomic.ai/news/nomic-embed-matryoshka</li>
+<li>mxbai-embed-large-v1: https://huggingface.co/mixedbread-ai/mxbai-embed-large-v1</li>
+<li>Snowflake Arctic Embed 2.0: https://www.snowflake.com/en/engineering-blog/snowflake-arctic-embed-2-multilingual/</li>
+<li>Arctic Embed (MRL): https://github.com/Snowflake-Labs/arctic-embed</li>
+<li>Embedding quantization (int8/binary): https://huggingface.co/blog/embedding-quantization</li>
+<li>Generative Agents (memory stream): https://ar5iv.labs.arxiv.org/html/2304.03442</li>
+<li>LangChain TimeWeightedVectorStore: https://python.langchain.com/v0.2/docs/how_to/time_weighted_vectorstore/</li>
+<li>Mem0: https://arxiv.org/abs/2504.19413 · https://arxiv.org/html/2504.19413v1</li>
+<li>Lost in the Middle: https://arxiv.org/abs/2307.03172</li>
+<li>MMR (Carbonell &amp; Goldstein): https://dl.acm.org/doi/10.1145/290941.291025</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.top", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

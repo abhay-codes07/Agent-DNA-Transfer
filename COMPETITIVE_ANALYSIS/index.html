@@ -1,0 +1,2239 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Take your AI's memory anywhere — a local-first, portable, git-like memory layer for AI coding agents.">
+      
+      
+      
+      
+        <link rel="prev" href="../PRD/">
+      
+      
+        <link rel="next" href="../BUSINESS/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Competitive Analysis - Helix</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#helix-competitive-analysis" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Helix" class="md-header__button md-logo" aria-label="Helix" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Helix
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Competitive Analysis
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/abhay-codes07/Agent-DNA-Transfer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Helix" class="md-nav__button md-logo" aria-label="Helix" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Helix
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/abhay-codes07/Agent-DNA-Transfer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Product & strategy
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Product & strategy
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PRD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PRD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Competitive Analysis
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Competitive Analysis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-market-in-one-paragraph" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The market in one paragraph
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-per-product-teardowns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Per-product teardowns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Per-product teardowns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-mem0-openmemory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Mem0 / OpenMemory
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-letta-memgpt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Letta (MemGPT)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-zep-graphiti" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Zep / Graphiti
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-cognee" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Cognee
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-langmem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 LangMem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26-supermemory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 Supermemory
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#27-memobase" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7 Memobase
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#28-a-mem-feature-source-not-a-competitor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.8 A-MEM (feature source, not a competitor)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#29-basic-memory-closest-philosophical-rival" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.9 basic-memory (closest philosophical rival)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#210-txtai-architecture-model-for-dna" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.10 txtai (architecture model for .dna)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#211-walrus-memwal-mysten-sui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.11 Walrus + MemWal (Mysten / Sui)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-the-6-axis-positioning-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. The 6-axis positioning table
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-helixs-whitespace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Helix's whitespace
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-ideas-to-steal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Ideas to steal
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-bottom-line" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Bottom line
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sources
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BUSINESS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Business & GTM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RESEARCH/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research Survey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Engineering
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Engineering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TSD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Technical Spec
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SYSTEM_ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    System Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MEMORY_MODEL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Memory Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CONSOLIDATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Consolidation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RETRIEVAL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DNA_FORMAT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    .dna Format
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SYNC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sync & Merge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../COST_OPTIMIZATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cost Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../API_REFERENCE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MCP_INTEGRATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PLUGINS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../OBSERVABILITY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trust, quality & process
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Trust, quality & process
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SECURITY_MODEL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PRIVACY_COMPLIANCE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Privacy & Compliance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../EVALUATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GOVERNANCE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Governance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GLOSSARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-market-in-one-paragraph" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The market in one paragraph
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-per-product-teardowns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Per-product teardowns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Per-product teardowns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-mem0-openmemory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Mem0 / OpenMemory
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-letta-memgpt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Letta (MemGPT)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-zep-graphiti" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Zep / Graphiti
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-cognee" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Cognee
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-langmem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 LangMem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26-supermemory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 Supermemory
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#27-memobase" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7 Memobase
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#28-a-mem-feature-source-not-a-competitor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.8 A-MEM (feature source, not a competitor)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#29-basic-memory-closest-philosophical-rival" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.9 basic-memory (closest philosophical rival)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#210-txtai-architecture-model-for-dna" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.10 txtai (architecture model for .dna)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#211-walrus-memwal-mysten-sui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.11 Walrus + MemWal (Mysten / Sui)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-the-6-axis-positioning-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. The 6-axis positioning table
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-helixs-whitespace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Helix's whitespace
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-ideas-to-steal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Ideas to steal
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-bottom-line" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Bottom line
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sources
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="helix-competitive-analysis">Helix — Competitive Analysis<a class="headerlink" href="#helix-competitive-analysis" title="Permanent link">&para;</a></h1>
+<p><strong>Status:</strong> Draft v1 · <strong>Last updated:</strong> 2026-06-18 · <strong>Related:</strong> <a href="../PRD/">PRD</a> · <a href="../ROADMAP.md">Roadmap</a> · <a href="../DECISIONS.md">Decisions</a></p>
+<blockquote>
+<p><strong>What this document is.</strong> A teardown of the AI-memory landscape as it stands mid-2026, scored against the six axes that define Helix's wedge. Star counts and pricing are point-in-time (mid-2026) and drift fast — treat them as directional, not authoritative. The thesis: every serious competitor optimizes for a <em>hosted, server-side, latest-truth-wins</em> memory service. Nobody ships a <strong>local-first, coding-native, single-file portable, git-like mergeable, $0-default</strong> memory layer. That gap is the entire reason Helix exists.</p>
+</blockquote>
+<hr />
+<h2 id="1-the-market-in-one-paragraph">1. The market in one paragraph<a class="headerlink" href="#1-the-market-in-one-paragraph" title="Permanent link">&para;</a></h2>
+<p>There is no audited TAM for "AI memory" — every vendor estimate quietly bundles orchestration, RAG, and vector infrastructure, and the numbers don't reconcile (Mordor: $6.27B 2025 → $28.45B 2030; SkyQuest: → $69.13B 2033). The parent "AI agents" category is more defensible at ~$7.84B → $52.6B by 2030. But the qualitative trend is real and load-bearing: <strong>AI amnesia is the bottleneck.</strong> OpenAI shipped ChatGPT Memory GA in 2024 and expanded it April 2025; a16z's <em>Big Ideas 2026</em> explicitly names context/state as <strong>the</strong> enterprise-agent bottleneck (https://www.a16z.news/p/big-ideas-2026-part-1). Meanwhile <strong>MCP</strong> has become the de-facto standard (Anthropic Nov 2024, OpenAI Mar 2025, Google Apr 2025) — which means MCP is <strong>table stakes, not differentiation</strong>. Speaking MCP gets you in the room; it does not win the room.</p>
+<hr />
+<h2 id="2-per-product-teardowns">2. Per-product teardowns<a class="headerlink" href="#2-per-product-teardowns" title="Permanent link">&para;</a></h2>
+<p>Each teardown below scores memory model, retrieval, storage, portability, license/stars, pricing, the single biggest strength, and <strong>the gap Helix exploits</strong>.</p>
+<h3 id="21-mem0-openmemory">2.1 Mem0 / OpenMemory<a class="headerlink" href="#21-mem0-openmemory" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Memory model</strong></td>
+<td>LLM 2-phase: extract → <code>ADD</code>/<code>UPDATE</code>/<code>DELETE</code>/<code>NOOP</code>, latest-truth-wins. Discrete facts, <strong>not</strong> a graph.</td>
+</tr>
+<tr>
+<td><strong>Retrieval</strong></td>
+<td>Vector-first + BM25 / entity boosts.</td>
+</tr>
+<tr>
+<td><strong>Storage</strong></td>
+<td>Qdrant default + SQLite history.</td>
+</tr>
+<tr>
+<td><strong>Portability</strong></td>
+<td>OpenMemory MCP ran local via Docker but is <strong>being sunset</strong> for the self-host server; export is <strong>managed-only</strong>.</td>
+</tr>
+<tr>
+<td><strong>License / stars</strong></td>
+<td>Apache-2.0 · ~58.8k ⭐ (the category leader by adoption).</td>
+</tr>
+<tr>
+<td><strong>Pricing</strong></td>
+<td>Hobby $0 (10k) / Starter $19 / Growth $79 / Pro $249 / Ent. $24M total Series A, Basis Set, Oct 2025.</td>
+</tr>
+<tr>
+<td><strong>Biggest strength</strong></td>
+<td>Ubiquity and ease — the default pip-install answer to "give my agent memory."</td>
+</tr>
+<tr>
+<td><strong>Gap Helix exploits</strong></td>
+<td>Weak temporal reasoning (~49% LongMemEval vs Zep ~64%); lossy LLM extraction throws away source fidelity; <strong>no portable signed artifact</strong>, and export is gated behind the managed tier. Helix keeps the raw, owns the file, and signs it.</td>
+</tr>
+</tbody>
+</table>
+<p>URLs: https://github.com/mem0ai/mem0 · https://mem0.ai/pricing</p>
+<h3 id="22-letta-memgpt">2.2 Letta (MemGPT)<a class="headerlink" href="#22-letta-memgpt" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Memory model</strong></td>
+<td>OS-paging tiers — <code>core</code> (self-editable, in-context) / <code>recall</code> / <code>archival</code>. The agent edits its <strong>own</strong> memory via tools.</td>
+</tr>
+<tr>
+<td><strong>Retrieval</strong></td>
+<td>Vector (<code>text-embedding-3-small</code>), <strong>no graph</strong>.</td>
+</tr>
+<tr>
+<td><strong>Storage</strong></td>
+<td>Postgres + pgvector / SQLite / TurboPuffer.</td>
+</tr>
+<tr>
+<td><strong>Portability</strong></td>
+<td><strong>Agent File <code>.af</code></strong> — open JSON of the <em>whole agent</em>, but <strong>unsigned, unencrypted</strong>, secrets not included.</td>
+</tr>
+<tr>
+<td><strong>License / stars</strong></td>
+<td>Apache-2.0 · ~23.4k ⭐.</td>
+</tr>
+<tr>
+<td><strong>Pricing</strong></td>
+<td>Self-host free; Cloud $20/mo + $0.10/agent + usage, BYOK. $10M seed, Felicis, Sept 2024, $70M post.</td>
+</tr>
+<tr>
+<td><strong>Biggest strength</strong></td>
+<td>Durable, self-managing agents + the ADE debugger for inspecting agent state.</td>
+</tr>
+<tr>
+<td><strong>Gap Helix exploits</strong></td>
+<td><strong>Framework lock-in</strong> — Letta owns the agent loop, so memory comes bundled with their runtime. Python-only, costly context paging, no graph, no coding angle. The <code>.af</code> file is the right instinct executed weakly: unsigned plaintext JSON. Helix's signed + encrypted <strong><code>.dna</code></strong> leapfrogs it, and Helix is loop-agnostic (it's a memory layer, not an agent runtime).</td>
+</tr>
+</tbody>
+</table>
+<p>URLs: https://github.com/letta-ai/letta · https://docs.letta.com/guides/build-with-letta/pricing</p>
+<h3 id="23-zep-graphiti">2.3 Zep / Graphiti<a class="headerlink" href="#23-zep-graphiti" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Memory model</strong></td>
+<td>Bi-temporal knowledge graph (valid time + transaction time; facts are <strong>invalidated, not deleted</strong>). Episode / entity / community tiers.</td>
+</tr>
+<tr>
+<td><strong>Retrieval</strong></td>
+<td>True hybrid: semantic + BM25 + graph BFS, with <strong>no LLM at query time</strong> (fast, deterministic, auditable).</td>
+</tr>
+<tr>
+<td><strong>Storage</strong></td>
+<td>FalkorDB / Neo4j / Neptune.</td>
+</tr>
+<tr>
+<td><strong>Portability</strong></td>
+<td>None — there is no portable artifact; you run a graph DB.</td>
+</tr>
+<tr>
+<td><strong>License / stars</strong></td>
+<td>Graphiti Apache-2.0 ~27.6k ⭐ · Zep ~4.7k ⭐. The OSS <strong>Zep server is deprecated</strong>; self-host = the Graphiti library.</td>
+</tr>
+<tr>
+<td><strong>Pricing</strong></td>
+<td>Graphiti free; Zep Cloud $0 → ~$104/mo cliff → ~$312 → Ent. ~$500K, YC W24.</td>
+</tr>
+<tr>
+<td><strong>Biggest strength</strong></td>
+<td>Best-in-class temporal accuracy + audit trail + fast retrieval (the no-LLM-at-query-time design is genuinely excellent).</td>
+</tr>
+<tr>
+<td><strong>Gap Helix exploits</strong></td>
+<td>You <strong>must run a graph DB</strong> — heavy, stateful, server-side. LLM-heavy ingestion. The turnkey self-host server is deprecated, pushing you to Cloud. <strong>No portable artifact.</strong> Helix steals the bi-temporal + no-LLM-at-query ideas without forcing a graph DB on a laptop.</td>
+</tr>
+</tbody>
+</table>
+<p>URLs: https://github.com/getzep/graphiti · https://www.getzep.com/pricing/</p>
+<h3 id="24-cognee">2.4 Cognee<a class="headerlink" href="#24-cognee" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Memory model</strong></td>
+<td>ECL pipeline (Extract-Cognify-Load), graph + vectors; <code>memify</code> self-prunes.</td>
+</tr>
+<tr>
+<td><strong>Retrieval</strong></td>
+<td>Graph-vector hybrid, 14 search modes.</td>
+</tr>
+<tr>
+<td><strong>Storage</strong></td>
+<td>Kuzu + LanceDB + SQLite default (many backends supported).</td>
+</tr>
+<tr>
+<td><strong>Portability</strong></td>
+<td>Self-hostable, file-based + Cognee Cloud.</td>
+</tr>
+<tr>
+<td><strong>License / stars</strong></td>
+<td>Apache-2.0 · ~17.9k ⭐.</td>
+</tr>
+<tr>
+<td><strong>Pricing</strong></td>
+<td>$0 / Dev $35 / Team $200 / Ent. $7.5M seed, Pebblebed, Feb 2026.</td>
+</tr>
+<tr>
+<td><strong>Biggest strength</strong></td>
+<td>Ontology-grounded graph + vector — the most "knowledge-engineering-correct" of the bunch.</td>
+</tr>
+<tr>
+<td><strong>Gap Helix exploits</strong></td>
+<td><strong>Multi-DB operational complexity</strong> (three+ stores to stand up), LLM-cost-heavy graph build, immature managed tier. Helix is a single signed file with zero infra to operate.</td>
+</tr>
+</tbody>
+</table>
+<p>URLs: https://github.com/topoteretes/cognee · https://www.cognee.ai/pricing</p>
+<h3 id="25-langmem">2.5 LangMem<a class="headerlink" href="#25-langmem" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Memory model</strong></td>
+<td>Semantic / episodic / procedural (self-updating prompts); hot-path + background extraction.</td>
+</tr>
+<tr>
+<td><strong>Retrieval</strong></td>
+<td>Vector over a KV + embedding store.</td>
+</tr>
+<tr>
+<td><strong>Storage</strong></td>
+<td>InMemory / Postgres / Pinecone / Redis.</td>
+</tr>
+<tr>
+<td><strong>License / stars</strong></td>
+<td>MIT · ~1.5k ⭐.</td>
+</tr>
+<tr>
+<td><strong>Pricing</strong></td>
+<td>OSS free; LangSmith Plus $39/seat.</td>
+</tr>
+<tr>
+<td><strong>Biggest strength</strong></td>
+<td>Tri-type memory native to LangGraph.</td>
+</tr>
+<tr>
+<td><strong>Gap Helix exploits</strong></td>
+<td>~60s p95 latency (batch-only), <strong>LangChain coupling</strong>, low traction. Coupled to one orchestration framework; Helix is framework-neutral and synchronous.</td>
+</tr>
+</tbody>
+</table>
+<p>URL: https://github.com/langchain-ai/langmem</p>
+<h3 id="26-supermemory">2.6 Supermemory<a class="headerlink" href="#26-supermemory" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Memory model</strong></td>
+<td>Unified memory graph + a <strong>Memory Router</strong> drop-in (change one URL).</td>
+</tr>
+<tr>
+<td><strong>Retrieval</strong></td>
+<td>Hybrid vector + keyword + graph, sub-300ms (vendor claim: "10x Zep, 25x Mem0").</td>
+</tr>
+<tr>
+<td><strong>Storage</strong></td>
+<td>Cloudflare + Postgres (cloud) + an embedded <code>./.supermemory</code> engine that runs offline with Ollama.</td>
+</tr>
+<tr>
+<td><strong>License / stars</strong></td>
+<td>MIT · ~27.2k ⭐.</td>
+</tr>
+<tr>
+<td><strong>Pricing</strong></td>
+<td>$0 ($5) / Pro $19 / Max $100 / Scale $399 / Ent. $2.6M seed, Oct 2025 (Susa, Browder, Jeff Dean angel).</td>
+</tr>
+<tr>
+<td><strong>Biggest strength</strong></td>
+<td>Raw speed + drop-in router (lowest integration friction in the category) + a genuinely free local self-host.</td>
+</tr>
+<tr>
+<td><strong>Gap Helix exploits</strong></td>
+<td><strong>No standard export</strong>, self-host-at-scale needs the $399 tier, not coding-native, <strong>no signed artifact</strong>. The closest on "local + free" but it has no portable, verifiable memory object and no coding workflow.</td>
+</tr>
+</tbody>
+</table>
+<p>URLs: https://github.com/supermemoryai/supermemory · https://supermemory.ai/pricing/</p>
+<h3 id="27-memobase">2.7 Memobase<a class="headerlink" href="#27-memobase" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Memory model</strong></td>
+<td>Structured per-user <strong>profile</strong> (schema attributes) + an event timeline; buffered batch extraction.</td>
+</tr>
+<tr>
+<td><strong>Retrieval</strong></td>
+<td>SQL profiles (&lt;100ms) + vector events. <strong>Not</strong> a graph.</td>
+</tr>
+<tr>
+<td><strong>Storage</strong></td>
+<td>Postgres + Redis.</td>
+</tr>
+<tr>
+<td><strong>License / stars</strong></td>
+<td>Apache-2.0 · ~2.8k ⭐.</td>
+</tr>
+<tr>
+<td><strong>Pricing</strong></td>
+<td>Self-host free + cloud PAYG.</td>
+</tr>
+<tr>
+<td><strong>Biggest strength</strong></td>
+<td>Strong temporal numbers — <strong>75.8% LoCoMo</strong> vs Mem0 66.9%, with cheap SQL-fast profile reads.</td>
+</tr>
+<tr>
+<td><strong>Gap Helix exploits</strong></td>
+<td><strong>Rigid schema</strong>, weak multi-hop reasoning, no graph, no export. Great if your memory fits a fixed profile shape; useless for open-ended coding context.</td>
+</tr>
+</tbody>
+</table>
+<p>URL: https://github.com/memodb-io/memobase</p>
+<h3 id="28-a-mem-feature-source-not-a-competitor">2.8 A-MEM <em>(feature source, not a competitor)</em><a class="headerlink" href="#28-a-mem-feature-source-not-a-competitor" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Memory model</strong></td>
+<td>Zettelkasten notes + <strong>autonomous link generation</strong> + <strong>memory evolution</strong> (new notes update old ones).</td>
+</tr>
+<tr>
+<td><strong>Retrieval</strong></td>
+<td>Vector + agentic linking.</td>
+</tr>
+<tr>
+<td><strong>Storage</strong></td>
+<td>ChromaDB.</td>
+</tr>
+<tr>
+<td><strong>License / stars</strong></td>
+<td>MIT · ~1.1k ⭐ (arXiv 2502.12110, Feb 2025).</td>
+</tr>
+<tr>
+<td><strong>Biggest strength</strong></td>
+<td>The most adaptive / self-organizing memory in the field.</td>
+</tr>
+<tr>
+<td><strong>Gap Helix exploits</strong></td>
+<td>Research-grade — <strong>no infra, no sync, no auth</strong>. We treat A-MEM as a <strong>feature source</strong>, not a rival: its self-evolving link generation is a capability to steal (see §4).</td>
+</tr>
+</tbody>
+</table>
+<p>URL: https://arxiv.org/abs/2502.12110</p>
+<h3 id="29-basic-memory-closest-philosophical-rival">2.9 basic-memory <em>(closest philosophical rival)</em><a class="headerlink" href="#29-basic-memory-closest-philosophical-rival" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Memory model</strong></td>
+<td><strong>Markdown-as-database</strong> — frontmatter entities + observations + relations; Obsidian wikilinks form the graph. Humans <strong>and</strong> AI edit the same files.</td>
+</tr>
+<tr>
+<td><strong>Retrieval</strong></td>
+<td>SQLite FTS + FastEmbed vectors + graph traversal.</td>
+</tr>
+<tr>
+<td><strong>Storage</strong></td>
+<td>Plain Markdown → SQLite index; cloud Postgres + Tigris S3.</td>
+</tr>
+<tr>
+<td><strong>Portability</strong></td>
+<td><strong>Best portability in the category</strong> — you own the Markdown; sync via Git or Syncthing; Obsidian-native; broad MCP support.</td>
+</tr>
+<tr>
+<td><strong>License / stars</strong></td>
+<td><strong>AGPL-3.0</strong> · ~3.3k ⭐.</td>
+</tr>
+<tr>
+<td><strong>Pricing</strong></td>
+<td>Self-host free; cloud $15/mo.</td>
+</tr>
+<tr>
+<td><strong>Biggest strength</strong></td>
+<td>True file-ownership and human/AI shared editing — philosophically the closest to Helix.</td>
+</tr>
+<tr>
+<td><strong>Gap Helix exploits</strong></td>
+<td>File-indexing <strong>scales poorly</strong>; <strong>AGPL-3.0 deters commercial embedding</strong> (an agent vendor cannot ship it inside a closed product); <strong>no encryption / signing</strong>; not coding-specialized; everything is plaintext. Helix wins on a <strong>signed + encrypted single artifact</strong>, <strong>coding-native</strong> modeling, <strong>git-like <em>semantic</em> merge</strong> (not just file-level Git sync), and a <strong>permissive license</strong> an agent vendor can actually embed.</td>
+</tr>
+</tbody>
+</table>
+<p>URL: https://github.com/basicmachines-co/basic-memory</p>
+<h3 id="210-txtai-architecture-model-for-dna">2.10 txtai <em>(architecture model for <code>.dna</code>)</em><a class="headerlink" href="#210-txtai-architecture-model-for-dna" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Memory model</strong></td>
+<td>All-in-one embeddings database (vector + graph + SQL + keyword).</td>
+</tr>
+<tr>
+<td><strong>Portability</strong></td>
+<td><strong>Single compressed portable archive</strong> via <code>save()</code> / <code>load()</code> — the literal model for the <code>.dna</code> artifact.</td>
+</tr>
+<tr>
+<td><strong>License / stars</strong></td>
+<td>Apache-2.0 · ~12.7k ⭐.</td>
+</tr>
+<tr>
+<td><strong>Gap Helix exploits</strong></td>
+<td>SQLite / Faiss core not built for distributed scale; <strong>not framed as agent memory</strong>. We borrow the single-archive portability pattern and wrap it with signing, encryption, and coding-native semantics.</td>
+</tr>
+</tbody>
+</table>
+<p>URL: https://github.com/neuml/txtai</p>
+<h3 id="211-walrus-memwal-mysten-sui">2.11 Walrus + MemWal (Mysten / Sui)<a class="headerlink" href="#211-walrus-memwal-mysten-sui" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Memory model</strong></td>
+<td>Decentralized blob store (RedStuff erasure coding, ~4–5x replication; blobs are Sui objects). Base layer = <strong>blob read only, no semantic search</strong>.</td>
+</tr>
+<tr>
+<td><strong>Retrieval</strong></td>
+<td>MemWal SDK (May 2026) adds encrypted memory containers + semantic search + Sui access control on top.</td>
+</tr>
+<tr>
+<td><strong>License / stars</strong></td>
+<td>Apache-2.0 · ~375 ⭐ · WAL token.</td>
+</tr>
+<tr>
+<td><strong>Biggest strength</strong></td>
+<td>Cheap, verifiable, <strong>content-addressed</strong>, vendor-neutral, on-chain ownership (~450TB).</td>
+</tr>
+<tr>
+<td><strong>Gap Helix exploits</strong></td>
+<td><strong>Storage-only core</strong>; MemWal is beta; the <strong>blockchain conflicts directly with $0 + local-first</strong> (a token requirement is a non-starter for a laptop-default dev tool). <strong>Takeaway: adopt content-addressing + encryption + verifiability, drop the chain.</strong></td>
+</tr>
+</tbody>
+</table>
+<p>URL: https://github.com/MystenLabs/walrus</p>
+<hr />
+<h2 id="3-the-6-axis-positioning-table">3. The 6-axis positioning table<a class="headerlink" href="#3-the-6-axis-positioning-table" title="Permanent link">&para;</a></h2>
+<p>Six axes define the wedge. The claim is simple and falsifiable: <strong>no competitor checks all six.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Product</th>
+<th style="text-align: center;">Local-first</th>
+<th style="text-align: center;">Portable single-file</th>
+<th style="text-align: center;">Coding-native</th>
+<th style="text-align: center;">Git-like (semantic) merge</th>
+<th style="text-align: center;">MCP</th>
+<th style="text-align: center;">$0 default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Helix</strong></td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr>
+<td>Mem0 / OpenMemory</td>
+<td style="text-align: center;">⚠️ (sunsetting)</td>
+<td style="text-align: center;">❌ (export gated)</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">⚠️ (10k cap)</td>
+</tr>
+<tr>
+<td>Letta (MemGPT)</td>
+<td style="text-align: center;">⚠️</td>
+<td style="text-align: center;">⚠️ (<code>.af</code> unsigned)</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅ (self-host)</td>
+</tr>
+<tr>
+<td>Zep / Graphiti</td>
+<td style="text-align: center;">❌ (graph DB)</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">⚠️ (server deprecated)</td>
+</tr>
+<tr>
+<td>Cognee</td>
+<td style="text-align: center;">⚠️ (multi-DB)</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr>
+<td>LangMem</td>
+<td style="text-align: center;">⚠️</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">⚠️</td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr>
+<td>Supermemory</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">⚠️ ($399 at scale)</td>
+</tr>
+<tr>
+<td>Memobase</td>
+<td style="text-align: center;">⚠️</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr>
+<td>A-MEM</td>
+<td style="text-align: center;">⚠️</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr>
+<td>basic-memory</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">⚠️ (plaintext MD)</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">⚠️ (file-level Git)</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr>
+<td>txtai</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅ (archive)</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr>
+<td>Walrus / MemWal</td>
+<td style="text-align: center;">❌ (chain)</td>
+<td style="text-align: center;">⚠️ (blob)</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌ (token)</td>
+</tr>
+</tbody>
+</table>
+<p>Legend: ✅ full · ⚠️ partial / conditional · ❌ none.</p>
+<p><strong>Read-out.</strong> basic-memory and Supermemory get closest on local-first + $0, but neither is coding-native, neither does <em>semantic</em> merge, and neither ships a signed/encrypted single artifact (basic-memory is plaintext under AGPL; Supermemory has no export). Letta's <code>.af</code> is the only true portable artifact among the leaders, and it's unsigned plaintext JSON bundled to a Python agent loop. <strong>The all-six column is empty except for Helix.</strong></p>
+<hr />
+<h2 id="4-helixs-whitespace">4. Helix's whitespace<a class="headerlink" href="#4-helixs-whitespace" title="Permanent link">&para;</a></h2>
+<p>The defensible whitespace is the <strong>intersection of three things no competitor combines</strong>:</p>
+<ol>
+<li><strong>Coding-native memory.</strong> Memory modeled around code work — files, symbols, decisions, repo context, agent task history — not generic "user facts." Every competitor models a chat user; none models a coding agent's working set.</li>
+<li><strong>Git-like <em>semantic</em> merge.</strong> Not file-level Git sync (basic-memory) and not latest-truth-wins overwrite (Mem0). A <strong>three-way semantic merge</strong> of memory: diff, conflict-detect, and reconcile memory the way you reconcile code. This is what makes the "review team memory like a PR" workflow possible (diff → approve → revert).</li>
+<li><strong>Signed + encrypted single-file portability.</strong> The <strong><code>.dna</code></strong> artifact: one file you own, that is content-addressed (à la Walrus, minus the chain), encrypted at rest, and <strong>cryptographically signed</strong> so its provenance is verifiable. Letta's <code>.af</code> is the closest prior art and it is unsigned, unencrypted, and loop-bound.</li>
+</ol>
+<p>No competitor occupies this intersection. The leaders are racing toward hosted server-side memory-as-a-service; the whitespace is the local, coding, mergeable, portable corner they're all walking away from.</p>
+<hr />
+<h2 id="5-ideas-to-steal">5. Ideas to steal<a class="headerlink" href="#5-ideas-to-steal" title="Permanent link">&para;</a></h2>
+<p>Good artists copy; this section is explicit about what to lift and from whom.</p>
+<table>
+<thead>
+<tr>
+<th>Idea</th>
+<th>From</th>
+<th>What to take</th>
+<th>What to drop</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Self-evolving links</strong></td>
+<td>A-MEM</td>
+<td>Autonomous link generation + memory evolution (new notes retroactively update old).</td>
+<td>The research-grade ChromaDB-only plumbing; no infra/sync/auth.</td>
+</tr>
+<tr>
+<td><strong>No-LLM-at-query-time + bi-temporal</strong></td>
+<td>Zep / Graphiti</td>
+<td>Deterministic, fast, auditable retrieval; facts invalidated (valid + transaction time) not deleted.</td>
+<td>The mandatory graph DB and LLM-heavy ingestion.</td>
+</tr>
+<tr>
+<td><strong>Content-addressing + encryption + verifiability</strong></td>
+<td>Walrus / MemWal</td>
+<td>Content-addressed, encrypted, signed, verifiable memory blobs.</td>
+<td><strong>The blockchain</strong> — a token requirement breaks $0 + local-first.</td>
+</tr>
+<tr>
+<td><strong>Single portable archive</strong></td>
+<td>txtai</td>
+<td><code>save()</code> / <code>load()</code> one-file archive pattern as the model for <code>.dna</code>.</td>
+<td>The "embeddings DB, not agent memory" framing.</td>
+</tr>
+<tr>
+<td><strong>File ownership + human/AI co-edit</strong></td>
+<td>basic-memory</td>
+<td>You own the artifact; humans and agents edit the same memory.</td>
+<td>AGPL (un-embeddable), plaintext (no signing/encryption), file-indexing scale ceiling.</td>
+</tr>
+<tr>
+<td><strong>Drop-in integration ergonomics</strong></td>
+<td>Supermemory</td>
+<td>One-line "Add to Cursor / Claude Code" install; near-zero integration friction.</td>
+<td>Cloud-router dependency and the $399 self-host-at-scale gate.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="6-bottom-line">6. Bottom line<a class="headerlink" href="#6-bottom-line" title="Permanent link">&para;</a></h2>
+<p>MCP is table stakes — every product here either has it or will. The category is consolidating around <strong>hosted, server-side, latest-truth-wins</strong> memory. Helix wins by refusing that frame: a <strong>local-first, coding-native, semantically mergeable, signed + encrypted single-file ($0-default)</strong> memory layer that an agent vendor can embed under a permissive license. The six-axis table has exactly one full row. That is the entire bet.</p>
+<hr />
+<h2 id="sources">Sources<a class="headerlink" href="#sources" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Mem0 / OpenMemory — https://github.com/mem0ai/mem0 · https://mem0.ai/pricing</li>
+<li>Letta (MemGPT) — https://github.com/letta-ai/letta · https://docs.letta.com/guides/build-with-letta/pricing</li>
+<li>Zep / Graphiti — https://github.com/getzep/graphiti · https://www.getzep.com/pricing/</li>
+<li>Cognee — https://github.com/topoteretes/cognee · https://www.cognee.ai/pricing</li>
+<li>LangMem — https://github.com/langchain-ai/langmem</li>
+<li>Supermemory — https://github.com/supermemoryai/supermemory · https://supermemory.ai/pricing/</li>
+<li>Memobase — https://github.com/memodb-io/memobase</li>
+<li>A-MEM — https://arxiv.org/abs/2502.12110</li>
+<li>basic-memory — https://github.com/basicmachines-co/basic-memory</li>
+<li>txtai — https://github.com/neuml/txtai</li>
+<li>Walrus / MemWal — https://github.com/MystenLabs/walrus</li>
+<li>MCP — https://www.anthropic.com/news/model-context-protocol</li>
+<li>a16z Big Ideas 2026 — https://www.a16z.news/p/big-ideas-2026-part-1</li>
+</ul>
+<p><em>Star counts and pricing are mid-2026 point-in-time snapshots and change frequently; re-verify before quoting externally.</em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.top", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

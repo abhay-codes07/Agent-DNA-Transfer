@@ -1,0 +1,1654 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Take your AI's memory anywhere — a local-first, portable, git-like memory layer for AI coding agents.">
+      
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Helix v3 — Phase 3 Plan ("Memory that compounds") - Helix</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#helix-v3-phase-3-plan-memory-that-compounds" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Helix" class="md-header__button md-logo" aria-label="Helix" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Helix
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Helix v3 — Phase 3 Plan ("Memory that compounds")
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/abhay-codes07/Agent-DNA-Transfer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Helix" class="md-nav__button md-logo" aria-label="Helix" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Helix
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/abhay-codes07/Agent-DNA-Transfer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Product & strategy
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Product & strategy
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PRD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PRD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../COMPETITIVE_ANALYSIS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Competitive Analysis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BUSINESS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Business & GTM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RESEARCH/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research Survey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Engineering
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Engineering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../TSD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Technical Spec
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SYSTEM_ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    System Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MEMORY_MODEL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Memory Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CONSOLIDATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Consolidation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RETRIEVAL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DNA_FORMAT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    .dna Format
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SYNC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sync & Merge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../COST_OPTIMIZATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cost Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../API_REFERENCE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MCP_INTEGRATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PLUGINS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../OBSERVABILITY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trust, quality & process
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Trust, quality & process
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SECURITY_MODEL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PRIVACY_COMPLIANCE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Privacy & Compliance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../EVALUATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GOVERNANCE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Governance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GLOSSARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0-tldr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0. TL;DR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-where-the-field-moved-july-2026-frontier-map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Where the field moved (July-2026 frontier map)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-the-five-v3-pillars" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. The five v3 pillars
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. The five v3 pillars">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pillar-1-compounding-memory-the-headline-experience-credit-assignment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pillar 1 — Compounding memory (the headline: experience + credit assignment)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pillar-2-temporal-reasoning-close-the-1-benchmark-gap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pillar 2 — Temporal reasoning (close the #1 benchmark gap)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pillar-3-the-compaction-bridge-be-where-context-goes-when-its-dropped" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pillar 3 — The compaction bridge (be where context goes when it's dropped)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pillar-4-prove-it-the-coding-memory-benchmark" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pillar 4 — Prove it (the coding-memory benchmark)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pillar-5-engine-modernization-keep-pace-on-the-primitives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pillar 5 — Engine modernization (keep pace on the primitives)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-roadmap-three-waves" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Roadmap — three waves
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Roadmap — three waves">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#wave-a-compounding-memory-v30-the-headline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wave A — "Compounding memory" (v3.0) — the headline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wave-b-active-temporal-v31" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wave B — "Active &amp; temporal" (v3.1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wave-c-modernized-primitives-v32" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wave C — "Modernized primitives" (v3.2+)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-success-metrics-what-v3-worked-means" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Success metrics (what "v3 worked" means)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-non-goals-guardrails-unchanged-golden-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Non-goals / guardrails (unchanged golden rules)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-top-risks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Top risks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-research-sources-july-2026-sweep" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix — research sources (July-2026 sweep)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="helix-v3-phase-3-plan-memory-that-compounds">Helix v3 — Phase 3 Plan ("Memory that compounds")<a class="headerlink" href="#helix-v3-phase-3-plan-memory-that-compounds" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>Status: <strong>Proposed</strong> · Authored 2026-07-14 · Builds on <a href="../V2_PLAN/"><code>docs/V2_PLAN.md</code></a>
+("Git for your AI's memory") and the shipped v2 engine.
+Research backing: a July-2026 frontier sweep (agent-memory survey + arXiv preprints, coding
+long-horizon benchmarks, context-engineering/compaction, on-device embeddings). Source
+appendix at the end. This doc is the contract for what v3 is and the order we build it.</p>
+</blockquote>
+<hr />
+<h2 id="0-tldr">0. TL;DR<a class="headerlink" href="#0-tldr" title="Permanent link">&para;</a></h2>
+<p>v1 made memory <strong>local and ownable</strong>. v2 made it <strong>portable, signed, and mergeable</strong> — <em>"Git for
+your AI's memory."</em> The field has since moved again, and v3 answers where it went.</p>
+<p>The 2026 research consensus is sharp and consistent across independent groups:</p>
+<ol>
+<li><strong>Memory is becoming <em>active</em>, not a passive store.</strong> The frontier is <em>Memory-as-Action</em> —
+   the agent decides <em>when</em> to write, edit, compact, and forget as first-class actions, and
+   <em>context compaction</em> (Anthropic's <code>compact-2026-01-12</code> API; CompactionRL; Self-Compacting
+   agents) is now the dominant way long-horizon agents survive. The open question is where the
+   dropped context <em>goes</em>. Today it evaporates. <strong>That's Helix's opening: be the durable sink
+   for compaction.</strong></li>
+<li><strong>Experience must <em>compound</em>, with fair credit assignment.</strong> Memory-R2, Fine-Mem, and
+   DELTAMEM all attack the same problem: an agent should get <em>measurably better</em> from its own
+   outcomes, and each memory should be rewarded/penalized in proportion to how much it actually
+   helped. v2 shipped this for <em>procedures</em> (reliability grows on confirmed reuse). v3
+   generalizes it to <strong>every fact</strong> — the strand demonstrably improves, and we can <em>prove it</em>.</li>
+<li><strong>Temporal reasoning is the #1 unsolved gap.</strong> Independent benchmarks (LongMemEval-V2,
+   LoCoMo temporal split) show <strong>up to 15-point accuracy gaps</strong> on "when/why did this change?"
+   queries — the single weakest axis across every memory architecture. Helix already stores
+   bi-temporal columns almost nobody else has. v3 turns that latent asset into a <strong>temporal
+   reasoning surface</strong> that answers belief-change queries directly.</li>
+<li><strong>Coding memory needs its own eval, and long-horizon software evolution is the arena.</strong>
+   SWE-EVO and the "knowledge compounding / agentic ROI" line argue the metric that matters is
+   not chat recall — it's <em>does the agent's stored experience make the next task cheaper and
+   more likely to succeed?</em> v3 ships that benchmark.</li>
+</ol>
+<p><strong>The v3 thesis in one line:</strong> <em>v1 you own it, v2 you move it — v3 it </em><em>compounds</em><em>. Helix is
+the only local-first, portable memory that makes your coding agent measurably better over time,
+proves it with a coding-native benchmark, and is the durable place your agent's context goes
+when it compacts.</em></p>
+<p>Like v2, <strong>v3 is additive, not a rewrite.</strong> The engine, <code>.dna</code> container, and MCP surface all
+stand; v3 adds an experience/credit-assignment layer, a temporal-reasoning surface, a
+compaction bridge, and the eval that scores them — every piece $0/offline by default.</p>
+<hr />
+<h2 id="1-where-the-field-moved-july-2026-frontier-map">1. Where the field moved (July-2026 frontier map)<a class="headerlink" href="#1-where-the-field-moved-july-2026-frontier-map" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>        PASSIVE STORE ─────────────────────────────► ACTIVE / AGENTIC MEMORY
+   (RAG-over-facts)                                (Memory-as-Action, self-editing)
+        v1 ● ────────► v2 ● (portable/mergeable) ────────► ★ v3 (compounding + active)
+
+   Axes the 2026 papers converged on, and where Helix stands:
+   ┌────────────────────────────┬───────────────────────────────┬──────────────┐
+   │ Frontier axis              │ SOTA direction (2026)         │ Helix today  │
+   ├────────────────────────────┼───────────────────────────────┼──────────────┤
+   │ Active / self-managing     │ Memory-as-Action, compaction  │ passive → v3 │
+   │ Experience compounding     │ Memory-R2 credit assignment   │ procedures→v3│
+   │ Temporal reasoning         │ bi-temporal + change events   │ columns → v3 │
+   │ Long-horizon coding eval   │ SWE-EVO, agentic ROI          │ recall eval  │
+   │ On-device embeddings       │ EmbeddingGemma / Qwen3 / jina │ bge-small    │
+   └────────────────────────────┴───────────────────────────────┴──────────────┘
+</code></pre></div>
+<p>Helix keeps the two structural advantages no funded competitor can copy without abandoning
+their cloud-first economics — <strong>local-first ownership</strong> and a <strong>portable signed strand</strong> — and
+now claims a third the incumbents aren't even chasing yet: <strong>memory that compounds and proves
+it, offline.</strong></p>
+<hr />
+<h2 id="2-the-five-v3-pillars">2. The five v3 pillars<a class="headerlink" href="#2-the-five-v3-pillars" title="Permanent link">&para;</a></h2>
+<p>Each capability carries an effort tag (S/M/L) and a priority (P0 = v3.0 headline, P1 = v3.x,
+P2 = later). Everything runs at $0 with no network unless a row says otherwise; cloud stays
+opt-in.</p>
+<h3 id="pillar-1-compounding-memory-the-headline-experience-credit-assignment">Pillar 1 — Compounding memory (the headline: experience + credit assignment)<a class="headerlink" href="#pillar-1-compounding-memory-the-headline-experience-credit-assignment" title="Permanent link">&para;</a></h3>
+<p>The defining v3 capability. v2 proved the mechanism on procedures; v3 makes <em>the whole strand</em>
+learn from outcomes and dramatizes the result.</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Capability</th>
+<th>What it adds</th>
+<th>Effort</th>
+<th>Pri</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1.1</td>
+<td><strong>Outcome-driven credit assignment for every fact</strong></td>
+<td>Generalize <code>record_procedure_outcome</code> into <code>record_outcome(memory_ids, success)</code>: when recalled memories contribute to a task that succeeds/fails, each earns a Laplace-smoothed reliability <code>(wins+1)/(uses+2)</code> (Memory-R2-lite, fully offline/deterministic — <strong>not</strong> RL). Proven facts float up; repeatedly-unhelpful ones sink.</td>
+<td>M</td>
+<td><strong>P0</strong></td>
+</tr>
+<tr>
+<td>1.2</td>
+<td><strong>Experience-weighted ranking</strong></td>
+<td>Fold reliability into the retrieval score as a <em>bounded, neutral-at-baseline</em> multiplier (0.5 reliability → ×1.0, so a fresh strand's ranking is unchanged). The recall pipeline stops being static and starts reflecting what actually worked.</td>
+<td>S</td>
+<td><strong>P0</strong></td>
+</tr>
+<tr>
+<td>1.3</td>
+<td><strong>The compounding meter</strong></td>
+<td>A first-class metric — reuse rate, outcomes recorded, win rate, avg reliability, reliability trend — the v3 analogue of the $0 meter. Turns "your memory is getting smarter" from a claim into a number on the dashboard.</td>
+<td>S</td>
+<td><strong>P0</strong></td>
+</tr>
+<tr>
+<td>1.4</td>
+<td><strong>Skill distillation from successful trajectories</strong></td>
+<td>When an episode ends in an observed success signal (tests pass/build green), auto-distill the trajectory into a <code>procedure</code> (Voyager/Fine-Mem). Extends v2's manual <code>learn_procedure</code> into automatic skill acquisition.</td>
+<td>M</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>1.5</td>
+<td><strong>Contradiction-aware decay of low-reliability facts</strong></td>
+<td>A fact repeatedly present at <em>failures</em> is a candidate for the review queue (advisory, never auto-deleted) — the negative half of credit assignment, on-brand with "the user owns the memory."</td>
+<td>S</td>
+<td>P1</td>
+</tr>
+</tbody>
+</table>
+<h3 id="pillar-2-temporal-reasoning-close-the-1-benchmark-gap">Pillar 2 — Temporal reasoning (close the #1 benchmark gap)<a class="headerlink" href="#pillar-2-temporal-reasoning-close-the-1-benchmark-gap" title="Permanent link">&para;</a></h3>
+<p>Helix's bi-temporal columns are a latent asset; v3 exposes them as answers.</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Capability</th>
+<th>What it adds</th>
+<th>Effort</th>
+<th>Pri</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2.1</td>
+<td><strong><code>history_of(subject)</code> — belief timeline</strong></td>
+<td>The ordered history of what Helix believed about a subject: current + superseded facts by <code>valid_from</code>, with each transition (from→to→when). Directly answers the temporal queries where every architecture loses 15 points. Builds on v2's <code>changes</code>/<code>as_of</code>.</td>
+<td>M</td>
+<td><strong>P0</strong></td>
+</tr>
+<tr>
+<td>2.2</td>
+<td><strong>Temporal query grammar</strong></td>
+<td>Parse "as of", "when did", "before/after" phrasing in recall and route to the bitemporal path instead of pure semantic match — so an agent's natural question hits the right index.</td>
+<td>M</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>2.3</td>
+<td><strong>Change-point summaries</strong></td>
+<td>On demand, summarize the arc of a decision ("Postgres→Mongo→Postgres, and why each time") from the supersession chain. LLM-optional; deterministic fallback lists the transitions.</td>
+<td>S</td>
+<td>P1</td>
+</tr>
+</tbody>
+</table>
+<h3 id="pillar-3-the-compaction-bridge-be-where-context-goes-when-its-dropped">Pillar 3 — The compaction bridge (be where context goes when it's dropped)<a class="headerlink" href="#pillar-3-the-compaction-bridge-be-where-context-goes-when-its-dropped" title="Permanent link">&para;</a></h3>
+<p>The single biggest <em>new</em> integration surface in 2026. When an agent compacts, the pruned
+context is exactly the distilled-facts Helix exists to keep.</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Capability</th>
+<th>What it adds</th>
+<th>Effort</th>
+<th>Pri</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>3.1</td>
+<td><strong><code>distill_session(messages)</code> — pre-compaction sink</strong></td>
+<td>A named surface that takes an agent's about-to-be-dropped working context and distills durable facts from it (reuses batched extraction + the redaction/gate pipeline). The compaction handoff the ecosystem is standardizing around, made durable and local.</td>
+<td>M</td>
+<td><strong>P0</strong></td>
+</tr>
+<tr>
+<td>3.2</td>
+<td><strong><code>memory_distill</code> / <code>memory_outcome</code> MCP tools</strong></td>
+<td>Expose the compaction sink and the credit-assignment loop to agents over MCP — the two operations that make memory <em>active</em> from the agent's side (ADR-038, grows the surface 10→12, still small).</td>
+<td>S</td>
+<td><strong>P0</strong></td>
+</tr>
+<tr>
+<td>3.3</td>
+<td><strong>Compaction-aware provenance</strong></td>
+<td>Facts distilled at compaction carry a <code>compaction</code> origin marker so the dashboard can show "learned while compacting session X" and the user can audit the automatic sink.</td>
+<td>S</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>3.4</td>
+<td><strong>Reflection-on-session</strong></td>
+<td>After a session, synthesize the 1–3 durable lessons (not every turn) — sleep-time consolidation triggered by the session boundary rather than a cron.</td>
+<td>M</td>
+<td>P1</td>
+</tr>
+</tbody>
+</table>
+<h3 id="pillar-4-prove-it-the-coding-memory-benchmark">Pillar 4 — Prove it (the coding-memory benchmark)<a class="headerlink" href="#pillar-4-prove-it-the-coding-memory-benchmark" title="Permanent link">&para;</a></h3>
+<p>v2 promised a coding eval; v3 makes it the yardstick and scores the new capabilities.</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Capability</th>
+<th>What it adds</th>
+<th>Effort</th>
+<th>Pri</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>4.1</td>
+<td><strong>Compounding &amp; temporal eval metrics</strong></td>
+<td>Extend <code>helix eval</code> with: reuse-rate, build-green-after-recall proxy, stale-catch rate, <strong>temporal-accuracy</strong> (does <code>history_of</code> answer the change query?), and an <strong>agentic-ROI</strong> proxy (did recall make the second attempt cheaper?).</td>
+<td>M</td>
+<td><strong>P0</strong></td>
+</tr>
+<tr>
+<td>4.2</td>
+<td><strong>SWE-EVO-style scenario harness</strong></td>
+<td>A small, local, multi-episode scenario (a project evolving over "sessions") that exercises compounding end-to-end — the honest coding analog to LongMemEval-V2's trajectory benchmark.</td>
+<td>L</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>4.3</td>
+<td><strong>Regression gate in CI</strong></td>
+<td>Fail the build if compounding/temporal metrics drop below a floor — the eval becomes a contract, not a report.</td>
+<td>S</td>
+<td>P1</td>
+</tr>
+</tbody>
+</table>
+<h3 id="pillar-5-engine-modernization-keep-pace-on-the-primitives">Pillar 5 — Engine modernization (keep pace on the primitives)<a class="headerlink" href="#pillar-5-engine-modernization-keep-pace-on-the-primitives" title="Permanent link">&para;</a></h3>
+<p>Non-headline but overdue; each is gated and $0-preserving.</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Capability</th>
+<th>What it adds</th>
+<th>Effort</th>
+<th>Pri</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>5.1</td>
+<td><strong>Embedding refresh</strong></td>
+<td>Wire <strong>EmbeddingGemma-300M</strong> / <strong>Qwen3-Embedding</strong> / <strong>bge-code-v1</strong> as opt-in fastembed models behind config, with int8 + Matryoshka storage (v2 §2.2 executed). bge-small stays the dependency-free default.</td>
+<td>S–M</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>5.2</td>
+<td><strong>Local LLM extraction path polish</strong></td>
+<td>Make the Ollama/local-model extractor first-class for sleep-time consolidation so higher-quality distillation needs no API.</td>
+<td>M</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>5.3</td>
+<td><strong>Perf budgets in CI</strong></td>
+<td>Recall p95 + strand-footprint budgets enforced (already listed in ROADMAP cross-phase; wire it).</td>
+<td>S</td>
+<td>P2</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3-roadmap-three-waves">3. Roadmap — three waves<a class="headerlink" href="#3-roadmap-three-waves" title="Permanent link">&para;</a></h2>
+<h3 id="wave-a-compounding-memory-v30-the-headline">Wave A — "Compounding memory" (v3.0) — the headline<a class="headerlink" href="#wave-a-compounding-memory-v30-the-headline" title="Permanent link">&para;</a></h3>
+<p>The thesis made real, entirely $0/offline/deterministic:
+- <strong>Compounding:</strong> 1.1 credit assignment for every fact, 1.2 experience-weighted ranking,
+  1.3 the compounding meter.
+- <strong>Temporal:</strong> 2.1 <code>history_of(subject)</code>.
+- <strong>Compaction bridge:</strong> 3.1 <code>distill_session</code>, 3.2 <code>memory_outcome</code> + <code>memory_distill</code> MCP tools.
+- <strong>Prove it:</strong> 4.1 compounding + temporal eval metrics.
+- Full SDK parity + docs (ADR-038) + tests.</p>
+<h3 id="wave-b-active-temporal-v31">Wave B — "Active &amp; temporal" (v3.1)<a class="headerlink" href="#wave-b-active-temporal-v31" title="Permanent link">&para;</a></h3>
+<ul>
+<li>1.4 auto-skill distillation, 1.5 low-reliability review, 2.2 temporal grammar, 2.3 change
+  summaries, 3.3 compaction provenance, 3.4 reflection-on-session, 4.2 SWE-EVO harness,
+  4.3 CI regression gate.</li>
+</ul>
+<h3 id="wave-c-modernized-primitives-v32">Wave C — "Modernized primitives" (v3.2+)<a class="headerlink" href="#wave-c-modernized-primitives-v32" title="Permanent link">&para;</a></h3>
+<ul>
+<li>5.1 embedding refresh, 5.2 local-LLM extraction, 5.3 perf budgets. Dashboard surfaces for the
+  compounding meter + belief timeline.</li>
+</ul>
+<hr />
+<h2 id="4-success-metrics-what-v3-worked-means">4. Success metrics (what "v3 worked" means)<a class="headerlink" href="#4-success-metrics-what-v3-worked-means" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Compounding is real:</strong> after recording outcomes, proven facts rank measurably higher and the
+  compounding meter climbs across a scenario — verified in the eval, not asserted.</li>
+<li><strong>Temporal accuracy:</strong> <code>history_of</code> answers belief-change queries the pure-semantic path misses
+  (closes the documented 15-point gap on the local eval).</li>
+<li><strong>Compaction sink works:</strong> a dropped working-context distills to durable, sourced, redacted
+  facts — round-tripped in a test.</li>
+<li><strong>$0 promise intact:</strong> every Wave-A capability makes zero network calls; the compounding meter,
+  like the $0 meter, is computed locally.</li>
+</ul>
+<h2 id="5-non-goals-guardrails-unchanged-golden-rules">5. Non-goals / guardrails (unchanged golden rules)<a class="headerlink" href="#5-non-goals-guardrails-unchanged-golden-rules" title="Permanent link">&para;</a></h2>
+<ul>
+<li>No core path may require a network call or cloud account. Credit assignment is offline
+  arithmetic, <strong>not</strong> RL; RL/auto-tuning stays opt-in cloud (v2 §1.7).</li>
+<li>Never store raw transcripts — <code>distill_session</code> distills, it does not log. The compaction sink
+  keeps <em>facts</em>, not the dropped tokens.</li>
+<li>Credit assignment <strong>never auto-deletes</strong>; low reliability routes to the review queue. The user
+  owns the memory.</li>
+<li>Every new fact still carries <code>source · created_at · confidence · type</code>; experience adds
+  <code>reliability</code> without dropping any of them.</li>
+<li>Don't bloat the MCP surface: v3 adds exactly two agent-facing tools, both central to active
+  memory, documented and ADR'd.</li>
+</ul>
+<h2 id="6-top-risks">6. Top risks<a class="headerlink" href="#6-top-risks" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Credit-assignment noise</strong> — a single outcome shouldn't swing ranking. Mitigate with Laplace
+   smoothing + a bounded, neutral-at-baseline multiplier (Wave A ships conservative constants).</li>
+<li><strong>Temporal surface complexity</strong> — keep <code>history_of</code> deterministic over existing columns; defer
+   the NL grammar (2.2) to Wave B.</li>
+<li><strong>Compaction-sink over-capture</strong> — the gate + redaction still apply; distill, never log; mark
+   provenance so the user can audit.</li>
+<li><strong>Eval over-fitting</strong> — the coding eval is a floor and a compass, not a leaderboard to game;
+   keep it honest and local.</li>
+</ol>
+<hr />
+<h2 id="appendix-research-sources-july-2026-sweep">Appendix — research sources (July-2026 sweep)<a class="headerlink" href="#appendix-research-sources-july-2026-sweep" title="Permanent link">&para;</a></h2>
+<p><strong>Agent-memory frontier:</strong> <em>Memory in the Age of AI Agents: A Survey</em> (Agent-Memory-Paper-List),
+Fine-Mem (arXiv 2601.08435), SAM: State-Adaptive Memory (2605.24468), Memory-R2 (2605.21768),
+DELTAMEM (2606.03083), ACE: Adaptive Context Elasticizer (2606.31564), <em>Agentic Memory: Unified
+Long/Short-Term Management</em>, <em>EverMemOS</em>, <em>Memory as Action: Autonomous Context Curation</em>,
+<em>The State of AI Agent Memory in 2026</em> (vektor/mem0), 2026 Memory Literature Scan.</p>
+<p><strong>Coding / long-horizon eval:</strong> SWE-EVO (2512.18470), LongMemEval-V2 (2605.12493), LoCoMo +
+temporal split, BEAM, LOCA-bench (2602.07962), <em>Knowledge Compounding / Agentic ROI</em> (2604.11243),
+Hippocampus memory module (2602.13594), ByteRover 2.0 LoCoMo results.</p>
+<p><strong>Context engineering / compaction:</strong> Anthropic <em>Effective context engineering for AI agents</em> +
+the compaction API (<code>compact-2026-01-12</code>), CompactionRL (2607.05378), Self-Compacting LM Agents
+(2606.23525), Slipstream trajectory-grounded compaction (2605.08580), subagent context isolation.</p>
+<p><strong>On-device embeddings:</strong> EmbeddingGemma (arXiv 2509.20354), Qwen3-Embedding (2506.05176),
+jina-embeddings-v3, BGE-M3 + BGE-reranker-v2, bge-code-v1, nomic-embed-text-v2; Matryoshka + int8
+quantization; local-on-Apple-Silicon comparisons (June 2026).</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.top", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
